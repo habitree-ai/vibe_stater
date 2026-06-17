@@ -2,6 +2,10 @@
 
 > LINKMAP 부가서비스형 개인 브랜드 플랫폼. 기획 → 구현 → 배포 문서 모음.
 
+## ⭐ LINKMAP 핵심 — 수동 설정 레지스트리
+- [`10_env_config_registry.md`](./10_env_config_registry.md) — 사용자가 직접 설정해야 하는 변수/설정 총정리(무엇·발급처·적용처·관리)
+- HTML 보드: [`../public/linkmap/env-board.html`](../public/linkmap/env-board.html) (배포 시 `/linkmap/env-board.html`) — 체크리스트·필터·진행률
+
 ## 👉 다음 작업 (핸드오프)
 - [`CLAUDE_CODE_TASKS.md`](./CLAUDE_CODE_TASKS.md) — **다음 Claude Code 세션 작업 지시서**(현재 상태·우선순위·위험경고)
 
@@ -20,6 +24,8 @@
 | 06 | [`06_deployment_cloudflare.md`](./06_deployment_cloudflare.md) | Cloudflare 배포 세팅(설정 파일 상세) |
 | 07 | [`07_github_cloudflare_deploy.md`](./07_github_cloudflare_deploy.md) | GitHub → Cloudflare 자동 배포(Git 연동) |
 | 08 | [`08_deploy_record.md`](./08_deploy_record.md) | 배포 처리 기록·재현 방법론 |
+| 09 | [`09_supabase_step3.md`](./09_supabase_step3.md) | Supabase 인증/DB(Step 3) |
+| 10 | [`10_env_config_registry.md`](./10_env_config_registry.md) | ⭐ 수동 설정 레지스트리(LINKMAP 핵심) |
 
 ## 서비스 셋업 가이드 시리즈
 - [`service-setup/README.md`](./service-setup/README.md) — 시리즈 인덱스·추가 절차
