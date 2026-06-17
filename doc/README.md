@@ -16,6 +16,7 @@
 | 05 | [`05_homepage_redesign.md`](./05_homepage_redesign.md) | 프리미엄 리디자인 기획 |
 | 06 | [`06_deployment_cloudflare.md`](./06_deployment_cloudflare.md) | Cloudflare 배포 세팅(설정 파일 상세) |
 | 07 | [`07_github_cloudflare_deploy.md`](./07_github_cloudflare_deploy.md) | GitHub → Cloudflare 자동 배포(Git 연동) |
+| 08 | [`08_deploy_record.md`](./08_deploy_record.md) | 배포 처리 기록·재현 방법론 |
 
 ## 서비스 셋업 가이드 시리즈
 - [`service-setup/README.md`](./service-setup/README.md) — 시리즈 인덱스·추가 절차

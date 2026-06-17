@@ -21,6 +21,7 @@ service-setup/
 
 ## 시리즈 현황
 
+### 가입·기초설정 편
 | 편 | 서비스 | 단계 | 문서 | 상태 |
 |---|---|---|---|---|
 | 1 | **Cloudflare** | 10 | [`cloudflare/cloudflare_setup.md`](./cloudflare/cloudflare_setup.md) | ✅ 완료 |
@@ -29,6 +30,13 @@ service-setup/
 | 4 | Supabase | – | – | ⬜ 예정 |
 | 5 | Stripe | – | – | ⬜ 예정 |
 | 6 | Resend | – | – | ⬜ 예정 |
+
+### 연결·배포 편 (프로세스 가이드)
+| 편 | 주제 | 단계 | 문서 | 자산 | 상태 |
+|---|---|---|---|---|---|
+| D1 | **GitHub → Cloudflare 자동 배포** | 9 | [`github-cloudflare-deploy/github_cloudflare_deploy_setup.md`](./github-cloudflare-deploy/github_cloudflare_deploy_setup.md) | 매뉴얼 HTML · 영상 · 캡처 9장 | ✅ 완료 |
+
+> 처리 기록(실제 git/배포 수행 로그): [`../08_deploy_record.md`](../08_deploy_record.md)
 
 > 본 플랫폼이 사용하는 외부 서비스 전체 목록·환경변수는 [`../00_setup_guide.md`](../00_setup_guide.md) 참고.
 
