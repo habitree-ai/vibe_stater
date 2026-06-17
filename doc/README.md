@@ -2,6 +2,9 @@
 
 > LINKMAP 부가서비스형 개인 브랜드 플랫폼. 기획 → 구현 → 배포 문서 모음.
 
+## 👉 다음 작업 (핸드오프)
+- [`CLAUDE_CODE_TASKS.md`](./CLAUDE_CODE_TASKS.md) — **다음 Claude Code 세션 작업 지시서**(현재 상태·우선순위·위험경고)
+
 ## 마스터 기획
 - [`linkmap_personal_platform_plan.md`](./linkmap_personal_platform_plan.md) — 전체 기획서(IA·서비스맵·ERD·MVP)
 
