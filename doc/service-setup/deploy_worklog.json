@@ -1,0 +1,39 @@
+{
+  "task": "Creator Link Hub — GitHub→Cloudflare 배포 준비 + 셋업 가이드 자료화",
+  "date": "2026-06-17",
+  "operator": "Cowork agent (habitree.ai)",
+  "environment": {
+    "project": "Next.js 16.2.9 (App Router)",
+    "deploy_target": "Cloudflare Workers (OpenNext adapter)",
+    "repo_strategy": "GitHub → Cloudflare Workers Builds (git push 자동배포)",
+    "constraints": [
+      "계정 생성·로그인·OAuth 인증은 사용자가 직접 (에이전트 불가)",
+      "봇 차단/CAPTCHA 우회 금지",
+      "OneDrive 동기화 폴더라 샌드박스에서 git .git 조작 불가 → Windows에서 실행"
+    ]
+  },
+  "steps": [
+    {"n": 1, "action": "배포 문서 검토", "detail": "doc/07_github_cloudflare_deploy.md, doc/06_deployment_cloudflare.md 정독", "result": "OpenNext 파일 명세·빌드 명령 확정", "status": "done"},
+    {"n": 2, "action": "OpenNext 설정 파일 생성", "files": ["wrangler.jsonc", "open-next.config.ts", ".dev.vars", "public/_headers"], "result": "생성 완료", "status": "done"},
+    {"n": 3, "action": "next.config.ts 수정", "detail": "initOpenNextCloudflareForDev() 추가", "status": "done"},
+    {"n": 4, "action": ".gitignore 보강", "detail": ".open-next/.dev.vars/.wrangler/cloudflare-env.d.ts 추가 (시크릿 미커밋)", "status": "done"},
+    {"n": 5, "action": "의존성 설치", "cmd": ["npm install @opennextjs/cloudflare@latest", "npm install --save-dev wrangler@latest"], "result": "@opennextjs/cloudflare ^1.19.11, wrangler ^4.101.0 — package.json/lock 반영", "status": "done"},
+    {"n": 6, "action": "package.json scripts", "detail": "preview/deploy/upload/cf-typegen 확인", "status": "done"},
+    {"n": 7, "action": "git init + 첫 커밋 (샌드박스)", "result": "실패 — OneDrive 권한으로 .git 조작 불가(Operation not permitted)", "mitigation": "deploy_push.ps1 생성 → Windows에서 실행", "status": "blocked→handoff"},
+    {"n": 8, "action": "배포 과정 재현 가이드 제작", "files": ["doc/service-setup/github-cloudflare-deploy/github_cloudflare_deploy_manual.html", "github_cloudflare_deploy_walkthrough.mp4"], "detail": "9단계 마우스포인터 애니메이션(재현)", "status": "done"},
+    {"n": 9, "action": "웹사이트 가이드 반영 준비", "files": ["src/data/guides.ts", "src/components/sections/Guides.tsx", "src/app/guides/page.tsx", "public/guides/**"], "detail": "홈 Guides 섹션 + /guides 페이지(영상 임베드)", "status": "done(stage2 commit 대기)"},
+    {"n": 10, "action": "배포 스크립트", "files": ["deploy_push.ps1 (1단계: 베이스, 가이드 제외)", "deploy_update_guides.ps1 (2단계: 가이드 반영 후 push)"], "status": "done"}
+  ],
+  "handoff_to_user": [
+    "deploy_push.ps1 실행 (git init→commit→push, GitHub 인증 직접)",
+    "Cloudflare Workers & Pages > Create > Connect to Git 로 저장소 연결(OAuth 직접)",
+    "Build: npx opennextjs-cloudflare build / Deploy: npx opennextjs-cloudflare deploy / 빌드 변수 등록",
+    "첫 배포(*.workers.dev) 확인 후 deploy_update_guides.ps1 실행 → 가이드 자동배포"
+  ],
+  "artifacts": {
+    "deploy_config": ["wrangler.jsonc", "open-next.config.ts", ".dev.vars", "public/_headers", "next.config.ts(수정)"],
+    "guides_site": ["src/data/guides.ts", "src/components/sections/Guides.tsx", "src/app/guides/page.tsx", "public/guides/cloudflare/*", "public/guides/deploy/*"],
+    "guide_docs": ["doc/service-setup/cloudflare/*", "doc/service-setup/github-cloudflare-deploy/*", "doc/service-setup/method_template.md"],
+    "scripts": ["deploy_push.ps1", "deploy_update_guides.ps1"]
+  }
+}
