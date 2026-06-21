@@ -4,7 +4,7 @@ export const site = {
   name: "Creator Link Hub",
   brandShort: "CLH",
   description:
-    "LINKMAP으로 만드는 나만의 서비스형 개인 플랫폼 — 전자책·강의·템플릿·컨설팅을 한 곳에서.",
+    "코딩을 몰라도 직접 만드는 우리의 온라인 공간 — AI·바이브코딩·독서로 읽고 만들고 연결합니다.",
   owner: "최동혁",
 };
 
@@ -12,7 +12,7 @@ export const navItems = [
   { label: "소개", href: "/about" },
   { label: "콘텐츠", href: "/posts" },
   { label: "서비스", href: "/projects" },
-  { label: "상품", href: "/products" },
+  { label: "자료", href: "/products" },
   { label: "교육", href: "/education" },
   { label: "문의", href: "/contact" },
 ] as const;
@@ -27,12 +27,12 @@ export const footerColumns = [
     ],
   },
   {
-    title: "상품",
+    title: "자료",
     links: [
       { label: "전자책", href: "/products" },
       { label: "강의", href: "/products" },
-      { label: "템플릿", href: "/products" },
-      { label: "컨설팅", href: "/products" },
+      { label: "1:1 커피챗", href: "/products" },
+      { label: "후원하기", href: "/support" },
     ],
   },
   {

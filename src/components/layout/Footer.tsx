@@ -15,7 +15,7 @@ export function Footer() {
               {site.name}
             </div>
             <p className="max-w-xs text-sm text-muted-foreground">
-              LINKMAP으로 만드는 나만의 서비스형 개인 플랫폼.
+              코딩을 몰라도 만드는 우리의 온라인 공간.
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               {profile.socials.map((s) => (

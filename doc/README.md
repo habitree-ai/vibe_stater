@@ -26,6 +26,8 @@
 | 08 | [`08_deploy_record.md`](./08_deploy_record.md) | 배포 처리 기록·재현 방법론 |
 | 09 | [`09_supabase_step3.md`](./09_supabase_step3.md) | Supabase 인증/DB(Step 3) |
 | 10 | [`10_env_config_registry.md`](./10_env_config_registry.md) | ⭐ 수동 설정 레지스트리(LINKMAP 핵심) |
+| 11 | [`11_deploy_troubleshooting_record.md`](./11_deploy_troubleshooting_record.md) | 배포 실패 진단 기록(클론·명령 오류, grant 누락) |
+| 12 | [`12_workers_builds_guide.md`](./12_workers_builds_guide.md) | (교육용) Workers Builds 이해·배포 디버깅 |
 
 ## 서비스 셋업 가이드 시리즈
 - [`service-setup/README.md`](./service-setup/README.md) — 시리즈 인덱스·추가 절차

@@ -3,24 +3,29 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>LINKMAP — 환경변수 · 수동 설정 레지스트리</title>
+<title>LINKMAP — 환경변수 · 수동 설정 가이드</title>
 <style>
   :root{
     --bg:#f7faf8; --fg:#13211c; --muted:#5b6b63; --card:#fff; --border:#e2e9e4;
     --primary:#10916b; --primary-weak:#e6f4ee; --secret:#b4513a; --secret-weak:#fbeae6;
-    --setting:#2563a8; --setting-weak:#e8f0fa; --radius:14px;
+    --setting:#2563a8; --setting-weak:#e8f0fa; --warn:#9a6a00; --warn-weak:#fff6e5; --radius:14px;
   }
   *{box-sizing:border-box}
   body{margin:0;background:radial-gradient(80% 50% at 80% -10%, #e7f5ee 0%, transparent 60%),var(--bg);
-    color:var(--fg);font-family:"Pretendard",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
-  .wrap{max-width:1080px;margin:0 auto;padding:40px 20px 80px}
+    color:var(--fg);font-family:"Pretendard",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 20px 90px}
   .badge-brand{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:var(--primary)}
   .badge-brand .dot{width:28px;height:28px;border-radius:8px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:12px}
   h1{font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;margin:18px 0 8px}
   h1 em{font-style:italic;color:var(--primary)}
-  .lead{color:var(--muted);max-width:62ch;margin:0 0 6px}
+  .lead{color:var(--muted);max-width:64ch;margin:0 0 6px}
   .note{font-size:13px;color:var(--muted);background:var(--primary-weak);border:1px solid #cfe8dd;
-    border-radius:12px;padding:12px 14px;margin:18px 0}
+    border-radius:12px;padding:12px 14px;margin:16px 0}
+  .quickstart{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:16px 0}
+  .quickstart h3{margin:0 0 8px;font-size:15px}
+  .quickstart ol{margin:0;padding-left:20px;font-size:13.5px;color:#26342e}
+  .quickstart ol li{margin:3px 0}
+  .quickstart b{color:var(--primary)}
   .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px 0 8px;position:sticky;top:0;
     background:linear-gradient(var(--bg),var(--bg) 70%,transparent);padding:10px 0;z-index:5}
   .chip{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:6px 13px;
@@ -30,15 +35,17 @@
   .progress{flex:1;min-width:160px;height:8px;background:#e6ece8;border-radius:999px;overflow:hidden}
   .progress>span{display:block;height:100%;width:0;background:var(--primary);transition:width .3s}
   .progress-label{font-size:13px;color:var(--muted);white-space:nowrap}
-  .svc{margin-top:30px}
-  .svc-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .svc{margin-top:28px}
+  .svc-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;flex-wrap:wrap}
   .svc-head h2{font-size:19px;margin:0;letter-spacing:-.01em}
   .svc-status{font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
   .svc-status.done{background:var(--primary-weak);color:var(--primary);border-color:#cfe8dd}
-  .svc-status.wip{background:#fff6e5;color:#9a6a00;border-color:#f0dcae}
+  .svc-status.wip{background:var(--warn-weak);color:var(--warn);border-color:#f0dcae}
+  .svc-intro{font-size:13px;color:var(--muted);margin:0 0 12px}
+  .svc-intro a{color:var(--setting)}
   .grid{display:grid;gap:12px}
   .item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
-  .item.checked{opacity:.62;background:#fbfdfc}
+  .item.checked{opacity:.66;background:#fbfdfc}
   .item-top{display:flex;align-items:flex-start;gap:12px}
   .chk{appearance:none;width:22px;height:22px;border:2px solid var(--border);border-radius:7px;cursor:pointer;flex:none;margin-top:2px;position:relative}
   .chk:checked{background:var(--primary);border-color:var(--primary)}
@@ -54,12 +61,24 @@
   .k-secret{background:var(--secret-weak);color:var(--secret)}
   .k-setting{background:var(--setting-weak);color:var(--setting)}
   .k-dns,.k-sql,.k-account{background:#eef0f3;color:#475063}
-  .what{margin:8px 0 10px;color:#26342e}
-  .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px;font-size:13px}
+  .what{margin:8px 0 8px;color:#26342e}
+  .status-pill{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:999px;margin:2px 0 8px}
+  .st-done{background:var(--primary-weak);color:var(--primary)}
+  .st-todo{background:var(--warn-weak);color:var(--warn)}
+  .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 18px;font-size:13px;margin-bottom:4px}
   .meta .lbl{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1px}
+  .path{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#33433c;background:#f1f6f3;border:1px solid var(--border);border-radius:8px;padding:6px 9px;display:inline-block}
   .apply-chip{display:inline-block;background:#eef4f1;border:1px solid var(--border);border-radius:6px;padding:1px 7px;margin:2px 4px 0 0;font-size:12px}
   a.where{color:var(--setting);text-decoration:none;font-weight:600}
   a.where:hover{text-decoration:underline}
+  .valuebox{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#0f1f190d;border:1px dashed var(--border);border-radius:8px;padding:7px 10px;margin:8px 0 0}
+  .valuebox .vlbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .valuebox code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;word-break:break-all}
+  .toggle{margin-top:10px;font-size:13px;font-weight:600;color:var(--setting);background:none;border:none;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
+  .steps{margin:10px 0 0;padding:12px 14px 12px 30px;background:#f7faf8;border:1px solid var(--border);border-radius:10px;font-size:13.5px;color:#26342e}
+  .steps li{margin:5px 0}
+  .steps code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:#0f1f1914;padding:1px 6px;border-radius:5px;word-break:break-all}
+  .steps b{color:var(--primary)}
   footer{margin-top:48px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:16px}
   .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-top:6px}
   .hide{display:none!important}
@@ -68,11 +87,24 @@
 <body>
 <div class="wrap">
   <div class="badge-brand"><span class="dot">CLH</span> LINKMAP</div>
-  <h1>환경변수 · <em>수동 설정</em> 레지스트리</h1>
-  <p class="lead">AI가 자동화할 수 없고 <strong>사용자가 직접</strong> 발급·설정·관리해야 하는 값들을 한곳에.
-    각 항목의 <strong>무엇·어디서 발급·어디에 적용·어디서 관리</strong>를 확인하고 체크하세요.</p>
+  <h1>환경변수 · <em>수동 설정</em> 가이드</h1>
+  <p class="lead">AI가 자동화할 수 없고 <strong>사용자가 직접</strong> 발급·설정해야 하는 값들.
+    각 항목의 <strong>무엇 · 어느 메뉴(경로) · 입력할 값 · 단계별 방법 · 현재 상태</strong>를 한곳에 담았습니다.
+    <strong>이 페이지만 보고도 모든 설정을 끝낼 수 있도록</strong> 구성했습니다.</p>
   <div class="note">🔒 시크릿/키의 <strong>실제 값은 여기에 저장되지 않습니다.</strong> 이 보드는 "어디서 받아 어디에 넣는지"만 안내합니다.
-    값은 <code>.env.local</code>(로컬, 커밋 금지)과 Cloudflare 빌드 변수에 직접 입력하세요. 체크 상태는 브라우저에만 저장됩니다.</div>
+    값은 <code>.env.local</code>(로컬, 커밋 금지)과 Cloudflare 빌드 변수에 직접 입력하세요. 체크 상태는 브라우저에만 저장됩니다.
+    각 항목의 <strong>"설정 방법 자세히 ▾"</strong>를 펼치면 단계별 안내가 나옵니다.</div>
+
+  <div class="quickstart">
+    <h3>⚡ 지금 당장 해야 할 순서 (배포 살리기)</h3>
+    <ol>
+      <li><b>Cloudflare 빌드 변수 4개 등록</b> — Supabase 키 등 (아래 Cloudflare 섹션 <code>cf-vars</code>). 안 하면 빌드 실패.</li>
+      <li><b>커밋·푸시로 첫 빌드 트리거</b> — <code>npm run ship "fix: deploy"</code> → 자동 빌드.</li>
+      <li><b>Builds 탭에서 성공 확인</b> → <code>*.workers.dev</code> 접속.</li>
+      <li>이후 <b>커스텀 도메인</b> 연결, 필요 시 Stripe/Resend 등 나머지.</li>
+    </ol>
+  </div>
+
   <div class="legend">
     <span>🔑 공개변수(NEXT_PUBLIC_*)</span><span>🔒 시크릿(서버전용)</span><span>⚙️ 대시보드 설정</span>
     <span>🌐 DNS</span><span>🗄️ SQL</span><span>👤 계정/OAuth</span>
@@ -82,15 +114,15 @@
   <div class="toolbar" style="position:static;padding-top:0">
     <div class="progress"><span id="bar"></span></div>
     <span class="progress-label" id="plabel"></span>
+    <button class="chip" id="expandAll">모두 펼치기</button>
     <button class="chip" id="reset">체크 초기화</button>
   </div>
 
   <div id="board"></div>
 
   <footer>
-    LINKMAP 환경설정 레지스트리 · 문서: <code>doc/10_env_config_registry.md</code> ·
-    적용 절차/서비스 가이드는 <code>doc/00_setup_guide.md</code>, <code>doc/service-setup/</code> 참고.<br/>
-    이 표를 프로젝트별로 관리·점검하는 것이 LINKMAP의 핵심 목표입니다.
+    LINKMAP 환경설정 가이드 · 원본 문서: <code>doc/10_env_config_registry.md</code> · 배포 트러블슈팅: <code>doc/11_deploy_troubleshooting_record.md</code> · 교육용: <code>doc/12_workers_builds_guide.md</code><br/>
+    계정 ID·Worker명 등은 이 프로젝트(habitree.ai / vibestater) 기준입니다. 다른 프로젝트면 값만 교체하세요.
   </footer>
 </div>
 
@@ -103,62 +135,231 @@ const KIND = {
   sql:{cls:"k-sql",icon:"🗄️",label:"SQL"},
   account:{cls:"k-account",icon:"👤",label:"계정/OAuth"}
 };
+
+// 이 프로젝트 고정값
+const CF_ACCT = "41610e7a867c4ab70a2413ae446f9479";
+const CF_SETTINGS = `https://dash.cloudflare.com/${CF_ACCT}/workers/services/view/vibestater/production/settings`;
+
 const DATA = [
-  {id:"github", name:"GitHub", status:"done", statusText:"저장소 생성 완료", items:[
-    {id:"gh-acct", kind:"account", key:"habitree-ai 조직/계정", what:"코드 호스팅 계정·조직.", where:{label:"github.com",url:"https://github.com"}, apply:["원격 origin"], manage:"GitHub"},
-    {id:"gh-repo", kind:"account", key:"habitree-ai/vibe_stater", what:"이 프로젝트의 저장소(이미 생성·푸시됨).", where:{label:"github.com/new",url:"https://github.com/new"}, apply:["git remote origin"], manage:"GitHub"},
-    {id:"gh-auth", kind:"account", key:"푸시 인증(OAuth/PAT)", what:"최초 1회 git push 시 인증. 이후 캐시.", where:{label:"Git Credential Manager 팝업",url:""}, apply:["OS 자격증명"], manage:"OS 자격증명 저장소"}
+  {id:"cloudflare", name:"Cloudflare (배포)", status:"wip", statusText:"빌드 변수 등록 필요",
+   intro:`Worker <b>vibestater</b> · 계정 <code>${CF_ACCT}</code> · 저장소 연결·명령어는 재설정 완료(2026-06-18). 남은 건 <b>빌드 변수 등록 → 푸시</b>.`,
+   items:[
+    {id:"cf-acct", kind:"account", key:"계정 + 2FA", what:"배포/DNS 플랫폼 계정.",
+     status:"done", where:{label:"dash.cloudflare.com",url:"https://dash.cloudflare.com"},
+     path:"dash.cloudflare.com → 로그인", apply:[], manage:"Cloudflare",
+     steps:["<b>완료됨.</b> habitree.ai@gmail.com 계정으로 로그인 상태.","보안을 위해 My Profile → Authentication에서 2FA 활성 권장."]},
+
+    {id:"cf-git", kind:"account", key:"Git 연결 (Workers Builds)", what:"저장소를 OAuth로 연결해 푸시 시 자동배포.",
+     status:"done", where:{label:"Build 설정 열기 ↗",url:CF_SETTINGS},
+     path:"Workers & Pages → vibestater → Settings → 우측 Build → Git repository", apply:["프로젝트↔GitHub"], manage:"Cloudflare",
+     steps:["<b>재연결 완료(2026-06-18).</b> 이전엔 grant가 비어 클론 실패 → Disconnect 후 재연결로 복구.",
+            "확인: Build 섹션에 <code>habitree-ai/vibe_stater</code>가 보이고 'push하면 빌드 시작' 배너가 있으면 정상.",
+            "문제 재발 시: Git repository 줄 <b>Disconnect → Connect</b>로 다시 연결."]},
+
+    {id:"cf-build", kind:"setting", key:"Build command", what:"OpenNext로 Next.js를 Workers용으로 변환하는 명령.",
+     status:"done", value:"npx opennextjs-cloudflare build",
+     where:{label:"Build 설정 열기 ↗",url:CF_SETTINGS},
+     path:"Settings → Build → Build configuration (연필 아이콘)", apply:["빌드 파이프라인"], manage:"Cloudflare",
+     steps:["<b>적용 완료.</b> 값: <code>npx opennextjs-cloudflare build</code>",
+            "수정하려면: Build configuration 행의 <b>연필</b> 클릭 → Build command 입력 → 저장.",
+            "⚠️ 순수 <code>npm run build</code>나 빈 값이면 <code>.open-next/worker.js</code>가 안 생겨 배포 실패."]},
+
+    {id:"cf-deploy", kind:"setting", key:"Deploy command", what:"변환 결과물을 Workers에 배포하는 명령.",
+     status:"done", value:"npx opennextjs-cloudflare deploy",
+     where:{label:"Build 설정 열기 ↗",url:CF_SETTINGS},
+     path:"Settings → Build → Build configuration (연필 아이콘)", apply:["빌드 파이프라인"], manage:"Cloudflare",
+     steps:["<b>적용 완료.</b> 값: <code>npx opennextjs-cloudflare deploy</code>",
+            "⚠️ <code>npx wrangler deploy</code>(기본값)는 OpenNext 산출물을 모르므로 실패. 반드시 위 값으로."]},
+
+    {id:"cf-branch", kind:"setting", key:"Production branch = main", what:"이 브랜치에 푸시하면 자동 배포.",
+     status:"done", value:"main",
+     where:{label:"Build 설정 열기 ↗",url:CF_SETTINGS},
+     path:"Settings → Build → Branch control", apply:["자동배포 트리거"], manage:"Cloudflare",
+     steps:["<b>적용 완료.</b> Production branch = <code>main</code>.","비-프로덕션 브랜치 빌드도 Enabled(미리보기용)."]},
+
+    {id:"cf-vars", kind:"setting", key:"빌드 변수 & 시크릿 (지금 필요!)", what:"NEXT_PUBLIC_* 등 빌드 타임 값. SSG/미들웨어가 빌드 때 읽음 — 없으면 빌드 실패.",
+     status:"todo",
+     where:{label:"Build 설정 열기 ↗",url:CF_SETTINGS},
+     path:"Settings → Build → Variables and secrets → + Add",
+     value:"NEXT_PUBLIC_SUPABASE_URL · NEXT_PUBLIC_SUPABASE_ANON_KEY · NEXT_PUBLIC_APP_URL · SUPABASE_SERVICE_ROLE_KEY(Secret)",
+     apply:["CF빌드"], manage:"Cloudflare",
+     steps:["⚠️ <b>아직 미설정 (None).</b> 이게 비면 클론은 통과해도 빌드 단계에서 실패합니다.",
+            "위치: <code>"+CF_SETTINGS+"</code> 열고 우측 <b>Build</b> → <b>Variables and secrets</b> 섹션 → <b>+ Add</b>.",
+            "다음 4개를 추가 (실제 값은 Supabase 섹션과 <code>.env.local</code>에서 가져옴):",
+            "1) <code>NEXT_PUBLIC_SUPABASE_URL</code> = Supabase Project URL",
+            "2) <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> = Supabase anon public 키",
+            "3) <code>NEXT_PUBLIC_APP_URL</code> = 배포 주소(예: https://vibestater.<계정>.workers.dev, 도메인 연결 후 교체)",
+            "4) <code>SUPABASE_SERVICE_ROLE_KEY</code> = service_role 키 — 추가 시 <b>Encrypt/Secret</b>으로 지정(노출 금지)",
+            "저장 후 다음 빌드부터 반영됨."]},
+
+    {id:"cf-name", kind:"setting", key:"wrangler.jsonc name = vibestater", what:"코드의 Worker 이름이 연결된 Worker와 일치해야 같은 Worker가 갱신됨.",
+     status:"done", value:"\"name\": \"vibestater\"",
+     where:{label:"코드 파일",url:""},
+     path:"저장소 루트 wrangler.jsonc", apply:["코드(wrangler.jsonc)"], manage:"본인(코드)",
+     steps:["<b>수정 완료(2026-06-18).</b> 기존 <code>creator-link-hub</code> → <code>vibestater</code>로 변경.",
+            "아직 <b>푸시 전</b>이면 <code>npm run ship</code>로 커밋·푸시해야 빌드에 반영됨.",
+            "대시보드 주황 배너('Update wrangler.jsonc')도 이 변경 푸시 후 사라짐."]},
+
+    {id:"cf-domain", kind:"dns", key:"커스텀 도메인", what:"서비스 도메인 연결(도메인이 Cloudflare에 Active 상태여야 함).",
+     status:"todo",
+     where:{label:"Build 설정 열기 ↗",url:CF_SETTINGS},
+     path:"Workers → vibestater → Settings → Domains & Routes → Add → Custom domain", apply:["DNS(자동)"], manage:"Cloudflare",
+     steps:["첫 배포 성공 후 진행.","Settings → <b>Domains & Routes</b> → <b>Add</b> → <b>Custom domain</b> → 원하는 도메인/서브도메인 입력.",
+            "같은 Cloudflare 존이면 DNS 자동 구성.","연결 후 <code>NEXT_PUBLIC_APP_URL</code>을 이 도메인으로 교체."]}
   ]},
-  {id:"cloudflare", name:"Cloudflare (배포)", status:"wip", statusText:"연결·빌드 설정 진행 중", items:[
-    {id:"cf-acct", kind:"account", key:"계정 + 2FA", what:"배포/DNS 플랫폼 계정.", where:{label:"dash.cloudflare.com",url:"https://dash.cloudflare.com"}, apply:[], manage:"Cloudflare"},
-    {id:"cf-git", kind:"account", key:"Git 연결(Import)", what:"저장소를 OAuth로 연결해 자동배포.", where:{label:"Workers & Pages → Create → Connect to Git",url:"https://dash.cloudflare.com"}, apply:["프로젝트↔GitHub"], manage:"Cloudflare"},
-    {id:"cf-build", kind:"setting", key:"Build command", what:"npx opennextjs-cloudflare build", where:{label:"프로젝트 → Settings → Builds",url:""}, apply:["빌드 파이프라인"], manage:"Cloudflare"},
-    {id:"cf-deploy", kind:"setting", key:"Deploy command", what:"npx opennextjs-cloudflare deploy", where:{label:"Settings → Builds",url:""}, apply:["빌드 파이프라인"], manage:"Cloudflare"},
-    {id:"cf-branch", kind:"setting", key:"Production branch = main", what:"이 브랜치 푸시 시 자동 배포.", where:{label:"Settings → Builds",url:""}, apply:["자동배포 트리거"], manage:"Cloudflare"},
-    {id:"cf-vars", kind:"setting", key:"Build variables & secrets", what:"NEXT_PUBLIC_* 등 빌드 타임 값. SSG에 필요.", where:{label:"Settings → Build → Variables and secrets",url:""}, apply:["CF빌드"], manage:"Cloudflare"},
-    {id:"cf-domain", kind:"dns", key:"커스텀 도메인", what:"서비스 도메인 연결(Active 상태 필요).", where:{label:"Settings → Domains & Routes → Add",url:""}, apply:["DNS(자동)"], manage:"Cloudflare"}
+
+  {id:"github", name:"GitHub", status:"done", statusText:"저장소·연결 완료",
+   intro:`저장소 <a href="https://github.com/habitree-ai/vibe_stater" target="_blank" rel="noreferrer">habitree-ai/vibe_stater</a> (public) · Cloudflare 앱 설치됨.`,
+   items:[
+    {id:"gh-acct", kind:"account", key:"habitree-ai 조직/계정", what:"코드 호스팅 계정·조직.",
+     status:"done", where:{label:"github.com",url:"https://github.com"}, path:"github.com → 로그인", apply:["원격 origin"], manage:"GitHub",
+     steps:["<b>완료됨.</b> @habitree-ai 계정 사용."]},
+    {id:"gh-repo", kind:"account", key:"habitree-ai/vibe_stater", what:"이 프로젝트의 저장소(생성·푸시됨, public).",
+     status:"done", where:{label:"저장소 열기 ↗",url:"https://github.com/habitree-ai/vibe_stater"}, path:"github.com/habitree-ai/vibe_stater", apply:["git remote origin"], manage:"GitHub",
+     steps:["<b>완료됨.</b> main 브랜치에 코드 업로드됨."]},
+    {id:"gh-app", kind:"account", key:"Cloudflare GitHub App", what:"Cloudflare가 저장소를 읽어 빌드/배포하도록 하는 앱 설치.",
+     status:"done", where:{label:"앱 설치 관리 ↗",url:"https://github.com/settings/installations/140788606"},
+     path:"GitHub → Settings → Applications → Installed GitHub Apps → Cloudflare Workers and Pages", apply:["저장소 접근 권한"], manage:"GitHub",
+     steps:["<b>설치·권한 확인됨.</b> 'Only select repositories'에 <code>vibe_stater</code> 포함.",
+            "권한 문제 시 여기서 Repository access에 저장소 추가 후 저장.",
+            "단, Cloudflare 쪽 'grant' 복구는 Cloudflare에서 Disconnect→재연결이 더 확실(이번에 그렇게 해결)."]},
+    {id:"gh-auth", kind:"account", key:"푸시 인증", what:"최초 git push 시 인증(이후 캐시).",
+     status:"done", where:{label:"",url:""}, path:"Git Credential Manager 팝업(최초 1회)", apply:["OS 자격증명"], manage:"OS 자격증명 저장소",
+     steps:["<b>완료됨.</b> 최초 push 시 브라우저 인증 후 캐시됨.","이후 <code>npm run ship</code>로 add+commit+push 자동."]}
   ]},
-  {id:"supabase", name:"Supabase (인증/DB)", status:"wip", statusText:"키 미등록 시 Auth 비활성", items:[
-    {id:"sb-proj", kind:"account", key:"프로젝트 생성", what:"Auth·DB·Storage 백엔드.", where:{label:"supabase.com/dashboard",url:"https://supabase.com/dashboard"}, apply:[], manage:"Supabase"},
-    {id:"sb-url", kind:"public", key:"NEXT_PUBLIC_SUPABASE_URL", what:"프로젝트 API URL.", where:{label:"Project Settings → API",url:""}, apply:["로컬",".env / CF빌드","src/lib/supabase/config.ts"], manage:"Supabase"},
-    {id:"sb-anon", kind:"public", key:"NEXT_PUBLIC_SUPABASE_ANON_KEY", what:"공개(anon) 키.", where:{label:"Project Settings → API",url:""}, apply:["로컬","CF빌드","config.ts"], manage:"Supabase"},
-    {id:"sb-srv", kind:"secret", key:"SUPABASE_SERVICE_ROLE_KEY", what:"서버 전용 관리 키. 절대 노출 금지.", where:{label:"Project Settings → API",url:""}, apply:["로컬","CF시크릿"], manage:"Supabase"},
-    {id:"sb-redir", kind:"setting", key:"Site URL / Redirect URLs", what:"로그인 리다이렉트 허용 도메인(로컬+배포 URL).", where:{label:"Authentication → URL Configuration",url:""}, apply:["Supabase Auth"], manage:"Supabase"},
-    {id:"sb-oauth", kind:"account", key:"OAuth 공급자(선택)", what:"Google/GitHub 소셜 로그인.", where:{label:"Authentication → Providers",url:""}, apply:["Supabase Auth"], manage:"Supabase"},
-    {id:"sb-sql", kind:"sql", key:"profiles 테이블 + RLS", what:"사용자 프로필/권한 스키마.", where:{label:"SQL Editor에 0001_profiles.sql 실행",url:""}, apply:["DB","supabase/migrations/0001_profiles.sql"], manage:"Supabase"}
+
+  {id:"supabase", name:"Supabase (인증/DB)", status:"wip", statusText:"키 발급·등록 필요",
+   intro:`인증·DB 백엔드. 키 4종을 발급해 <code>.env.local</code> + Cloudflare 빌드 변수에 넣어야 로그인이 동작. 대시보드: <a href="https://supabase.com/dashboard" target="_blank" rel="noreferrer">supabase.com/dashboard</a>`,
+   items:[
+    {id:"sb-proj", kind:"account", key:"프로젝트 생성", what:"Auth·DB·Storage 백엔드 프로젝트.",
+     status:"todo", where:{label:"Supabase 대시보드 ↗",url:"https://supabase.com/dashboard"},
+     path:"supabase.com/dashboard → New project", apply:[], manage:"Supabase",
+     steps:["대시보드 → <b>New project</b> → 조직 선택 → 이름/DB 비밀번호/리전(서울=ap-northeast-2 권장) 입력 → Create.",
+            "생성에 1~2분 소요."]},
+    {id:"sb-url", kind:"public", key:"NEXT_PUBLIC_SUPABASE_URL", what:"프로젝트 API URL.",
+     status:"todo", where:{label:"Supabase 대시보드 ↗",url:"https://supabase.com/dashboard"},
+     path:"프로젝트 → 좌하단 Project Settings(톱니) → API → Project URL", apply:["로컬","CF빌드","src/lib/supabase/config.ts"], manage:"Supabase",
+     steps:["프로젝트 선택 → 좌측 하단 <b>Project Settings(톱니)</b> → <b>API</b>.",
+            "<b>Project URL</b> 값(<code>https://xxxx.supabase.co</code>) 복사.",
+            "<code>.env.local</code>의 <code>NEXT_PUBLIC_SUPABASE_URL</code>과 Cloudflare 빌드 변수에 입력."]},
+    {id:"sb-anon", kind:"public", key:"NEXT_PUBLIC_SUPABASE_ANON_KEY", what:"공개(anon) 키 — 클라이언트에서 사용.",
+     status:"todo", where:{label:"Supabase 대시보드 ↗",url:"https://supabase.com/dashboard"},
+     path:"Project Settings → API → Project API keys → anon public", apply:["로컬","CF빌드","config.ts"], manage:"Supabase",
+     steps:["같은 API 페이지 → <b>Project API keys</b> → <b>anon / public</b> 키 복사.",
+            "<code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code>에 입력(로컬+CF빌드). 공개되어도 되는 키."]},
+    {id:"sb-srv", kind:"secret", key:"SUPABASE_SERVICE_ROLE_KEY", what:"서버 전용 관리 키. 절대 노출/커밋 금지.",
+     status:"todo", where:{label:"Supabase 대시보드 ↗",url:"https://supabase.com/dashboard"},
+     path:"Project Settings → API → Project API keys → service_role", apply:["로컬","CF시크릿"], manage:"Supabase",
+     steps:["같은 API 페이지 → <b>service_role</b> 키('Reveal' 후 복사).",
+            "⚠️ 클라이언트/깃에 절대 노출 금지. Cloudflare에선 <b>Secret(Encrypt)</b>으로 등록.",
+            "로컬은 <code>.env.local</code>(커밋 금지)에만."]},
+    {id:"sb-redir", kind:"setting", key:"Site URL / Redirect URLs", what:"로그인 리다이렉트 허용 도메인.",
+     status:"todo", value:"http://localhost:3000  +  배포 URL",
+     where:{label:"Supabase 대시보드 ↗",url:"https://supabase.com/dashboard"},
+     path:"Authentication → URL Configuration", apply:["Supabase Auth"], manage:"Supabase",
+     steps:["좌측 <b>Authentication</b> → <b>URL Configuration</b>.",
+            "<b>Site URL</b>: 배포 주소(처음엔 <code>http://localhost:3000</code>).",
+            "<b>Redirect URLs</b>에 <code>http://localhost:3000/**</code> 와 배포 URL(<code>https://.../**</code>) 추가.",
+            "안 하면 로그인 후 리다이렉트 차단됨."]},
+    {id:"sb-oauth", kind:"account", key:"OAuth 공급자(선택)", what:"Google/GitHub 소셜 로그인.",
+     status:"todo", where:{label:"Supabase 대시보드 ↗",url:"https://supabase.com/dashboard"},
+     path:"Authentication → Providers", apply:["Supabase Auth"], manage:"Supabase",
+     steps:["<b>Authentication → Providers</b>에서 원하는 공급자 토글.",
+            "각 공급자 콘솔(Google Cloud / GitHub OAuth App)에서 Client ID/Secret 발급 → 여기에 입력.",
+            "Supabase가 보여주는 콜백 URL을 공급자 쪽 허용 목록에 등록. (선택 기능, 나중에 가능)"]},
+    {id:"sb-sql", kind:"sql", key:"profiles 테이블 + RLS", what:"사용자 프로필/권한 스키마.",
+     status:"todo", where:{label:"Supabase 대시보드 ↗",url:"https://supabase.com/dashboard"},
+     path:"SQL Editor → 붙여넣기 → Run", apply:["DB","supabase/migrations/0001_profiles.sql"], manage:"Supabase",
+     steps:["좌측 <b>SQL Editor</b> → New query.",
+            "저장소의 <code>supabase/migrations/0001_profiles.sql</code> 내용을 붙여넣고 <b>Run</b>.",
+            "또는 CLI: <code>supabase db push</code>.","RLS 정책까지 포함되어 실행됨."]}
   ]},
-  {id:"stripe", name:"Stripe (결제 · 예정)", status:"wip", statusText:"Step 5 예정", items:[
-    {id:"st-acct", kind:"account", key:"계정", what:"결제 처리.", where:{label:"stripe.com",url:"https://stripe.com"}, apply:[], manage:"Stripe"},
-    {id:"st-pub", kind:"public", key:"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY", what:"공개 키.", where:{label:"Developers → API keys",url:""}, apply:["로컬","CF빌드"], manage:"Stripe"},
-    {id:"st-sec", kind:"secret", key:"STRIPE_SECRET_KEY", what:"비밀 키.", where:{label:"Developers → API keys",url:""}, apply:["로컬","CF시크릿"], manage:"Stripe"},
-    {id:"st-wh", kind:"secret", key:"STRIPE_WEBHOOK_SECRET", what:"웹훅 서명 시크릿.", where:{label:"Developers → Webhooks(엔드포인트 생성)",url:""}, apply:["로컬","CF시크릿"], manage:"Stripe"},
-    {id:"st-prod", kind:"setting", key:"Product / Price", what:"판매 상품·가격(stripe_price_id).", where:{label:"Products",url:""}, apply:["products.stripe_price_id"], manage:"Stripe"}
+
+  {id:"stripe", name:"Stripe (결제 · 예정)", status:"wip", statusText:"Step 5 예정",
+   intro:`결제 단계에서 진행. 우선 <b>테스트 모드</b> 키로 개발. 대시보드: <a href="https://dashboard.stripe.com/test/apikeys" target="_blank" rel="noreferrer">test/apikeys</a>`,
+   items:[
+    {id:"st-acct", kind:"account", key:"계정", what:"결제 처리 계정.",
+     status:"todo", where:{label:"stripe.com ↗",url:"https://stripe.com"}, path:"stripe.com → 가입", apply:[], manage:"Stripe",
+     steps:["가입 후 우상단에서 <b>Test mode</b> 켜고 개발 시작(실 결제 없이 테스트)."]},
+    {id:"st-pub", kind:"public", key:"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY", what:"공개 키(pk_test_...).",
+     status:"todo", where:{label:"API keys ↗",url:"https://dashboard.stripe.com/test/apikeys"},
+     path:"Developers → API keys → Publishable key", apply:["로컬","CF빌드"], manage:"Stripe",
+     steps:["Developers → <b>API keys</b> → <b>Publishable key</b>(pk_test_...) 복사 → 입력."]},
+    {id:"st-sec", kind:"secret", key:"STRIPE_SECRET_KEY", what:"비밀 키(sk_test_...).",
+     status:"todo", where:{label:"API keys ↗",url:"https://dashboard.stripe.com/test/apikeys"},
+     path:"Developers → API keys → Secret key (Reveal)", apply:["로컬","CF시크릿"], manage:"Stripe",
+     steps:["같은 페이지 <b>Secret key</b>(Reveal) 복사 → <b>Secret</b>으로 등록. 노출 금지."]},
+    {id:"st-wh", kind:"secret", key:"STRIPE_WEBHOOK_SECRET", what:"웹훅 서명 시크릿(whsec_...).",
+     status:"todo", where:{label:"Webhooks ↗",url:"https://dashboard.stripe.com/test/webhooks"},
+     path:"Developers → Webhooks → Add endpoint", apply:["로컬","CF시크릿"], manage:"Stripe",
+     steps:["Developers → <b>Webhooks</b> → Add endpoint → URL <code>https://<배포도메인>/api/stripe/webhook</code>.",
+            "이벤트 <code>checkout.session.completed</code> 등 선택 → 생성.",
+            "생성된 <b>Signing secret</b>(whsec_...) 복사 → Secret으로 등록."]},
+    {id:"st-prod", kind:"setting", key:"Product / Price", what:"판매 상품·가격(stripe_price_id).",
+     status:"todo", where:{label:"Products ↗",url:"https://dashboard.stripe.com/test/products"},
+     path:"Products → Add product", apply:["products.stripe_price_id"], manage:"Stripe",
+     steps:["<b>Products</b> → Add product → 이름/가격 설정 → 생성.",
+            "Price의 <code>price_...</code> ID를 DB <code>products.stripe_price_id</code>에 매핑."]}
   ]},
-  {id:"resend", name:"Resend (이메일 · 예정)", status:"wip", statusText:"Step 6 예정", items:[
-    {id:"rs-key", kind:"secret", key:"RESEND_API_KEY", what:"이메일 발송 API 키.", where:{label:"resend.com → API Keys",url:"https://resend.com"}, apply:["로컬","CF시크릿"], manage:"Resend"},
-    {id:"rs-from", kind:"setting", key:"RESEND_FROM_EMAIL", what:"발신 주소(도메인 인증 후).", where:{label:"Resend → Domains",url:""}, apply:["로컬","CF빌드"], manage:"Resend"},
-    {id:"rs-dns", kind:"dns", key:"도메인 인증(SPF/DKIM)", what:"Resend가 안내한 DNS 레코드를 Cloudflare DNS에 추가.", where:{label:"Cloudflare DNS",url:""}, apply:["도메인"], manage:"Cloudflare DNS"}
+
+  {id:"resend", name:"Resend (이메일 · 예정)", status:"wip", statusText:"Step 6 예정",
+   intro:`트랜잭션 이메일 발송. 도메인 인증 후 발신. 대시보드: <a href="https://resend.com/api-keys" target="_blank" rel="noreferrer">resend.com/api-keys</a>`,
+   items:[
+    {id:"rs-key", kind:"secret", key:"RESEND_API_KEY", what:"이메일 발송 API 키(re_...).",
+     status:"todo", where:{label:"API Keys ↗",url:"https://resend.com/api-keys"},
+     path:"Resend → API Keys → Create API Key", apply:["로컬","CF시크릿"], manage:"Resend",
+     steps:["<b>API Keys</b> → Create API Key → 이름 입력 → 생성 → 즉시 복사(한 번만 표시).","Secret으로 등록."]},
+    {id:"rs-from", kind:"setting", key:"RESEND_FROM_EMAIL", what:"발신 주소(도메인 인증 후).",
+     status:"todo", where:{label:"Domains ↗",url:"https://resend.com/domains"},
+     path:"Resend → Domains", apply:["로컬","CF빌드"], manage:"Resend",
+     steps:["도메인 인증 후 <code>no-reply@yourdomain.com</code> 형태로 결정 → 입력."]},
+    {id:"rs-dns", kind:"dns", key:"도메인 인증(SPF/DKIM)", what:"Resend가 안내한 DNS 레코드를 Cloudflare DNS에 추가.",
+     status:"todo", where:{label:"Domains ↗",url:"https://resend.com/domains"},
+     path:"Resend → Domains → Add Domain → (안내 레코드) → Cloudflare DNS에 입력", apply:["도메인"], manage:"Cloudflare DNS",
+     steps:["Resend → Domains → <b>Add Domain</b> → 도메인 입력.",
+            "Resend가 보여주는 <b>TXT/MX/DKIM</b> 레코드를 Cloudflare → 도메인 → <b>DNS</b>에 그대로 추가.",
+            "Resend에서 <b>Verify</b> 눌러 인증 완료."]}
   ]},
-  {id:"others", name:"PostHog · OpenAI · 사이트 · LINKMAP", status:"wip", statusText:"일부 예정", items:[
-    {id:"ph-key", kind:"public", key:"NEXT_PUBLIC_POSTHOG_KEY", what:"분석 프로젝트 키.", where:{label:"PostHog → Project Settings",url:"https://posthog.com"}, apply:["로컬","CF빌드"], manage:"PostHog"},
-    {id:"ph-host", kind:"public", key:"NEXT_PUBLIC_POSTHOG_HOST", what:"인제스트 호스트.", where:{label:"PostHog → Project Settings",url:""}, apply:["로컬","CF빌드"], manage:"PostHog"},
-    {id:"oa-key", kind:"secret", key:"OPENAI_API_KEY", what:"OpenAI API 키.", where:{label:"platform.openai.com → API keys",url:"https://platform.openai.com/api-keys"}, apply:["로컬","CF시크릿"], manage:"OpenAI"},
-    {id:"app-url", kind:"public", key:"NEXT_PUBLIC_APP_URL", what:"배포된 사이트 URL(첫 배포 후 확정).", where:{label:"첫 배포 후 *.workers.dev / 커스텀 도메인",url:""}, apply:["로컬","CF빌드"], manage:"본인"},
-    {id:"admin", kind:"setting", key:"ADMIN_EMAIL", what:"관리자 권한 판별 이메일.", where:{label:"본인 결정",url:""}, apply:["로컬","CF빌드"], manage:"본인"},
-    {id:"lm", kind:"secret", key:"LINKMAP_PROJECT_ID / LINKMAP_API_TOKEN", what:"LINKMAP 연동 식별자/토큰.", where:{label:"LINKMAP 서비스",url:""}, apply:["로컬","CF시크릿"], manage:"LINKMAP"}
+
+  {id:"others", name:"PostHog · OpenAI · 사이트 · LINKMAP", status:"wip", statusText:"일부 예정",
+   intro:`분석/AI/사이트 메타/연동 값. 대부분 선택·후순위. <code>NEXT_PUBLIC_APP_URL</code>만 배포 후 꼭 확정.`,
+   items:[
+    {id:"app-url", kind:"public", key:"NEXT_PUBLIC_APP_URL", what:"배포된 사이트 URL(첫 배포 후 확정).",
+     status:"todo", value:"http://localhost:3000 (로컬) / https://vibestater.<계정>.workers.dev (배포)",
+     where:{label:"",url:""}, path:"첫 배포 후 *.workers.dev 또는 커스텀 도메인", apply:["로컬","CF빌드"], manage:"본인",
+     steps:["로컬은 <code>http://localhost:3000</code>.","첫 배포 후 발급되는 <code>*.workers.dev</code> 주소로 CF빌드 변수 설정.","커스텀 도메인 연결 후 그 도메인으로 교체."]},
+    {id:"ph-key", kind:"public", key:"NEXT_PUBLIC_POSTHOG_KEY", what:"분석 프로젝트 키.",
+     status:"todo", where:{label:"PostHog ↗",url:"https://posthog.com"}, path:"PostHog → Project Settings → Project API Key", apply:["로컬","CF빌드"], manage:"PostHog",
+     steps:["PostHog 가입 → Project Settings → <b>Project API Key</b> 복사."]},
+    {id:"ph-host", kind:"public", key:"NEXT_PUBLIC_POSTHOG_HOST", what:"인제스트 호스트.",
+     status:"todo", value:"https://us.i.posthog.com (US) / https://eu.i.posthog.com (EU)",
+     where:{label:"PostHog ↗",url:"https://posthog.com"}, path:"가입 리전에 따라 결정", apply:["로컬","CF빌드"], manage:"PostHog",
+     steps:["리전에 맞는 호스트 입력(US/EU)."]},
+    {id:"oa-key", kind:"secret", key:"OPENAI_API_KEY", what:"OpenAI API 키.",
+     status:"todo", where:{label:"API keys ↗",url:"https://platform.openai.com/api-keys"}, path:"platform.openai.com → API keys → Create", apply:["로컬","CF시크릿"], manage:"OpenAI",
+     steps:["platform.openai.com → <b>API keys</b> → Create → 복사(한 번만 표시) → Secret으로 등록."]},
+    {id:"admin", kind:"setting", key:"ADMIN_EMAIL", what:"관리자 권한 판별 이메일.",
+     status:"todo", value:"본인 이메일",
+     where:{label:"",url:""}, path:"본인 결정", apply:["로컬","CF빌드"], manage:"본인",
+     steps:["관리자로 쓸 이메일 주소를 값으로 지정."]},
+    {id:"lm", kind:"secret", key:"LINKMAP_PROJECT_ID / LINKMAP_API_TOKEN", what:"LINKMAP 연동 식별자/토큰.",
+     status:"todo", where:{label:"",url:""}, path:"LINKMAP 서비스(준비 중)", apply:["로컬","CF시크릿"], manage:"LINKMAP",
+     steps:["LINKMAP 연동 시 발급. 현재는 후순위."]}
   ]}
 ];
 
-const LS_KEY = "linkmap-env-board-v1";
+const LS_KEY = "linkmap-env-board-v2";
 let state = {};
 try { state = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch(e){ state = {}; }
 let filter = "all";
+let allOpen = false;
 
 const allItems = DATA.flatMap(s => s.items);
 const board = document.getElementById("board");
 const filtersEl = document.getElementById("filters");
 
 function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
+function esc(s){ return String(s); }
 function copy(text, btn){
   navigator.clipboard?.writeText(text).then(()=>{ const o=btn.textContent; btn.textContent="복사됨"; setTimeout(()=>btn.textContent=o,1200); });
 }
@@ -172,9 +373,13 @@ function renderBoard(){
     const items = svc.items.map(it=>{
       const k = KIND[it.kind];
       const checked = !!state[it.id];
-      const isVar = /^[A-Z0-9_]+/.test(it.key) && it.key.includes("_");
+      const isVar = /^[A-Z0-9_]+$/.test(it.key.split(' ')[0]) && it.key.includes("_");
       const apply = it.apply.map(a=>`<span class="apply-chip">${a}</span>`).join("");
-      const where = it.where.url ? `<a class="where" href="${it.where.url}" target="_blank" rel="noreferrer">${it.where.label} ↗</a>` : `<span>${it.where.label}</span>`;
+      const where = it.where && it.where.url ? `<a class="where" href="${it.where.url}" target="_blank" rel="noreferrer">${it.where.label}</a>` : `<span>${(it.where&&it.where.label)||'—'}</span>`;
+      const stPill = it.status==="done" ? `<span class="status-pill st-done">✅ 완료</span>` : `<span class="status-pill st-todo">⏳ 해야 함</span>`;
+      const valueBox = it.value ? `<div class="valuebox"><span class="vlbl">입력값</span><code>${it.value}</code><button class="copy" data-copy="${it.value.replace(/"/g,'&quot;')}">복사</button></div>` : "";
+      const steps = it.steps && it.steps.length ? `<ol class="steps ${allOpen?'':'hide'}" data-steps="${it.id}">${it.steps.map(s=>`<li>${s}</li>`).join("")}</ol>` : "";
+      const toggle = it.steps && it.steps.length ? `<button class="toggle" data-toggle="${it.id}">설정 방법 자세히 ${allOpen?'▴':'▾'}</button>` : "";
       return `<div class="item ${checked?'checked':''}" data-id="${it.id}">
         <div class="item-top">
           <input type="checkbox" class="chk" ${checked?'checked':''} data-id="${it.id}" aria-label="설정 완료 체크"/>
@@ -182,23 +387,35 @@ function renderBoard(){
             <div class="keyline">
               <span class="kind ${k.cls}">${k.icon} ${k.label}</span>
               <code class="key">${it.key}</code>
-              ${isVar?`<button class="copy" data-copy="${it.key.split(' ')[0]}">복사</button>`:''}
+              ${isVar?`<button class="copy" data-copy="${it.key.split(' ')[0]}">키 복사</button>`:''}
             </div>
+            ${stPill}
             <div class="what">${it.what}</div>
             <div class="meta">
-              <div><div class="lbl">어디서 발급/설정</div>${where}</div>
+              <div><div class="lbl">어디서</div>${where}</div>
+              <div><div class="lbl">메뉴 경로</div><span class="path">${it.path||'—'}</span></div>
               <div><div class="lbl">어디에 적용</div>${apply||'—'}</div>
               <div><div class="lbl">관리</div>${it.manage}</div>
             </div>
+            ${valueBox}
+            ${toggle}
+            ${steps}
           </div>
         </div></div>`;
     }).join("");
     const st = svc.status==="done"?"done":"wip";
     return `<section class="svc"><div class="svc-head"><h2>${svc.name}</h2>
-      <span class="svc-status ${st}">${svc.statusText}</span></div><div class="grid">${items}</div></section>`;
+      <span class="svc-status ${st}">${svc.statusText}</span></div>
+      ${svc.intro?`<p class="svc-intro">${svc.intro}</p>`:''}
+      <div class="grid">${items}</div></section>`;
   }).join("");
   board.querySelectorAll(".chk").forEach(c=> c.onchange=()=>{ state[c.dataset.id]=c.checked; save(); renderBoard(); updateProgress(); });
   board.querySelectorAll(".copy").forEach(b=> b.onclick=()=>copy(b.dataset.copy,b));
+  board.querySelectorAll(".toggle").forEach(b=> b.onclick=()=>{
+    const ol = board.querySelector(`[data-steps="${b.dataset.toggle}"]`);
+    if(!ol) return; const open = ol.classList.toggle("hide")===false;
+    b.textContent = "설정 방법 자세히 " + (open?'▴':'▾');
+  });
   updateProgress();
 }
 function updateProgress(){
@@ -208,6 +425,7 @@ function updateProgress(){
   document.getElementById("plabel").textContent = `${done} / ${total} 설정 완료`;
 }
 document.getElementById("reset").onclick=()=>{ if(confirm("체크 상태를 모두 초기화할까요?")){ state={}; save(); renderBoard(); } };
+document.getElementById("expandAll").onclick=(e)=>{ allOpen=!allOpen; e.target.textContent = allOpen?"모두 접기":"모두 펼치기"; renderBoard(); };
 renderFilters(); renderBoard();
 </script>
 </body>

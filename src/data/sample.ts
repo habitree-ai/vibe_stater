@@ -78,8 +78,8 @@ export function formatDate(iso: string): string {
 
 export const profile: Profile = {
   name: "최동혁",
-  tagline: "AI 시대, 읽고 만들고 연결하는 개인 플랫폼",
-  bio: "AI·바이브코딩·독서를 결합해 개인이 직접 서비스를 만들고 운영하는 방법을 연구하고 가르칩니다. 코드를 몰라도 시작할 수 있도록, 기획부터 배포까지의 과정을 콘텐츠와 템플릿으로 정리합니다.",
+  tagline: "AI 시대, 읽고 만들고 연결하는 우리의 공간",
+  bio: "제조기업 ERP PM이자 AX(AI 전환) 담당자로 일하며, 곁에서 AI·바이브코딩·독서를 함께 공부합니다. 가르치기보다, 직접 읽고 만들어 본 과정을 기록하고 나누는 사람입니다.",
   keywords: ["AI", "바이브코딩", "독서", "서비스 기획", "LINKMAP"],
   stats: [
     { label: "누적 독자", value: "12,000+" },
@@ -148,7 +148,7 @@ export const products: Product[] = [
     id: "ebook-vibe",
     name: "바이브코딩으로 시작하는 1인 SaaS",
     type: "ebook",
-    price: 19000,
+    price: 0,
     currency: "KRW",
     summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책.",
     slug: "vibe-1in-saas",
@@ -169,7 +169,7 @@ export const products: Product[] = [
     id: "course-linkmap",
     name: "LINKMAP 실전 강의",
     type: "course",
-    price: 89000,
+    price: 0,
     currency: "KRW",
     summary: "Supabase·Stripe·Resend를 LINKMAP으로 연결하는 영상 강의.",
     slug: "linkmap-course",
@@ -190,7 +190,7 @@ export const products: Product[] = [
     id: "template-creator",
     name: "Creator Platform 템플릿",
     type: "template",
-    price: 49000,
+    price: 0,
     currency: "KRW",
     summary: "이 사이트의 기반이 된 Next.js 개인 플랫폼 템플릿.",
     slug: "creator-platform-template",
@@ -210,7 +210,7 @@ export const products: Product[] = [
     id: "consulting-1on1",
     name: "1:1 서비스 빌드 컨설팅",
     type: "consulting",
-    price: 150000,
+    price: 0,
     currency: "KRW",
     summary: "당신의 아이디어를 함께 설계하고 출시까지 돕는 60분 세션.",
     slug: "1on1-consulting",
@@ -309,3 +309,169 @@ export function findProduct(slug: string): Product | undefined {
 export function findPost(slug: string): Post | undefined {
   return posts.find((p) => p.slug === slug);
 }
+
+// ==================================================
+// ============================================================
+//  메인 페이지(리디자인) 전용 데이터 — Home.dc.html 기준
+// ============================================================
+
+// 히어로 하단 마퀴 키워드
+export const marqueeItems: string[] = [
+  "1인 SaaS",
+  "개인 브랜드",
+  "AI 바이브코딩",
+  "Next.js",
+  "Supabase",
+  "Stripe 결제",
+  "Resend 이메일",
+  "Vercel 배포",
+  "독서 · 필사",
+  "LINKMAP 연결",
+];
+
+// 소개(About) 섹션
+export type AboutTimelineItem = { period: string; title: string; desc: string };
+
+export const aboutInfo = {
+  eyebrow: "About",
+  badges: ["독서", "바이브코딩", "제조 ERP PM", "AX · AI 전환", "LINKMAP"],
+  quote:
+    "AI가 답을 대신 써주는 시대일수록, 저는 더 많이 읽고 직접 만들어 봅니다. 가르치기보다, 같이 공부하며 배운 걸 나눕니다.",
+  timeline: [
+    {
+      period: "본업 · 현재",
+      title: "제조기업 ERP PM · AX 담당자",
+      desc: "제조 현장의 데이터와 프로세스를 설계하는 ERP 프로젝트를 이끌고, AI 전환(AX)으로 일하는 방식을 바꿔갑니다.",
+    },
+    {
+      period: "2024 – 현재",
+      title: "LINKMAP · ReadTree 제작 · 운영",
+      desc: "필요한 도구를 직접 만들어 쓰고 공개합니다. 서비스 연결·독서 습관 도구를 운영하며 배운 과정을 기록합니다.",
+    },
+    {
+      period: "기록 · 공유",
+      title: "바이브코딩, 같이 공부하는 사람",
+      desc: "가르치는 사람이 아니라, 읽고 만들어 본 과정을 나누는 동료입니다. 혼자보다 같이 더 멀리 갑니다.",
+    },
+  ] as AboutTimelineItem[],
+};
+
+// 서비스(Services) 섹션 — 운영 중인 실제 라이브 서비스
+export type LiveService = {
+  id: string;
+  name: string;
+  url: string;
+  domain: string;
+  description: string;
+  features: string[];
+  tags: string[];
+};
+
+export const liveServices: LiveService[] = [
+  {
+    id: "linkmap",
+    name: "LINKMAP",
+    url: "https://linkmap.biz",
+    domain: "linkmap.biz",
+    description:
+      "초보자부터 개발자까지, 구글 계정 하나로 3분 만에 배포하는 바이브 코딩 플랫폼. 서비스 맵·연결 체크리스트·환경변수(AES-256 암호화)를 한 곳에서 관리합니다.",
+    features: [
+      "서비스 맵 시각화 & 연결 체크리스트",
+      "환경변수 안전 관리 (AES-256)",
+      "30+ 서비스 · 프로젝트 템플릿",
+    ],
+    tags: ["환경관리", "온보딩", "배포"],
+  },
+  {
+    id: "readtree",
+    name: "ReadTree",
+    url: "https://readingtree-tan.vercel.app",
+    domain: "readingtree.vercel.app",
+    description:
+      "읽고 기록하면 독서나무가 자라는 독서 습관 플랫폼. 읽은 모든 페이지가 자산이 됩니다.",
+    features: [
+      "독서 기록 & 통계 · 독서나무 성장",
+      "AI 채팅 · OCR 필사 · AI 리포트",
+      "독서 그룹 · 독서 달력",
+    ],
+    tags: ["독서", "필사", "습관"],
+  },
+];
+
+export const youtubeChannel = {
+  name: "YouTube 채널",
+  category: "콘텐츠",
+  description: "AI·바이브코딩·독서 인사이트를 영상으로 정리하는 채널.",
+  url: "https://youtube.com",
+};
+
+// 자료(Resources) 섹션 — 모두 무료 · 교육용
+export type Resource = {
+  id: string;
+  type: string;
+  name: string;
+  summary: string;
+  tag: string;
+  cta: string;
+  href: string;
+  signup?: { current: number; total: number; note: string };
+};
+
+export const resources: Resource[] = [
+  {
+    id: "ebook",
+    type: "전자책",
+    name: "바이브코딩으로 시작하는 1인 SaaS",
+    summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책.",
+    tag: "무료 · 교육용",
+    cta: "받기",
+    href: "/products/vibe-1in-saas",
+  },
+  {
+    id: "course",
+    type: "강의",
+    name: "LINKMAP 실전 강의",
+    summary: "Supabase·Stripe·Resend를 LINKMAP으로 연결하는 영상 강의.",
+    tag: "무료 · 교육용",
+    cta: "받기",
+    href: "/products/linkmap-course",
+  },
+  {
+    id: "coffeechat",
+    type: "1:1 커피챗",
+    name: "1:1 커피챗 · 추첨 무료 세션",
+    summary:
+      "신청자 100명이 모이면 추첨을 통해, 원하시는 방식(온라인·오프라인)으로 세션을 무료로 진행합니다.",
+    tag: "무료 · 추첨",
+    cta: "커피챗 신청",
+    href: "/contact",
+    signup: { current: 37, total: 100, note: "63명 더 모이면 추첨이 시작돼요" },
+  },
+];
+
+export const supportBanner = {
+  title: "모든 자료와 서비스는 교육 목적의 무료 공개입니다",
+  description:
+    "도움이 되었다면 원하는 만큼 응원해 주세요. 후원은 100% 선택이며, 자료 이용에 전혀 영향을 주지 않습니다.",
+  cta: "후원으로 응원하기",
+  href: "/support",
+};
+
+// 후원(Support) 페이지
+export const support = {
+  badge: "교육 목적 · 자율 후원",
+  title: "함께 만들어 주셔서",
+  titleAccent: "감사합니다",
+  description:
+    "이곳의 모든 자료와 서비스는 누구나 무료로 쓸 수 있는 교육 자원입니다. 후원은 전적으로 선택이에요 — 부담 없이, 마음이 닿는 만큼만.",
+  presets: [1, 5, 10, 30, 50, 100, 500, 1000],
+  min: 1,
+  max: 10000,
+  defaultAmount: 10,
+  currency: "USD",
+  assurances: ["강요 없음", "1회성 후원", "자료는 항상 무료"],
+  share: {
+    title: "함께 응원할 친구에게 공유해 주세요",
+    description: "후원보다 더 큰 힘은, 이 자료가 필요한 사람에게 닿는 거예요.",
+  },
+};

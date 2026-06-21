@@ -57,13 +57,13 @@ export function Header() {
             로그인
           </Link>
           <Link
-            href="/signup"
+            href="/support"
             className={cn(
               buttonVariants({ variant: "default", size: "sm" }),
               "shadow-[0_0_24px_-6px_var(--primary)]"
             )}
           >
-            시작하기
+            후원하기
           </Link>
         </div>
       </div>

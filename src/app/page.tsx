@@ -1,38 +1,20 @@
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Projects } from "@/components/sections/Projects";
-import { Products } from "@/components/sections/Products";
-import { Posts } from "@/components/sections/Posts";
-import { EducationCTA } from "@/components/sections/EducationCTA";
-import { Newsletter } from "@/components/sections/Newsletter";
-import { Marquee } from "@/components/ui/Marquee";
+import type { Metadata } from "next";
+import { homeMarkup } from "@/generated/homeMarkup";
+import { HomeEnhancer } from "@/components/HomeEnhancer";
 
-const marqueeItems = [
-  "AI 바이브코딩",
-  "Next.js",
-  "Supabase",
-  "Stripe 결제",
-  "Resend 이메일",
-  "Vercel 배포",
-  "독서 · 필사",
-  "LINKMAP 연결",
-  "1인 SaaS",
-  "개인 브랜드",
-];
+export const metadata: Metadata = {
+  title: "Creator Link Hub — 코딩 몰라도 직접 만든 우리의 공간",
+  description:
+    "AI 시대, 읽고 만들고 연결하는 우리의 공간. LINKMAP·ReadTree와 무료 교육 자료를 한곳에서.",
+};
 
+// 메인 화면은 참조 디자인('Creator Link Hub.html')을 그대로 반영한다.
+// 마크업은 src/generated/homeMarkup.ts(자동 생성). 인터랙션은 HomeEnhancer.
 export default function Home() {
   return (
     <>
-      <Hero />
-      <div className="border-y border-border/60 bg-card/50 py-4">
-        <Marquee items={marqueeItems} />
-      </div>
-      <About />
-      <Projects />
-      <Products />
-      <Posts />
-      <EducationCTA />
-      <Newsletter />
+      <div dangerouslySetInnerHTML={{ __html: homeMarkup }} />
+      <HomeEnhancer />
     </>
   );
 }

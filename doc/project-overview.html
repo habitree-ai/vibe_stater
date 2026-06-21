@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Creator Link Hub — 프로젝트 현황 개요</title>
+<style>
+  :root{
+    --bg:#f6faf8; --fg:#13211c; --muted:#5b6b63; --card:#fff; --border:#e3e9e5;
+    --primary:#10916b; --primary-weak:#e6f4ee; --ink:#13211c;
+    --ok:#10916b; --wip:#9a6a00; --todo:#7b8a82; --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(70% 40% at 85% -5%,#e7f5ee,transparent 60%),var(--bg);
+    color:var(--fg);font-family:"Pretendard",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+  .wrap{max-width:1100px;margin:0 auto;padding:44px 22px 90px}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14px;color:var(--primary)}
+  .brand .dot{width:30px;height:30px;border-radius:9px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:12px}
+  h1{font-size:clamp(28px,4.5vw,42px);letter-spacing:-.025em;margin:16px 0 6px}
+  h1 em{font-style:italic;color:var(--primary)}
+  .sub{color:var(--muted);max-width:64ch;margin:0}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+  .pill{font-size:12.5px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:5px 12px;color:var(--muted)}
+  .pill b{color:var(--fg)}
+  .pill.ok{background:var(--primary-weak);border-color:#cfe8dd;color:var(--primary)}
+  section.block{margin-top:38px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--primary);margin:0 0 14px;
+    display:flex;align-items:center;gap:8px}
+  h2::before{content:"";width:22px;height:2px;background:var(--primary);display:inline-block}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+  .card h3{margin:0 0 6px;font-size:15px}
+  .card p{margin:0;font-size:13.5px;color:var(--muted)}
+  .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .kpi .card{text-align:center}
+  .kpi .num{font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+  .kpi .lbl{font-size:12px;color:var(--muted);margin-top:2px}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .node{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600}
+  .node small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+  .node.lit{border-color:var(--primary);background:var(--primary-weak);color:var(--primary)}
+  .arrow{color:var(--primary);font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border)}
+  th{background:#f0f5f2;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:0}
+  code{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:12.5px;background:#0f1f191a;padding:1px 6px;border-radius:5px}
+  .tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .t-ok{background:var(--primary-weak);color:var(--ok)}
+  .t-wip{background:#fff6e5;color:var(--wip)}
+  .t-todo{background:#eef0f2;color:var(--todo)}
+  ul.clean{margin:0;padding-left:18px}ul.clean li{margin:4px 0;font-size:13.5px}
+  .docs{columns:2;column-gap:18px}
+  @media(max-width:640px){.docs{columns:1}}
+  .docs a{display:block;font-size:13px;color:var(--ink);text-decoration:none;padding:3px 0;break-inside:avoid}
+  .docs a:hover{color:var(--primary)}
+  .commit{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--muted)}
+  .commit b{color:var(--primary)}
+  .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .btn{display:inline-flex;gap:8px;align-items:center;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:600;text-decoration:none}
+  .btn.p{background:var(--primary);color:#fff}.btn.o{border:1px solid var(--border);color:var(--ink);background:#fff}
+  footer{margin-top:46px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:16px}
+  .banner{background:linear-gradient(100deg,var(--primary),#0c7d5b);color:#fff;border-radius:var(--radius);padding:20px 22px;margin-top:16px}
+  .banner h3{margin:0 0 4px;font-size:16px}.banner p{margin:0;opacity:.92;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span class="dot">CLH</span> Creator Link Hub · 프로젝트 현황</div>
+  <h1>코딩 몰라도 직접 만든 <em>우리의 공간</em></h1>
+  <p class="sub">Next.js 개인 브랜드 플랫폼 — 기획 → 프리미엄 UI → 하위 페이지 → 인증/DB(Supabase) →
+    GitHub·Cloudflare 자동 배포 → LINKMAP 수동설정 레지스트리까지 구축한 현재 상태 요약 (스냅샷: 2026-06-20).</p>
+
+  <div class="pills">
+    <span class="pill ok">● 빌드 통과</span>
+    <span class="pill">저장소 <b>habitree-ai/vibe_stater</b></span>
+    <span class="pill">브랜치 <b>main</b> · 동기화됨</span>
+    <span class="pill">최신 커밋 <b>453926d</b></span>
+    <span class="pill">자동배포 <b>ship.ps1 → Cloudflare</b></span>
+  </div>
+
+  <!-- KPI -->
+  <section class="block">
+    <div class="kpi">
+      <div class="card"><div class="num">21</div><div class="lbl">빌드 라우트</div></div>
+      <div class="card"><div class="num">14</div><div class="lbl">페이지(라우트 그룹)</div></div>
+      <div class="card"><div class="num">11</div><div class="lbl">홈 섹션 컴포넌트</div></div>
+      <div class="card"><div class="num">13</div><div class="lbl">기획·배포 문서</div></div>
+      <div class="card"><div class="num">5</div><div class="lbl">커밋</div></div>
+    </div>
+  </section>
+
+  <!-- 배포 파이프라인 -->
+  <section class="block">
+    <h2>배포 파이프라인 (자체 서버 없음)</h2>
+    <div class="card flow">
+      <div class="node">로컬<small>Next.js 16 · OpenNext</small></div>
+      <span class="arrow">→</span>
+      <div class="node">ship.ps1<small>add·commit·push</small></div>
+      <span class="arrow">→</span>
+      <div class="node lit">GitHub<small>habitree-ai/vibe_stater</small></div>
+      <span class="arrow">→</span>
+      <div class="node">Cloudflare Workers Builds<small>opennextjs-cloudflare</small></div>
+      <span class="arrow">→</span>
+      <div class="node">*.workers.dev<small>+ 커스텀 도메인</small></div>
+    </div>
+    <p class="sub" style="margin-top:10px;font-size:13px">남은 1회 작업(사용자): Cloudflare에서 저장소 연결 + Build/Deploy 명령·빌드변수 등록 → 이후 <code>git push</code>마다 자동 배포.</p>
+  </section>
+
+  <!-- 기술 스택 -->
+  <section class="block">
+    <h2>기술 스택</h2>
+    <div class="grid g3">
+      <div class="card"><h3>프론트엔드</h3><p>Next.js 16.2.9 · React 19 · TypeScript · Tailwind v4 · shadcn/ui(Base UI) · Pretendard(셀프호스팅)</p></div>
+      <div class="card"><h3>백엔드/인증</h3><p>Supabase Auth · @supabase/ssr · PostgreSQL(profiles + RLS) — env 없으면 안전 비활성</p></div>
+      <div class="card"><h3>배포/운영</h3><p>GitHub · Cloudflare Workers(OpenNext) · wrangler · ship.ps1 자동 푸시</p></div>
+    </div>
+  </section>
+
+  <!-- 페이지 현황 -->
+  <section class="block">
+    <h2>페이지 현황</h2>
+    <table>
+      <tr><th>경로</th><th>설명</th><th>상태</th></tr>
+      <tr><td><code>/</code></td><td>홈 — 프리미엄 리디자인(Hero·About·Services·Resources·Posts·교육CTA·Newsletter) + linkmap.biz 목업</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/about</code></td><td>소개 + 경력 타임라인</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/projects</code></td><td>서비스(LINKMAP·ReadTree·YouTube)</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/products</code> · <code>/products/[slug]</code></td><td>자료 목록·상세(SSG, 현재 무료)</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/posts</code> · <code>/posts/[slug]</code></td><td>글 목록·상세(SSG)</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/education</code></td><td>교육 커리큘럼</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/guides</code></td><td>셋업 가이드(매뉴얼·영상)</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/contact</code> · <code>/support</code></td><td>문의 · 후원</td><td><span class="tag t-ok">완료</span></td></tr>
+      <tr><td><code>/login</code> · <code>/signup</code></td><td>Supabase Auth 연동(동적)</td><td><span class="tag t-wip">키 등록 시 활성</span></td></tr>
+      <tr><td><code>/me</code></td><td>마이페이지(프로필·로그아웃)</td><td><span class="tag t-wip">키 등록 시 활성</span></td></tr>
+      <tr><td><code>/linkmap/env-board.html</code></td><td>LINKMAP 수동설정 레지스트리 보드</td><td><span class="tag t-ok">완료</span></td></tr>
+    </table>
+  </section>
+
+  <!-- 완료 기능 -->
+  <section class="block">
+    <h2>구축 완료 기능</h2>
+    <div class="grid g2">
+      <div class="card"><h3>🎨 프리미엄 디자인</h3><p>오로라·그레인·글래스·Bento·마퀴·스크롤 리빌, 디스플레이/세리프 폰트, emerald 테마.</p></div>
+      <div class="card"><h3>🔐 Supabase 인증/DB (Step 3)</h3><p>로그인·회원가입·마이페이지 + profiles/RLS 마이그레이션. 키 없으면 가드로 안전 동작.</p></div>
+      <div class="card"><h3>🚀 자동 배포 파이프라인</h3><p>GitHub→Cloudflare(OpenNext). <code>ship.ps1</code> 한 줄로 커밋·푸시·자동배포.</p></div>
+      <div class="card"><h3>🔤 폰트 셀프호스팅</h3><p>Pretendard를 <code>next/font/local</code>로 내장 — 외부 CDN 의존 제거.</p></div>
+      <div class="card"><h3>⭐ LINKMAP 레지스트리</h3><p>사람만 할 수 있는 변수/설정을 무엇·발급처·적용처·관리로 취합한 HTML 보드.</p></div>
+      <div class="card"><h3>📚 서비스 셋업 시리즈</h3><p>Cloudflare 가입(10단계) + GitHub→Cloudflare 배포(9단계) 매뉴얼·영상·캡처.</p></div>
+    </div>
+  </section>
+
+  <!-- LINKMAP 배너 -->
+  <section class="block">
+    <div class="banner">
+      <h3>⭐ LINKMAP 핵심 — 수동 설정 레지스트리</h3>
+      <p>AI가 자동화할 수 없고 사용자가 직접 해야 하는 키·설정을 한곳에 모아 관리하는 것이 이 프로젝트의 핵심 포인트입니다.
+        보드: <code>/linkmap/env-board.html</code> · 문서: <code>doc/10_env_config_registry.md</code></p>
+    </div>
+  </section>
+
+  <!-- 문서 -->
+  <section class="block">
+    <h2>문서 (doc/)</h2>
+    <div class="card docs">
+      <a href="./README.md">README — 문서 인덱스</a>
+      <a href="./linkmap_personal_platform_plan.md">마스터 기획서</a>
+      <a href="./00_setup_guide.md">00 · 개발 환경 세팅</a>
+      <a href="./01_design_system.md">01 · 디자인 시스템</a>
+      <a href="./02_main_page_plan.md">02 · 메인페이지 기획</a>
+      <a href="./03_sample_content.md">03 · 샘플 콘텐츠</a>
+      <a href="./04_roadmap.md">04 · 실행 로드맵</a>
+      <a href="./05_homepage_redesign.md">05 · 프리미엄 리디자인</a>
+      <a href="./06_deployment_cloudflare.md">06 · Cloudflare 배포 설정</a>
+      <a href="./07_github_cloudflare_deploy.md">07 · GitHub→Cloudflare 배포</a>
+      <a href="./08_deploy_record.md">08 · 배포 처리 기록</a>
+      <a href="./09_supabase_step3.md">09 · Supabase Step 3</a>
+      <a href="./10_env_config_registry.md">10 · ⭐ 수동설정 레지스트리</a>
+      <a href="./11_deploy_troubleshooting_record.md">11 · 배포 트러블슈팅 기록</a>
+      <a href="./12_workers_builds_guide.md">12 · Workers Builds 가이드</a>
+      <a href="./CLAUDE_CODE_TASKS.md">핸드오프 작업 지시서</a>
+    </div>
+  </section>
+
+  <!-- 커밋 -->
+  <section class="block">
+    <h2>커밋 히스토리</h2>
+    <div class="card">
+      <p class="commit"><b>453926d</b> feat: LINKMAP 수동설정 레지스트리(doc/10 + env-board.html)</p>
+      <p class="commit"><b>c3d63e3</b> feat: Supabase Step 3 + Pretendard 셀프호스팅 + 미들웨어 타입 수정</p>
+      <p class="commit"><b>8c35bf7</b> docs: 다음 Claude Code 세션 작업 지시서</p>
+      <p class="commit"><b>4d94b97</b> docs: GitHub→Cloudflare 배포 가이드·ship 스크립트</p>
+      <p class="commit"><b>1cf7ec9</b> chore: initial commit — Creator Link Hub</p>
+    </div>
+  </section>
+
+  <!-- 다음 -->
+  <section class="block">
+    <h2>다음 단계</h2>
+    <div class="grid g3">
+      <div class="card"><h3><span class="tag t-wip">사용자</span> Cloudflare 연결</h3><p>저장소 Import + Build/Deploy 명령 + 빌드변수 → 첫 배포(*.workers.dev).</p></div>
+      <div class="card"><h3><span class="tag t-todo">다음</span> Supabase 키 등록</h3><p>프로젝트 생성 후 키를 .env.local / 빌드변수에 등록 → 로그인·마이페이지 활성.</p></div>
+      <div class="card"><h3><span class="tag t-todo">로드맵</span> Step 4~6</h3><p>콘텐츠/자료 CMS · Stripe 결제 · 문의/뉴스레터/분석.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Creator Link Hub · 스냅샷 2026-06-20 · 저장소 github.com/habitree-ai/vibe_stater ·
+    이 페이지는 <code>doc/project-overview.html</code> (정적, 오프라인 동작).
+  </footer>
+</div>
+</body>
+</html>
