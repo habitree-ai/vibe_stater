@@ -5,6 +5,7 @@ import "./globals.css";
 import { site } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ChatWidget } from "@/components/ChatWidget";
 
 // Pretendard 셀프호스팅(가변 폰트) — 외부 CDN 의존 제거. (doc/CLAUDE_CODE_TASKS.md #2)
 const pretendard = localFont({
@@ -66,6 +67,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ChatWidget />
       </body>
     </html>
   );

@@ -62,7 +62,7 @@ export function SupportEnhancer() {
       amount = clamp(Number((e.target as HTMLInputElement).value));
       syncUI(false);
     };
-    const donate = () => {
+    const showThanks = () => {
       const t = gid("sup-thank-amt");
       if (t) t.textContent = fmt(amount);
       if (form) form.style.display = "none";
@@ -70,6 +70,38 @@ export function SupportEnhancer() {
       try {
         window.scrollTo({ top: 0, behavior: "smooth" });
       } catch {}
+    };
+
+    const donate = async () => {
+      const btn = gid("sup-btn-label")?.closest("button") as HTMLButtonElement | null;
+      const label = gid("sup-btn-label");
+      if (btn?.disabled) return;
+      const prev = label?.textContent;
+      if (btn) btn.disabled = true;
+      if (label) label.textContent = "결제창 여는 중…";
+      try {
+        const res = await fetch("/api/donate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          url?: string;
+          configured?: boolean;
+        };
+        if (res.ok && data.url) {
+          // Polar 결제 페이지로 이동
+          window.location.href = data.url;
+          return;
+        }
+        // 미설정(503) 또는 오류 → 감사 카드로 폴백(데모)
+        showThanks();
+      } catch {
+        showThanks();
+      } finally {
+        if (btn) btn.disabled = false;
+        if (label && prev) label.textContent = prev;
+      }
     };
     const reset = () => {
       if (thank) thank.style.display = "none";
