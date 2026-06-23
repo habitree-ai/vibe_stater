@@ -24,14 +24,9 @@ export function Header() {
           scrolled && "mt-3 max-w-5xl rounded-2xl border border-border/60 bg-background/70 px-4 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] backdrop-blur-xl"
         )}
       >
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight"
-        >
-          <span className="grid size-8 place-items-center rounded-lg bg-primary text-sm font-bold text-primary-foreground shadow-[0_0_20px_-4px_var(--primary)]">
-            {site.brandShort}
-          </span>
-          <span className="hidden sm:inline">{site.name}</span>
+        <Link href="/" className="flex items-center" aria-label={site.name}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/img/habitree-logo.png" alt="Habitree" className="h-9 w-auto" />
         </Link>
 
         <nav
