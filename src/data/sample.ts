@@ -77,7 +77,7 @@ export function formatDate(iso: string): string {
 }
 
 export const profile: Profile = {
-  name: "최동혁",
+  name: "Habitree",
   tagline: "AI 시대, 읽고 만들고 연결하는 우리의 공간",
   bio: "제조기업 ERP PM이자 AX(AI 전환) 담당자로 일하며, 곁에서 AI·바이브코딩·독서를 함께 공부합니다. 가르치기보다, 직접 읽고 만들어 본 과정을 기록하고 나누는 사람입니다.",
   keywords: ["AI", "바이브코딩", "독서", "서비스 기획", "LINKMAP"],
