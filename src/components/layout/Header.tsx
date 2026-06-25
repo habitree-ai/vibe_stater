@@ -58,7 +58,7 @@ export function Header() {
               "shadow-[0_0_24px_-6px_var(--primary)]"
             )}
           >
-            응원 키트 받기
+            응원하기
           </Link>
         </div>
       </div>

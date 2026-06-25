@@ -33,7 +33,7 @@ export const footerColumns = [
       { label: "전자책", href: "/#products" },
       { label: "강의", href: "/#products" },
       { label: "1:1 커피챗", href: "/#products" },
-      { label: "응원 키트 받기", href: "/support" },
+      { label: "응원하기", href: "/support" },
     ],
   },
   {
