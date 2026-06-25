@@ -42,3 +42,14 @@
 - **anon 키 실동작 검증(완료)**: 정상 익명 신청 삽입 ✓ / status 조작·user_id 사칭·이메일 형식 불량 삽입 모두 차단 ✓ / 익명 타인 조회 0건 ✓. 테스트 행 삭제 완료(현재 0건). 프로젝트 ERROR급 보안 경고 0건.
 - `activity_logs`는 정책 없음(INFO) = 의도된 기본 차단(service_role 전용). 추가 조치 불필요.
 - **앱 동작 메모**: `submitCoffeeChat`은 `.insert()`만 호출(재조회 없음, return=minimal)이라 익명 신청이 정상 저장됨. `.select()`를 붙이면 `select_own` 정책상 익명 행은 재조회 불가하니 주의.
+
+### 2026-06-25 (3) — [이슈] 로그인 후 DNS 오류(`habitree.ai`) → Auth 리다이렉트 설정 수정
+- **증상**: 로그인(특히 Google OAuth) 시 `DNS_PROBE_FINISHED_NXDOMAIN` — 브라우저가 존재하지 않는 `habitree.ai`로 이동.
+- **원인**: Supabase Auth 설정 오타/누락.
+  - `site_url = https://habitree.ai`(존재하지 않는 도메인, 실제는 `habitree.io`)
+  - `uri_allow_list`에 운영 콜백 `https://vibe.habitree.io/auth/callback` 누락 → OAuth 복귀 시 허용 안 된 콜백으로 판단 → `site_url`(habitree.ai)로 폴백 → DNS 오류.
+- **조치**(Management API PATCH `/config/auth`):
+  - `site_url` → `https://vibe.habitree.io`
+  - `uri_allow_list` → `https://vibe.habitree.io/**,http://localhost:3000/**`(와일드카드로 콜백·향후 경로 커버, 로컬 개발 유지)
+- **영향 범위**: 앱 코드 변경 없음(Supabase 측 설정만). Google Cloud Console의 Authorized redirect URI(`…supabase.co/auth/v1/callback`)는 무관·정상.
+- **재발 방지**: 도메인은 `habitree.io`(운영 호스트 `vibe.habitree.io`). `.ai` 아님.
