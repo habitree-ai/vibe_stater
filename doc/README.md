@@ -9,6 +9,9 @@
 ## 👉 다음 작업 (핸드오프)
 - [`CLAUDE_CODE_TASKS.md`](./CLAUDE_CODE_TASKS.md) — **다음 Claude Code 세션 작업 지시서**(현재 상태·우선순위·위험경고)
 
+## 📒 작업·이슈 로그
+- [`WORKLOG.md`](./WORKLOG.md) — 변경/이슈/데이터 로그(상위 기록). 런타임 로그는 `activity_logs` 테이블 + 서버 콘솔.
+
 ## 마스터 기획
 - [`linkmap_personal_platform_plan.md`](./linkmap_personal_platform_plan.md) — 전체 기획서(IA·서비스맵·ERD·MVP)
 

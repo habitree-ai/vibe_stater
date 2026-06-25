@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { logout } from "@/app/auth/actions";
 import { navItems, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-export function Header() {
+export function Header({ isAuthed = false }: { isAuthed?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -45,12 +46,28 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden sm:inline-flex")}
-          >
-            로그인
-          </Link>
+          {isAuthed ? (
+            <>
+              <Link
+                href="/me"
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden sm:inline-flex")}
+              >
+                마이페이지
+              </Link>
+              <form action={logout} className="hidden sm:block">
+                <button type="submit" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                  로그아웃
+                </button>
+              </form>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden sm:inline-flex")}
+            >
+              로그인
+            </Link>
+          )}
           <Link
             href="/support"
             className={cn(

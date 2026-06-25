@@ -6,6 +6,8 @@ import { site } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
+import { createClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 // Pretendard 셀프호스팅(가변 폰트) — 외부 CDN 의존 제거. (doc/CLAUDE_CODE_TASKS.md #2)
 const pretendard = localFont({
@@ -53,18 +55,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let isAuthed = false;
+  if (isSupabaseConfigured) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    isAuthed = !!user;
+  }
+
   return (
     <html
       lang="ko"
       className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Header />
+        <Header isAuthed={isAuthed} />
         <main className="flex-1">{children}</main>
         <Footer />
         <ChatWidget />

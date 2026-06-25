@@ -3,13 +3,18 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { logout } from "@/app/auth/actions";
+import { logout, updateDisplayName } from "@/app/auth/actions";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "마이페이지" };
 
-export default async function MePage() {
+export default async function MePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; error?: string }>;
+}) {
+  const { success, error } = await searchParams;
   if (!isSupabaseConfigured) {
     return (
       <section className="mx-auto max-w-md px-4 py-20 sm:px-6">
@@ -60,12 +65,42 @@ export default async function MePage() {
         </form>
       </div>
 
+      {success ? (
+        <p className="mt-6 rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">{success}</p>
+      ) : null}
+      {error ? (
+        <p className="mt-6 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</p>
+      ) : null}
+
       <dl className="mt-8 grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2">
         <Row label="이름" value={name} />
         <Row label="이메일" value={email} />
         <Row label="권한" value={isAdmin ? "관리자(admin)" : "회원(user)"} />
         <Row label="상태" value={profile?.status ?? "active"} />
       </dl>
+
+      <div className="mt-6 rounded-xl border border-border bg-card p-5">
+        <h2 className="font-semibold">계정 관리</h2>
+        <p className="mt-1 text-sm text-muted-foreground">표시 이름을 변경할 수 있습니다.</p>
+        <form action={updateDisplayName} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+          <div className="flex-1 space-y-2">
+            <label htmlFor="name" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              이름
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              defaultValue={name}
+              className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            />
+          </div>
+          <button type="submit" className={buttonVariants({ variant: "default", className: "h-11" })}>
+            저장
+          </button>
+        </form>
+      </div>
 
       {isAdmin ? (
         <div className="mt-6 rounded-xl border border-primary/30 bg-primary/5 p-5">
