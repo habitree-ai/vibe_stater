@@ -34,3 +34,11 @@
 #### 알려진 이슈 / 후속
 - service_role 키 미설정 시: 활동 로그는 서버 콘솔에만 남고 DB에는 기록되지 않음(가드 처리됨, 기능엔 영향 없음).
 - 마이그레이션 미적용 시: 커피챗 신청은 "저장에 실패했습니다" 오류로 안내됨(콘솔/로그에 원인 기록).
+
+### 2026-06-25 (2) — 마이그레이션 적용 완료 + RLS 보안 강화
+- **MCP/적용 경로 정리**: 기존 연결 MCP는 `setlog-ntl's Org/linkmap`만 접근 가능 → Habitree 프로젝트(`ofxzkwbqwpsjoeqjhrpl`)엔 권한 없음을 확인. 프로젝트 폴더에 `.mcp.json`(`supabase-habitree`, `--project-ref=ofxzkwbqwpsjoeqjhrpl`, 토큰=`${SUPABASE_ACCESS_TOKEN}`) 추가. `.env.local`에 `SUPABASE_ACCESS_TOKEN`(PAT, gitignore) 자리 추가.
+- **마이그레이션 적용(완료)**: PAT 기반 Supabase Management API(`/database/query`)로 `0002`·`0003` 적용 성공. 두 테이블 RLS 활성화 확인.
+- **RLS 강화(`0004_coffee_chat_harden_rls.sql`)**: 보안 어드바이저가 `coffee_chat_insert_anyone`의 `with check (true)`(무제한 삽입)를 WARN으로 지적 → 제약 정책 `coffee_chat_insert_valid`로 교체. 조건: `status='pending'` 고정, `user_id is null or = auth.uid()`(사칭 차단), 이름/이메일 길이·이메일 형식·topic/message 길이 제한.
+- **anon 키 실동작 검증(완료)**: 정상 익명 신청 삽입 ✓ / status 조작·user_id 사칭·이메일 형식 불량 삽입 모두 차단 ✓ / 익명 타인 조회 0건 ✓. 테스트 행 삭제 완료(현재 0건). 프로젝트 ERROR급 보안 경고 0건.
+- `activity_logs`는 정책 없음(INFO) = 의도된 기본 차단(service_role 전용). 추가 조치 불필요.
+- **앱 동작 메모**: `submitCoffeeChat`은 `.insert()`만 호출(재조회 없음, return=minimal)이라 익명 신청이 정상 저장됨. `.select()`를 붙이면 `select_own` 정책상 익명 행은 재조회 불가하니 주의.
