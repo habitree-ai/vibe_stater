@@ -12,7 +12,7 @@ const SUGGESTIONS = [
 ];
 
 const GREETING =
-  "안녕하세요! 👋 Creator Link Hub의 AI 어시스턴트예요. LINKMAP·ReadTree, 무료 교육 자료, 응원에 대해 무엇이든 물어보세요.";
+  "안녕하세요! 👋 Habitree의 AI 어시스턴트예요. LINKMAP·ReadTree, 무료 교육 자료, 응원에 대해 무엇이든 물어보세요.";
 
 const ink = "oklch(0.16 0.012 160)";
 const primary = "oklch(0.62 0.14 163)";
@@ -130,7 +130,7 @@ export function ChatWidget() {
               <p style={{ margin: 0, fontFamily: "var(--font-display), system-ui, sans-serif", fontSize: 15, fontWeight: 600, color: ink }}>AI 어시스턴트</p>
               <p style={{ margin: "1px 0 0", fontSize: 12, color: "oklch(0.5 0.13 163)" }}>
                 <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: 999, background: primary, marginRight: 5 }} />
-                Creator Link Hub 안내
+                Habitree 안내
               </p>
             </div>
             <button type="button" onClick={() => setOpen(false)} aria-label="닫기" style={{ display: "grid", placeItems: "center", width: 32, height: 32, border: "none", background: "transparent", borderRadius: 8, cursor: "pointer", color: muted }}>

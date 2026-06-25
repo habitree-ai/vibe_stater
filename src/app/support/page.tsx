@@ -3,7 +3,7 @@ import { supportMarkup } from "@/generated/supportMarkup";
 import { SupportEnhancer } from "@/components/SupportEnhancer";
 
 export const metadata: Metadata = {
-  title: "응원하기 — Creator Link Hub",
+  title: "응원하기 — Habitree",
   description:
     "모든 자료와 서비스는 무료 교육 자원입니다. 응원은 100% 선택이에요 — 마음이 닿는 만큼만.",
 };

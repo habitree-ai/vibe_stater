@@ -1,11 +1,11 @@
 // 사이트 전역 상수 (브랜드/내비게이션). doc/02_main_page_plan.md 참조.
 
 export const site = {
-  name: "Creator Link Hub",
-  brandShort: "CLH",
+  name: "Habitree",
+  brandShort: "HT",
   description:
     "코딩을 몰라도 직접 만드는 우리의 온라인 공간 — AI·바이브코딩·독서로 읽고 만들고 연결합니다.",
-  owner: "Habitree",
+  owner: "바이브코딩 치트키",
 };
 
 // 내비게이션은 홈(`/`)의 섹션 앵커로 연결 — 어느 페이지에서 눌러도 홈으로 이동 후 해당 섹션으로 스크롤.

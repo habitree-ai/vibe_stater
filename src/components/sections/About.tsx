@@ -18,7 +18,7 @@ export function About() {
               <h2 className="font-heading text-4xl font-semibold leading-[1.1] tracking-tight text-balance sm:text-5xl">
                 안녕하세요,
                 <br />
-                <span className="serif-accent text-gradient pr-2">AI보다 읽는</span>
+                <span className="serif-accent text-gradient pr-2">바이브코딩 치트키</span>
                 사람입니다
               </h2>
             </Reveal>
