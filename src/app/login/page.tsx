@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { login } from "@/app/auth/actions";
+import { GoogleButton } from "@/components/auth/GoogleButton";
 
 export const metadata: Metadata = { title: "로그인" };
 
@@ -28,6 +29,8 @@ export default async function LoginPage({
       {error ? (
         <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</p>
       ) : null}
+
+      <GoogleButton label="Google로 로그인" />
 
       <form className="space-y-4" aria-label="로그인" action={login}>
         <div className="space-y-2">
