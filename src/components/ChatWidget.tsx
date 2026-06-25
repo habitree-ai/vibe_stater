@@ -8,11 +8,11 @@ type Msg = { role: "user" | "assistant"; content: string };
 const SUGGESTIONS = [
   "LINKMAP은 어떤 서비스인가요?",
   "무료 교육 자료는 어떻게 받나요?",
-  "후원은 어떻게 하나요?",
+  "응원 키트는 어떻게 하나요?",
 ];
 
 const GREETING =
-  "안녕하세요! 👋 Creator Link Hub의 AI 어시스턴트예요. LINKMAP·ReadTree, 무료 교육 자료, 후원에 대해 무엇이든 물어보세요.";
+  "안녕하세요! 👋 Creator Link Hub의 AI 어시스턴트예요. LINKMAP·ReadTree, 무료 교육 자료, 응원 키트에 대해 무엇이든 물어보세요.";
 
 const ink = "oklch(0.16 0.012 160)";
 const primary = "oklch(0.62 0.14 163)";

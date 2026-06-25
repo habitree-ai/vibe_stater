@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-// 주입된 후원 마크업의 인터랙션(금액 칩/슬라이더/커스텀 입력/후원/공유)을 연결한다.
+// 주입된 응원 키트 마크업의 인터랙션(금액 칩/슬라이더/커스텀 입력/응원 키트/공유)을 연결한다.
 // 원본 디자인의 DCLogic을 동일 동작으로 재구현.
 export function SupportEnhancer() {
   useEffect(() => {
@@ -24,7 +24,7 @@ export function SupportEnhancer() {
 
     const syncUI = (updateCustom: boolean) => {
       const lbl = gid("sup-btn-label");
-      if (lbl) lbl.textContent = fmt(amount) + " 후원하기";
+      if (lbl) lbl.textContent = fmt(amount) + " 응원 키트 받기";
       if (slider) {
         slider.value = String(amount);
         const pct = ((amount - 1) / 9999) * 100;

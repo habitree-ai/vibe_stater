@@ -1,9 +1,9 @@
-// 후원(Donation) 체크아웃 — Polar 결제 세션 생성 Route Handler.
+// 응원 키트(Donation) 체크아웃 — Polar 결제 세션 생성 Route Handler.
 // 사용자가 선택한 금액($1~$10,000)으로 Polar Checkout을 만들고 결제 URL을 반환한다.
 //
 // 필요한 환경변수 (.env.local / 배포 변수에 등록):
 //   POLAR_ACCESS_TOKEN  — Polar Organization Access Token (서버 전용, 커밋 금지)
-//   POLAR_PRODUCT_ID    — "Pay what you want" 가격으로 설정한 후원 상품 ID
+//   POLAR_PRODUCT_ID    — "Pay what you want" 가격으로 설정한 응원 키트 상품 ID
 //   POLAR_SERVER        — "sandbox" 또는 "production" (기본: production)
 //   NEXT_PUBLIC_APP_URL — 결제 성공 후 돌아올 사이트 주소
 
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
   if (!Number.isFinite(amount) || amount < MIN_USD || amount > MAX_USD) {
     return Response.json(
-      { error: `후원 금액은 $${MIN_USD} ~ $${MAX_USD} 사이여야 합니다.` },
+      { error: `응원 키트 금액은 $${MIN_USD} ~ $${MAX_USD} 사이여야 합니다.` },
       { status: 400 }
     );
   }
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     return Response.json(
       {
         error:
-          "후원 결제가 아직 설정되지 않았습니다. 관리자에게 Polar 연동(POLAR_ACCESS_TOKEN, POLAR_PRODUCT_ID) 설정을 요청해 주세요.",
+          "응원 키트 결제가 아직 설정되지 않았습니다. 관리자에게 Polar 연동(POLAR_ACCESS_TOKEN, POLAR_PRODUCT_ID) 설정을 요청해 주세요.",
         configured: false,
       },
       { status: 503 }
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         products: [productId],
-        // Pay-what-you-want 상품은 amount(단위: 센트)로 후원 금액을 지정한다.
+        // Pay-what-you-want 상품은 amount(단위: 센트)로 응원 키트 · 금액을 지정한다.
         amount: Math.round(amount * 100),
         success_url: `${appUrl}/support?status=success`,
         metadata: { kind: "donation", source: "creator-link-hub" },
