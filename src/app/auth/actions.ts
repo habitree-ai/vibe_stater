@@ -95,14 +95,21 @@ export async function logout() {
   redirect("/");
 }
 
-// 계정관리 — 표시 이름 변경(프로필 + auth user_metadata 동기화)
-export async function updateDisplayName(formData: FormData) {
+// 계정관리 — 개인정보(표시 이름·프로필 이미지) 수정. 프로필 + auth user_metadata 동기화.
+export async function updateProfile(formData: FormData) {
   if (!isSupabaseConfigured) {
     redirect("/me?error=" + enc("Supabase가 아직 설정되지 않았습니다."));
   }
   const name = String(formData.get("name") || "").trim();
+  const avatarUrl = String(formData.get("avatar_url") || "").trim();
   if (!name) {
     redirect("/me?error=" + enc("이름을 입력해 주세요."));
+  }
+  if (name.length > 100) {
+    redirect("/me?error=" + enc("이름은 100자 이하여야 합니다."));
+  }
+  if (avatarUrl && !/^https?:\/\/.+/i.test(avatarUrl)) {
+    redirect("/me?error=" + enc("프로필 이미지는 http(s)로 시작하는 URL이어야 합니다."));
   }
 
   const supabase = await createClient();
@@ -113,16 +120,22 @@ export async function updateDisplayName(formData: FormData) {
     redirect("/login?notice=" + enc("로그인이 필요합니다."));
   }
 
-  const { error: authError } = await supabase.auth.updateUser({ data: { name } });
-  const { error: profileError } = await supabase.from("profiles").update({ name }).eq("id", user!.id);
+  const avatar = avatarUrl || null;
+  const { error: authError } = await supabase.auth.updateUser({
+    data: { name, avatar_url: avatar },
+  });
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update({ name, avatar_url: avatar })
+    .eq("id", user!.id);
 
   if (authError || profileError) {
-    const msg = authError?.message || profileError?.message || "이름 변경에 실패했습니다.";
-    await logActivity({ action: "account.update_name", level: "issue", userId: user!.id, message: msg });
+    const msg = authError?.message || profileError?.message || "정보 수정에 실패했습니다.";
+    await logActivity({ action: "account.update_profile", level: "issue", userId: user!.id, message: msg });
     redirect("/me?error=" + enc(msg));
   }
 
-  await logActivity({ action: "account.update_name", userId: user!.id, message: `이름 변경 → ${name}` });
+  await logActivity({ action: "account.update_profile", userId: user!.id, message: `프로필 수정 → ${name}` });
   revalidatePath("/", "layout");
-  redirect("/me?success=" + enc("이름이 변경되었습니다."));
+  redirect("/me?success=" + enc("정보가 저장되었습니다."));
 }

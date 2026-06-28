@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { logout, updateDisplayName } from "@/app/auth/actions";
+import { logout, updateProfile } from "@/app/auth/actions";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -47,16 +47,45 @@ export default async function MePage({
   const email = profile?.email ?? user.email ?? "";
   const role = profile?.role ?? "user";
   const isAdmin = role === "admin";
+  const avatarUrl = profile?.avatar_url ?? (user.user_metadata?.avatar_url as string | undefined) ?? "";
+
+  // 내 커피챗 신청 내역(RLS: 본인 user_id만 조회 가능)
+  const { data: coffeeChats } = await supabase
+    .from("coffee_chat_requests")
+    .select("id, topic, message, status, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  const statusLabel: Record<string, string> = {
+    pending: "접수됨",
+    scheduled: "일정 확정",
+    done: "완료",
+    canceled: "취소됨",
+  };
 
   return (
     <section className="mx-auto max-w-2xl px-4 py-20 sm:px-6">
       <div className="flex items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <h1 className="font-heading text-2xl font-bold tracking-tight">{name}</h1>
-            {isAdmin ? <Badge>관리자</Badge> : <Badge variant="secondary">회원</Badge>}
+        <div className="flex items-center gap-4">
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatarUrl}
+              alt={name}
+              className="size-14 shrink-0 rounded-full border border-border object-cover"
+            />
+          ) : (
+            <div className="grid size-14 shrink-0 place-items-center rounded-full bg-muted text-lg font-semibold text-muted-foreground">
+              {name.slice(0, 1).toUpperCase()}
+            </div>
+          )}
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h1 className="font-heading text-2xl font-bold tracking-tight">{name}</h1>
+              {isAdmin ? <Badge>관리자</Badge> : <Badge variant="secondary">회원</Badge>}
+            </div>
+            <p className="text-sm text-muted-foreground">{email}</p>
           </div>
-          <p className="text-sm text-muted-foreground">{email}</p>
         </div>
         <form action={logout}>
           <button type="submit" className={buttonVariants({ variant: "outline" })}>
@@ -80,10 +109,10 @@ export default async function MePage({
       </dl>
 
       <div className="mt-6 rounded-xl border border-border bg-card p-5">
-        <h2 className="font-semibold">계정 관리</h2>
-        <p className="mt-1 text-sm text-muted-foreground">표시 이름을 변경할 수 있습니다.</p>
-        <form action={updateDisplayName} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
-          <div className="flex-1 space-y-2">
+        <h2 className="font-semibold">내 정보 수정</h2>
+        <p className="mt-1 text-sm text-muted-foreground">표시 이름과 프로필 이미지를 변경할 수 있습니다.</p>
+        <form action={updateProfile} className="mt-4 space-y-4">
+          <div className="space-y-2">
             <label htmlFor="name" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               이름
             </label>
@@ -92,7 +121,22 @@ export default async function MePage({
               name="name"
               type="text"
               required
+              maxLength={100}
               defaultValue={name}
+              className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="avatar_url" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              프로필 이미지 URL <span className="normal-case text-muted-foreground">(선택)</span>
+            </label>
+            <input
+              id="avatar_url"
+              name="avatar_url"
+              type="url"
+              inputMode="url"
+              placeholder="https://example.com/avatar.png"
+              defaultValue={avatarUrl}
               className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             />
           </div>
@@ -100,6 +144,47 @@ export default async function MePage({
             저장
           </button>
         </form>
+      </div>
+
+      <div className="mt-6 rounded-xl border border-border bg-card p-5">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="font-semibold">내 커피챗 신청 내역</h2>
+          <Link href="/coffee-chat" className="text-sm font-medium text-primary hover:underline">
+            새 신청 →
+          </Link>
+        </div>
+        {coffeeChats && coffeeChats.length > 0 ? (
+          <ul className="mt-4 space-y-3">
+            {coffeeChats.map((c) => (
+              <li
+                key={c.id}
+                className="flex items-start justify-between gap-3 rounded-lg border border-border bg-background p-4"
+              >
+                <div className="min-w-0 space-y-1">
+                  <p className="truncate text-sm font-medium">
+                    {c.topic || "주제 미입력"}
+                  </p>
+                  {c.message ? (
+                    <p className="line-clamp-2 text-xs text-muted-foreground">{c.message}</p>
+                  ) : null}
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(c.created_at).toLocaleDateString("ko-KR")}
+                  </p>
+                </div>
+                <Badge variant={c.status === "done" ? "default" : "secondary"}>
+                  {statusLabel[c.status] ?? c.status}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4 text-sm text-muted-foreground">
+            아직 신청 내역이 없습니다.{" "}
+            <Link href="/coffee-chat" className="font-medium text-primary hover:underline">
+              1:1 커피챗 신청하기
+            </Link>
+          </p>
+        )}
       </div>
 
       {isAdmin ? (

@@ -15,12 +15,20 @@
 | `auth.login` | info/issue | `auth/actions.ts` | 이메일 로그인 성공/실패 |
 | `auth.signup` | info/issue | `auth/actions.ts` | 회원가입 성공/실패 |
 | `auth.logout` | info | `auth/actions.ts` | 로그아웃 |
-| `account.update_name` | info/issue | `auth/actions.ts` | 표시 이름 변경 |
+| `account.update_name` | info/issue | `auth/actions.ts` | (구) 표시 이름 변경 |
+| `account.update_profile` | info/issue | `auth/actions.ts` | 내 정보(이름·아바타) 수정 |
 | `coffee_chat.submit` | info/error | `coffee-chat/actions.ts` | 1:1 커피챗 신청 저장 |
 
 ---
 
 ## 변경/이슈 기록
+
+### 2026-06-28 — profiles 적용·내 정보 수정 강화·응원 프리셋 추가·Polar 결제 진단
+- **profiles 테이블 적용(완료)**: 앱 프로젝트(`ofxzkwbqwpsjoeqjhrpl`)에 `0001_profiles`가 미적용 상태였음(테이블/가입 트리거 부재 → 마이페이지·정보수정 실패). Management API로 `0001` 적용 + 기존 사용자 백필(`0005_backfill_profiles.sql`, `habitree.ai@gmail.com`→admin). `on_auth_user_created` 트리거 생성 확인.
+- **내 정보 수정 강화**: `updateDisplayName` → `updateProfile`로 확장(이름 + 프로필 이미지 URL, `auth.updateUser` + `profiles` 동기화, URL 형식 검증). `/me`에 아바타 표시 추가.
+- **커피챗 내역 반영**: `/me`에 "내 커피챗 신청 내역" 섹션 추가(RLS `select_own`으로 본인 신청만 조회, 상태 배지). 인증/익명 insert 동작을 RLS 시뮬레이션으로 검증.
+- **응원 프리셋 추가**: `supportMarkup.ts`·`sample.ts`에 `$5,000`·`$10,000` 칩 추가(총 10개). 최대 $10,000 그대로.
+- **Polar 결제 진단(코드 아님)**: `/api/donate`는 정상(체크아웃 생성 성공). 원인은 조직 `vibe_habitree` 미승인 — `status=created`, `details_submitted_at=null`, `payout_account_id=null`, `capabilities.checkout_payments=false` → "Payments are currently unavailable". Polar 대시보드에서 사업자·정산정보 제출/승인 필요(테스트는 `POLAR_SERVER=sandbox`).
 
 ### 2026-06-25 — 로그인 상태 UI · 커피챗 Supabase 연결 · 로그 체계 도입
 - **헤더 로그인 인식화**: `layout.tsx`(서버)에서 `getUser()`로 로그인 여부 판별 → `Header`에 `isAuthed` 전달. 로그인 시 `마이페이지` + `로그아웃`, 비로그인 시 `로그인` 노출.
