@@ -18,6 +18,21 @@ function polarBase() {
     : "https://api.polar.sh";
 }
 
+// 결제 성공 후 돌아올 사이트 주소.
+// 사용자가 실제로 결제를 시작한 도메인(요청 호스트)을 최우선으로 사용한다.
+// NEXT_PUBLIC_APP_URL이 미연결 도메인(예: DNS 미등록)을 가리키면 결제 후
+// NXDOMAIN으로 페이지가 넘어가지 않는 문제가 있어, env는 호스트가 없을 때의
+// 폴백으로만 둔다.
+function resolveAppUrl(req: Request): string {
+  const h = req.headers;
+  const host = h.get("x-forwarded-host") || h.get("host");
+  if (host) {
+    const proto = h.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
+    return `${proto}://${host}`;
+  }
+  return process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
+}
+
 export async function POST(req: Request) {
   let amount = 0;
   try {
@@ -36,7 +51,7 @@ export async function POST(req: Request) {
 
   const token = process.env.POLAR_ACCESS_TOKEN;
   const productId = process.env.POLAR_PRODUCT_ID;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
+  const appUrl = resolveAppUrl(req);
 
   if (!token || !productId) {
     return Response.json(
