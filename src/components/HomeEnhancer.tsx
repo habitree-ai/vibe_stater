@@ -2,9 +2,58 @@
 
 import { useEffect } from "react";
 
-// 주입된 홈 마크업의 가벼운 인터랙션(뉴스레터 폼, 커피챗 카드 링크)을 연결한다.
+// 주입된 홈 v2 마크업의 인터랙션을 연결한다.
+// - 스크롤 진입 reveal(.rv → .in)
+// - 커스텀 커서 라벨(#hv-cursor, [data-cursor] hover)
+// - 뉴스레터 폼(#nl-email)
+// 서비스/자료/저널 카드는 마크업에서 <a href>로 이동을 처리한다.
 export function HomeEnhancer() {
   useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cleanups: Array<() => void> = [];
+
+    // 스크롤 진입 reveal
+    const revealEls = Array.from(document.querySelectorAll<HTMLElement>(".home-v2 .rv"));
+    if (reduceMotion) {
+      revealEls.forEach((el) => el.classList.add("in"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          }),
+        { threshold: 0.12 }
+      );
+      revealEls.forEach((el) => io.observe(el));
+      cleanups.push(() => io.disconnect());
+    }
+
+    // 커스텀 커서 라벨 (장식) — reduced-motion 시 비활성
+    const cursor = document.getElementById("hv-cursor");
+    if (cursor && !reduceMotion) {
+      const onMove = (e: MouseEvent) => {
+        cursor.style.left = `${e.clientX}px`;
+        cursor.style.top = `${e.clientY}px`;
+      };
+      window.addEventListener("mousemove", onMove);
+      cleanups.push(() => window.removeEventListener("mousemove", onMove));
+
+      const targets = Array.from(document.querySelectorAll<HTMLElement>(".home-v2 [data-cursor]"));
+      for (const el of targets) {
+        const on = () => cursor.classList.add("on");
+        const off = () => cursor.classList.remove("on");
+        el.addEventListener("mouseenter", on);
+        el.addEventListener("mouseleave", off);
+        cleanups.push(() => {
+          el.removeEventListener("mouseenter", on);
+          el.removeEventListener("mouseleave", off);
+        });
+      }
+    }
+
     // 뉴스레터 폼
     const form = document.querySelector<HTMLFormElement>("#nl-email")?.closest("form");
     const onSubmit = (e: Event) => {
@@ -17,27 +66,9 @@ export function HomeEnhancer() {
       }
     };
     form?.addEventListener("submit", onSubmit);
+    cleanups.push(() => form?.removeEventListener("submit", onSubmit));
 
-    // "커피챗 신청 →" 카드 → /coffee-chat 이동
-    const ctas = Array.from(document.querySelectorAll<HTMLElement>("span")).filter((el) =>
-      el.textContent?.includes("커피챗 신청")
-    );
-    const cleanups: Array<() => void> = [];
-    for (const cta of ctas) {
-      const card = cta.closest<HTMLElement>("div");
-      const target = card ?? cta;
-      target.style.cursor = "pointer";
-      const go = () => {
-        window.location.href = "/coffee-chat";
-      };
-      target.addEventListener("click", go);
-      cleanups.push(() => target.removeEventListener("click", go));
-    }
-
-    return () => {
-      form?.removeEventListener("submit", onSubmit);
-      cleanups.forEach((fn) => fn());
-    };
+    return () => cleanups.forEach((fn) => fn());
   }, []);
 
   return null;

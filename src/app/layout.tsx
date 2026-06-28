@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk, Instrument_Serif, Fraunces } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { site } from "@/lib/site";
@@ -40,6 +40,15 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
+// 메인 v2 헤드라인용 가변 세리프 (doc/14_homepage_v2_personality.md §지렛대2)
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "900"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: `${site.name} — ${site.owner}`,
@@ -72,7 +81,7 @@ export default async function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Header isAuthed={isAuthed} />
