@@ -54,16 +54,35 @@ export function HomeEnhancer() {
       }
     }
 
-    // 뉴스레터 폼
+    // 뉴스레터 폼 — 실제 구독 저장(newsletter_subscribers)으로 연결.
     const form = document.querySelector<HTMLFormElement>("#nl-email")?.closest("form");
     const onSubmit = (e: Event) => {
       e.preventDefault();
       const input = document.getElementById("nl-email") as HTMLInputElement | null;
       const msg = document.getElementById("nl-msg");
-      if (input?.value.trim() && msg) {
-        msg.textContent = "구독 신청이 완료되었습니다. 감사합니다! ✦";
-        input.value = "";
-      }
+      const button = form?.querySelector<HTMLButtonElement>("button[type=submit]");
+      const email = input?.value.trim();
+      if (!email || !msg) return;
+
+      if (button) button.disabled = true;
+      msg.textContent = "구독 중…";
+
+      fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+        .then((r) => r.json())
+        .then((res: { ok?: boolean; message?: string }) => {
+          msg.textContent = res?.message ?? "잠시 후 다시 시도해 주세요.";
+          if (res?.ok && input) input.value = "";
+        })
+        .catch(() => {
+          msg.textContent = "구독에 실패했어요. 잠시 후 다시 시도해 주세요.";
+        })
+        .finally(() => {
+          if (button) button.disabled = false;
+        });
     };
     form?.addEventListener("submit", onSubmit);
     cleanups.push(() => form?.removeEventListener("submit", onSubmit));

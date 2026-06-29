@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { buttonVariants } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { submitCoffeeChat } from "./actions";
@@ -81,9 +82,9 @@ export default async function CoffeeChatPage({
               <label htmlFor="message" className="text-sm font-medium">하고 싶은 이야기 <span className="text-muted-foreground">(선택)</span></label>
               <textarea id="message" name="message" rows={5} placeholder="어떤 이야기를 나누고 싶으신가요?" className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50" />
             </div>
-            <button type="submit" className={buttonVariants({ variant: "default", className: "h-11 w-full text-base" })}>
+            <SubmitButton pendingText="신청 중…" className="h-11 w-full text-base">
               커피챗 신청하기
-            </button>
+            </SubmitButton>
             <p className="text-center text-xs text-muted-foreground">신청은 무료이며, 추첨 결과는 이메일로 안내드립니다.</p>
           </form>
         )}

@@ -4,8 +4,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { logout, updateProfile } from "@/app/auth/actions";
+import { cancelCoffeeChat } from "@/app/coffee-chat/actions";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/SubmitButton";
+import { AvatarUploader } from "./AvatarUploader";
 
 export const metadata: Metadata = { title: "마이페이지" };
 
@@ -126,23 +129,10 @@ export default async function MePage({
               className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             />
           </div>
-          <div className="space-y-2">
-            <label htmlFor="avatar_url" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              프로필 이미지 URL <span className="normal-case text-muted-foreground">(선택)</span>
-            </label>
-            <input
-              id="avatar_url"
-              name="avatar_url"
-              type="url"
-              inputMode="url"
-              placeholder="https://example.com/avatar.png"
-              defaultValue={avatarUrl}
-              className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-            />
-          </div>
-          <button type="submit" className={buttonVariants({ variant: "default", className: "h-11" })}>
+          <AvatarUploader userId={user.id} initialUrl={avatarUrl} name={name} />
+          <SubmitButton pendingText="저장 중…" className="h-11">
             저장
-          </button>
+          </SubmitButton>
         </form>
       </div>
 
@@ -171,9 +161,22 @@ export default async function MePage({
                     {new Date(c.created_at).toLocaleDateString("ko-KR")}
                   </p>
                 </div>
-                <Badge variant={c.status === "done" ? "default" : "secondary"}>
-                  {statusLabel[c.status] ?? c.status}
-                </Badge>
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <Badge variant={c.status === "done" ? "default" : "secondary"}>
+                    {statusLabel[c.status] ?? c.status}
+                  </Badge>
+                  {c.status === "pending" ? (
+                    <form action={cancelCoffeeChat}>
+                      <input type="hidden" name="id" value={c.id} />
+                      <button
+                        type="submit"
+                        className="text-xs text-muted-foreground hover:text-destructive hover:underline"
+                      >
+                        신청 취소
+                      </button>
+                    </form>
+                  ) : null}
+                </div>
               </li>
             ))}
           </ul>
@@ -191,10 +194,13 @@ export default async function MePage({
         <div className="mt-6 rounded-xl border border-primary/30 bg-primary/5 p-5">
           <h2 className="font-semibold">관리자 영역</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            콘텐츠·상품·주문 관리 기능은 다음 단계(Step 4~)에서 연결됩니다.
+            커피챗 신청 현황을 확인하고 상태를 관리할 수 있습니다.
           </p>
-          <Link href="/" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
-            대시보드(준비 중) →
+          <Link
+            href="/admin/coffee-chat"
+            className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          >
+            커피챗 신청 관리 →
           </Link>
         </div>
       ) : null}

@@ -1,7 +1,9 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { logActivity } from "@/lib/log";
 
@@ -26,6 +28,25 @@ export async function submitCoffeeChat(formData: FormData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // 중복 신청 방지 — 동일 사용자/이메일로 아직 처리 대기(pending)인 신청이 있으면 차단.
+  // (연속 클릭/재신청으로 인한 쓰레기 데이터 누적 방지. service_role로 RLS 우회 조회.)
+  const service = createServiceClient();
+  if (service) {
+    let dup = service
+      .from("coffee_chat_requests")
+      .select("id")
+      .eq("status", "pending")
+      .limit(1);
+    dup = user?.id ? dup.eq("user_id", user.id) : dup.eq("email", email);
+    const { data: existing } = await dup;
+    if (existing && existing.length > 0) {
+      redirect(
+        "/coffee-chat?error=" +
+          enc("이미 접수 대기 중인 신청이 있어요. 결과 안내 후 다시 신청해 주세요.")
+      );
+    }
+  }
 
   const { error } = await supabase.from("coffee_chat_requests").insert({
     user_id: user?.id ?? null,
@@ -56,4 +77,52 @@ export async function submitCoffeeChat(formData: FormData) {
   });
 
   redirect("/coffee-chat?success=1");
+}
+
+// 본인 신청 취소 — pending 상태만 canceled로 변경(RLS: coffee_chat_update_own_cancel).
+export async function cancelCoffeeChat(formData: FormData) {
+  const id = String(formData.get("id") || "").trim();
+  if (!id) {
+    redirect("/me?error=" + enc("잘못된 요청입니다."));
+  }
+  if (!isSupabaseConfigured) {
+    redirect("/me?error=" + enc("아직 서버가 설정되지 않았습니다."));
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    redirect("/login?notice=" + enc("로그인이 필요합니다."));
+  }
+
+  const { error } = await supabase
+    .from("coffee_chat_requests")
+    .update({ status: "canceled" })
+    .eq("id", id)
+    .eq("user_id", user!.id)
+    .eq("status", "pending");
+
+  if (error) {
+    await logActivity({
+      action: "coffee_chat.cancel",
+      level: "issue",
+      userId: user!.id,
+      targetType: "coffee_chat_request",
+      targetId: id,
+      message: error.message,
+    });
+    redirect("/me?error=" + enc("취소에 실패했습니다. 잠시 후 다시 시도해 주세요."));
+  }
+
+  await logActivity({
+    action: "coffee_chat.cancel",
+    userId: user!.id,
+    targetType: "coffee_chat_request",
+    targetId: id,
+    message: "커피챗 신청 취소",
+  });
+  revalidatePath("/me");
+  redirect("/me?success=" + enc("신청을 취소했습니다."));
 }

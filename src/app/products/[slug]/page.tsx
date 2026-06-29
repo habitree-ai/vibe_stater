@@ -104,10 +104,10 @@ export default async function ProductDetailPage({
                   {formatPrice(product.price, product.currency)}
                 </div>
                 <Link
-                  href={`/checkout/${product.id}`}
+                  href={`/contact?type=${encodeURIComponent("상담 신청")}`}
                   className={buttonVariants({ variant: "default", className: "h-11 w-full text-base" })}
                 >
-                  구매하기
+                  구매 문의하기
                 </Link>
                 <Link
                   href="/products"
@@ -116,7 +116,7 @@ export default async function ProductDetailPage({
                   다른 상품 보기
                 </Link>
                 <p className="text-xs text-muted-foreground">
-                  * 결제는 추후 Stripe 연동 단계에서 활성화됩니다.
+                  * 온라인 결제는 준비 중입니다. 구매를 원하시면 문의해 주시면 안내드릴게요.
                 </p>
               </CardContent>
             </Card>
