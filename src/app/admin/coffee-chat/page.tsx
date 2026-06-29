@@ -21,6 +21,7 @@ const statusLabel: Record<string, string> = {
 
 type CoffeeChatRow = {
   id: string;
+  seq: number;
   name: string;
   email: string;
   topic: string | null;
@@ -64,8 +65,8 @@ export default async function AdminCoffeeChatPage({
   if (service) {
     const { data } = await service
       .from("coffee_chat_requests")
-      .select("id, name, email, topic, message, status, user_id, created_at")
-      .order("created_at", { ascending: false });
+      .select("id, seq, name, email, topic, message, status, user_id, created_at")
+      .order("seq", { ascending: false });
     rows = (data as CoffeeChatRow[]) ?? [];
   }
 
@@ -109,6 +110,9 @@ export default async function AdminCoffeeChatPage({
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 space-y-1">
                   <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-semibold text-primary">
+                      #{String(r.seq).padStart(4, "0")}
+                    </span>
                     <span className="font-medium">{r.name}</span>
                     <Badge variant={r.status === "done" ? "default" : "secondary"}>
                       {statusLabel[r.status] ?? r.status}

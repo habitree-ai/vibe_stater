@@ -17,9 +17,10 @@ const fieldClass =
 export default async function CoffeeChatPage({
   searchParams,
 }: {
-  searchParams: Promise<{ success?: string; error?: string }>;
+  searchParams: Promise<{ success?: string; error?: string; no?: string }>;
 }) {
-  const { success, error } = await searchParams;
+  const { success, error, no } = await searchParams;
+  const seqNo = no && /^\d+$/.test(no) ? Number(no) : null;
 
   let prefillName = "";
   let prefillEmail = "";
@@ -50,7 +51,20 @@ export default async function CoffeeChatPage({
         {success ? (
           <div className="rounded-2xl border border-primary/30 bg-primary/10 p-6 text-center">
             <p className="font-heading text-xl font-semibold text-primary">신청이 접수되었습니다 ✦</p>
-            <p className="mt-2 text-sm text-muted-foreground">
+            {seqNo ? (
+              <div className="mx-auto mt-4 w-fit rounded-xl border border-primary/30 bg-background px-6 py-4">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  나의 신청번호
+                </p>
+                <p className="font-heading text-3xl font-bold text-primary">
+                  #{String(seqNo).padStart(4, "0")}
+                </p>
+                <p className="mt-1 text-sm text-foreground">
+                  <strong>{seqNo}</strong>번째 신청자예요!
+                </p>
+              </div>
+            ) : null}
+            <p className="mt-4 text-sm text-muted-foreground">
               추첨이 시작되면 입력하신 이메일로 안내드릴게요. 응원해 주셔서 감사합니다!
             </p>
             <a href="/" className={buttonVariants({ variant: "outline", className: "mt-5" })}>

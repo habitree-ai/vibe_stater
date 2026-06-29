@@ -67,16 +67,31 @@ export async function submitCoffeeChat(formData: FormData) {
     redirect("/coffee-chat?error=" + enc("신청 저장에 실패했습니다. 잠시 후 다시 시도해 주세요."));
   }
 
+  // 부여된 신청 순번(고유번호) 조회 — 익명 행은 anon이 select할 수 없어 service_role로 읽는다.
+  let seq: number | null = null;
+  if (service) {
+    let seqQuery = service
+      .from("coffee_chat_requests")
+      .select("seq")
+      .eq("status", "pending");
+    seqQuery = user?.id ? seqQuery.eq("user_id", user.id) : seqQuery.eq("email", email);
+    const { data: row } = await seqQuery
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    seq = (row?.seq as number | undefined) ?? null;
+  }
+
   await logActivity({
     action: "coffee_chat.submit",
     level: "info",
     userId: user?.id ?? null,
     targetType: "coffee_chat_request",
-    message: `${name} 커피챗 신청`,
-    metadata: { email, topic },
+    message: `${name} 커피챗 신청 (#${seq ?? "?"})`,
+    metadata: { email, topic, seq },
   });
 
-  redirect("/coffee-chat?success=1");
+  redirect("/coffee-chat?success=1" + (seq ? `&no=${seq}` : ""));
 }
 
 // 본인 신청 취소 — pending 상태만 canceled로 변경(RLS: coffee_chat_update_own_cancel).

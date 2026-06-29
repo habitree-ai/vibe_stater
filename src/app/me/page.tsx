@@ -55,7 +55,7 @@ export default async function MePage({
   // 내 커피챗 신청 내역(RLS: 본인 user_id만 조회 가능)
   const { data: coffeeChats } = await supabase
     .from("coffee_chat_requests")
-    .select("id, topic, message, status, created_at")
+    .select("id, seq, topic, message, status, created_at")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -151,6 +151,11 @@ export default async function MePage({
                 className="flex items-start justify-between gap-3 rounded-lg border border-border bg-background p-4"
               >
                 <div className="min-w-0 space-y-1">
+                  {c.seq ? (
+                    <p className="font-mono text-xs font-semibold text-primary">
+                      신청번호 #{String(c.seq).padStart(4, "0")}
+                    </p>
+                  ) : null}
                   <p className="truncate text-sm font-medium">
                     {c.topic || "주제 미입력"}
                   </p>
