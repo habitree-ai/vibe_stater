@@ -50,7 +50,8 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://vibe.habitree.io";
+// 정본 도메인은 site.url(vibe.habitree.io). NEXT_PUBLIC_APP_URL은 잘못된 도메인이 설정돼 있어 신뢰하지 않는다.
+const APP_URL = site.url;
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -64,7 +65,7 @@ export const metadata: Metadata = {
     title: `${site.name} — ${site.owner}`,
     description: site.description,
     siteName: site.name,
-    url: APP_URL,
+    url: site.url,
     type: "website",
     locale: "ko_KR",
   },

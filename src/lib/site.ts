@@ -6,6 +6,9 @@ export const site = {
   description:
     "코딩을 몰라도 직접 만드는 우리의 온라인 공간 — AI·바이브코딩·독서로 읽고 만들고 연결합니다.",
   owner: "바이브코딩 치트키",
+  // 운영 정본 도메인. habitree.ai는 미등록(NXDOMAIN)이므로 절대 사용 금지.
+  // canonical/sitemap/robots/OG의 단일 출처(잘못 설정된 env에 의존하지 않음).
+  url: "https://vibe.habitree.io",
 };
 
 // 내비게이션은 전용 페이지로 직접 연결 — 발견성을 높인다(홈 앵커 대신 실제 라우트).

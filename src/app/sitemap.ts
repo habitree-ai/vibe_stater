@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 import { posts, products } from "@/data/sample";
+import { site } from "@/lib/site";
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL || "https://vibe.habitree.io";
+// 정본 도메인은 site.url(vibe.habitree.io). env(NEXT_PUBLIC_APP_URL)는 잘못된 도메인이 설정돼 있어 신뢰하지 않는다.
+const BASE = site.url;
 
 // 공개 라우트 사이트맵. 관리자(/admin)·개인(/me)·인증 콜백은 제외.
 export default function sitemap(): MetadataRoute.Sitemap {
