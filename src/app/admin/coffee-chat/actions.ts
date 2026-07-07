@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/admin";
+import { getAdminUserId } from "@/lib/admin";
 import { logActivity } from "@/lib/log";
 
 function enc(s: string) {
@@ -11,22 +11,6 @@ function enc(s: string) {
 }
 
 const VALID_STATUS = ["pending", "scheduled", "done", "canceled"] as const;
-
-// 현재 로그인 사용자가 관리자인지 확인. 아니면 null.
-async function getAdminUserId(): Promise<string | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, status")
-    .eq("id", user.id)
-    .single();
-  if (profile?.role !== "admin" || profile?.status !== "active") return null;
-  return user.id;
-}
 
 // 커피챗 신청 상태 변경 — 관리자 전용. service_role로 RLS 우회 업데이트.
 export async function updateCoffeeChatStatus(formData: FormData) {

@@ -6,6 +6,7 @@ import { site } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
+import { unstable_rethrow } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -49,7 +50,10 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://vibe.habitree.io";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
   title: {
     default: `${site.name} — ${site.owner}`,
     template: `%s | ${site.name}`,
@@ -59,8 +63,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${site.name} — ${site.owner}`,
     description: site.description,
+    siteName: site.name,
+    url: APP_URL,
     type: "website",
     locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.owner}`,
+    description: site.description,
   },
 };
 
@@ -71,11 +82,18 @@ export default async function RootLayout({
 }>) {
   let isAuthed = false;
   if (isSupabaseConfigured) {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    isAuthed = !!user;
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      isAuthed = !!user;
+    } catch (e) {
+      // Next의 제어 흐름 에러(동적 렌더 신호·redirect 등)는 반드시 다시 던진다.
+      unstable_rethrow(e);
+      // 실제 Supabase 장애 시에만 비로그인으로 폴백해 전체 렌더를 지킨다.
+      console.error("[layout] auth 확인 실패:", e);
+    }
   }
 
   return (

@@ -2,31 +2,30 @@ import type { Metadata } from "next";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { Badge } from "@/components/ui/badge";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import { updateCoffeeChatStatus } from "./actions";
+import { updateContactStatus } from "./actions";
 
-export const metadata: Metadata = { title: "커피챗 신청 관리" };
+export const metadata: Metadata = { title: "문의 인박스" };
 
-const STATUS_OPTIONS = ["pending", "scheduled", "done", "canceled"] as const;
+const STATUS_OPTIONS = ["new", "read", "done"] as const;
 const statusLabel: Record<string, string> = {
-  pending: "접수됨",
-  scheduled: "일정 확정",
+  new: "신규",
+  read: "확인",
   done: "완료",
-  canceled: "취소됨",
 };
 
-type CoffeeChatRow = {
+type ContactRow = {
   id: string;
-  seq: number;
   name: string;
   email: string;
-  topic: string | null;
-  message: string | null;
+  type: string | null;
+  subject: string | null;
+  message: string;
   status: string;
   user_id: string | null;
   created_at: string;
 };
 
-export default async function AdminCoffeeChatPage({
+export default async function AdminContactPage({
   searchParams,
 }: {
   searchParams: Promise<{ success?: string; error?: string }>;
@@ -34,15 +33,14 @@ export default async function AdminCoffeeChatPage({
   const { success, error } = await searchParams;
 
   // 접근 제어는 admin/layout.tsx의 requireAdmin()이 담당.
-  // 전체 신청 목록(service_role로 RLS 우회) -------------------------
   const service = createServiceClient();
-  let rows: CoffeeChatRow[] = [];
+  let rows: ContactRow[] = [];
   if (service) {
     const { data } = await service
-      .from("coffee_chat_requests")
-      .select("id, seq, name, email, topic, message, status, user_id, created_at")
-      .order("seq", { ascending: false });
-    rows = (data as CoffeeChatRow[]) ?? [];
+      .from("contact_messages")
+      .select("id, name, email, type, subject, message, status, user_id, created_at")
+      .order("created_at", { ascending: false });
+    rows = (data as ContactRow[]) ?? [];
   }
 
   const counts = rows.reduce<Record<string, number>>((acc, r) => {
@@ -53,10 +51,10 @@ export default async function AdminCoffeeChatPage({
   return (
     <section className="py-8">
       <div>
-        <h1 className="font-heading text-2xl font-bold tracking-tight">커피챗 신청 관리</h1>
+        <h1 className="font-heading text-2xl font-bold tracking-tight">문의 인박스</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          전체 {rows.length}건 · 접수 {counts.pending ?? 0} · 확정 {counts.scheduled ?? 0} · 완료{" "}
-          {counts.done ?? 0} · 취소 {counts.canceled ?? 0}
+          전체 {rows.length}건 · 신규 {counts.new ?? 0} · 확인 {counts.read ?? 0} · 완료{" "}
+          {counts.done ?? 0}
         </p>
       </div>
 
@@ -72,39 +70,40 @@ export default async function AdminCoffeeChatPage({
       ) : null}
 
       {rows.length === 0 ? (
-        <p className="mt-10 text-sm text-muted-foreground">아직 신청 내역이 없습니다.</p>
+        <p className="mt-10 text-sm text-muted-foreground">아직 문의가 없습니다.</p>
       ) : (
         <ul className="mt-8 space-y-3">
           {rows.map((r) => (
             <li key={r.id} className="rounded-xl border border-border bg-card p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-semibold text-primary">
-                      #{String(r.seq).padStart(4, "0")}
-                    </span>
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium">{r.name}</span>
                     <Badge variant={r.status === "done" ? "default" : "secondary"}>
                       {statusLabel[r.status] ?? r.status}
                     </Badge>
+                    {r.type ? <Badge variant="outline">{r.type}</Badge> : null}
                     {r.user_id ? null : <Badge variant="outline">비회원</Badge>}
                   </div>
-                  <p className="text-xs text-muted-foreground">{r.email}</p>
-                  {r.topic ? <p className="text-sm">{r.topic}</p> : null}
-                  {r.message ? (
-                    <p className="line-clamp-2 text-xs text-muted-foreground">{r.message}</p>
-                  ) : null}
+                  <p className="text-xs text-muted-foreground">
+                    <a href={`mailto:${r.email}`} className="hover:underline">
+                      {r.email}
+                    </a>
+                  </p>
+                  {r.subject ? <p className="text-sm font-medium">{r.subject}</p> : null}
+                  <p className="whitespace-pre-wrap text-sm text-muted-foreground">{r.message}</p>
                   <p className="text-xs text-muted-foreground">
                     {new Date(r.created_at).toLocaleString("ko-KR")}
                   </p>
                 </div>
 
-                <form action={updateCoffeeChatStatus} className="flex shrink-0 items-center gap-2">
+                <form action={updateContactStatus} className="flex shrink-0 items-center gap-2">
                   <input type="hidden" name="id" value={r.id} />
                   <select
                     name="status"
                     defaultValue={r.status}
                     className="h-9 rounded-lg border border-border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                    aria-label="문의 상태"
                   >
                     {STATUS_OPTIONS.map((s) => (
                       <option key={s} value={s}>

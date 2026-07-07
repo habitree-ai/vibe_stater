@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { buttonVariants } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -41,9 +42,9 @@ export default async function ContactPage({
             <p className="mt-2 text-sm text-muted-foreground">
               영업일 기준 2일 내에 입력하신 이메일로 답변드릴게요. 감사합니다!
             </p>
-            <a href="/" className={buttonVariants({ variant: "outline", className: "mt-5" })}>
+            <Link href="/" className={buttonVariants({ variant: "outline", className: "mt-5" })}>
               홈으로
-            </a>
+            </Link>
           </div>
         ) : (
           <form action={submitContact} className="space-y-5" aria-label="문의 양식">

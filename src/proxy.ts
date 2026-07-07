@@ -1,7 +1,8 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-export async function middleware(request: NextRequest) {
+// Next.js 16: `middleware` 규약이 `proxy`로 이름 변경됨. 동작은 동일(요청마다 Supabase 세션 갱신).
+export async function proxy(request: NextRequest) {
   return await updateSession(request);
 }
 

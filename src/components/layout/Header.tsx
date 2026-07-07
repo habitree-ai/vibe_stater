@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { logout } from "@/app/auth/actions";
 import { navItems, site } from "@/lib/site";
@@ -9,6 +10,8 @@ import { cn } from "@/lib/utils";
 
 export function Header({ isAuthed = false }: { isAuthed?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -77,8 +80,69 @@ export function Header({ isAuthed = false }: { isAuthed?: boolean }) {
           >
             응원하기
           </Link>
+
+          {/* 모바일 메뉴 토글 */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "lg:hidden")}
+          >
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
         </div>
       </div>
+
+      {/* 모바일 드로어 */}
+      {menuOpen ? (
+        <div
+          id="mobile-menu"
+          className="mx-4 mt-2 rounded-2xl border border-border/60 bg-background/95 p-3 shadow-lg backdrop-blur-xl lg:hidden"
+        >
+          <nav className="flex flex-col" aria-label="모바일 메뉴">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={closeMenu}
+                className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="my-2 border-t border-border/60" />
+            {isAuthed ? (
+              <>
+                <Link
+                  href="/me"
+                  onClick={closeMenu}
+                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+                >
+                  마이페이지
+                </Link>
+                <form action={logout}>
+                  <button
+                    type="submit"
+                    className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+                  >
+                    로그아웃
+                  </button>
+                </form>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={closeMenu}
+                className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+              >
+                로그인
+              </Link>
+            )}
+          </nav>
+        </div>
+      ) : null}
     </header>
   );
 }

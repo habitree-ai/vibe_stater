@@ -1,13 +1,13 @@
 <#
   ship.ps1 — 변경사항을 한 번에 add + commit + push.
-  푸시 즉시 Cloudflare Workers Builds가 자동으로 빌드·배포합니다.
+  푸시 즉시 Vercel이 main 브랜치를 자동으로 빌드·배포합니다(운영 vibe.habitree.io).
 
   사용:
     .\scripts\ship.ps1 "feat: 변경 내용"
     .\scripts\ship.ps1            # 메시지 생략 시 타임스탬프 메시지 사용
 
-  전제: GitHub 인증(최초 1회)과 Cloudflare↔GitHub 연결이 끝나 있어야 자동배포가 동작.
-  상세: doc/07_github_cloudflare_deploy.md / doc/08_deploy_record.md
+  전제: GitHub 인증(최초 1회)과 Vercel↔GitHub 연결이 끝나 있어야 자동배포가 동작.
+  상세: doc/13_vercel_deployment.md
 #>
 param(
   [Parameter(Position = 0)]
@@ -41,7 +41,7 @@ if ([string]::IsNullOrWhiteSpace($pending)) {
 Write-Host "2) commit: $Message" -ForegroundColor Cyan
 git commit -m $Message
 
-Write-Host "3) push → origin/$Branch (→ Cloudflare 자동 배포)" -ForegroundColor Cyan
+Write-Host "3) push → origin/$Branch (→ Vercel 자동 배포)" -ForegroundColor Cyan
 git push origin $Branch
 
-Write-Host "완료. Cloudflare Builds 탭에서 배포 진행 상황을 확인하세요." -ForegroundColor Green
+Write-Host "완료. Vercel 대시보드에서 배포 진행 상황을 확인하세요." -ForegroundColor Green

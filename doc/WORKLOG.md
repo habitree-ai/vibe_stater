@@ -18,10 +18,22 @@
 | `account.update_name` | info/issue | `auth/actions.ts` | (구) 표시 이름 변경 |
 | `account.update_profile` | info/issue | `auth/actions.ts` | 내 정보(이름·아바타) 수정 |
 | `coffee_chat.submit` | info/error | `coffee-chat/actions.ts` | 1:1 커피챗 신청 저장 |
+| `coffee_chat.cancel` | info/issue | `coffee-chat/actions.ts` | 본인 커피챗 신청 취소 |
+| `admin.coffee_chat.update_status` | info/error | `admin/coffee-chat/actions.ts` | 관리자 커피챗 상태 변경 |
+| `admin.contact.update_status` | info/error | `admin/contact/actions.ts` | 관리자 문의 상태 변경 |
+| `contact.submit` | info/error | `contact/actions.ts` | 문의 접수 저장 |
+| `newsletter.subscribe` | info/error | `Newsletter.actions.ts` / `api/newsletter` | 뉴스레터 구독 |
 
 ---
 
 ## 변경/이슈 기록
+
+### 2026-07-07 — 사이트 전면 고도화(관리자 허브·SEO/내비·기술 위생)
+- **관리자 데이터 허브**: 공용 가드 `src/lib/admin.ts`(`requireAdmin`) + `admin/layout.tsx`(내비). 문의 인박스(`/admin/contact`), 뉴스레터 구독자+CSV(`/admin/subscribers`), 활동로그 뷰어(`/admin/logs`) 신설. `activity_logs`가 처음으로 UI에 노출. DB 스키마 변경 없음(service_role 읽기).
+- **SEO/내비**: 내비·푸터를 전용 페이지로 연결(홈 앵커 폐지), 모바일 햄버거 메뉴, `/terms`·`/privacy` 플레이스홀더(깨진 링크 해소), `error.tsx`·`not-found.tsx`, `sitemap.ts`·`robots.ts`, `metadataBase`+OG/Twitter, `icon.tsx`·`opengraph-image.tsx`(ImageResponse 동적 생성).
+- **기술 위생**: `middleware.ts`→`proxy.ts`(Next 16 규약, deprecation 해소). Cloudflare 잔재 제거(`wrangler.jsonc`·`open-next.config.ts`·`public/_headers`·`next.config` init·package 스크립트/의존성 `@opennextjs/cloudflare`·`wrangler`, `npm install`로 362패키지 정리), `ship.ps1` Vercel 안내로 수정. `layout`의 `getUser()` try-catch(`unstable_rethrow`로 프레임워크 에러 보존). 기본 svg 정리.
+- **문서**: `doc/15_site_enhancement_2026-07.md` 신설.
+- **후속(보류)**: 이메일 알림(Resend 키 미발급), 관리자 데이터모델 확장, 정식 약관 문구.
 
 ### 2026-06-28 — profiles 적용·내 정보 수정 강화·응원 프리셋 추가·Polar 결제 진단
 - **profiles 테이블 적용(완료)**: 앱 프로젝트(`ofxzkwbqwpsjoeqjhrpl`)에 `0001_profiles`가 미적용 상태였음(테이블/가입 트리거 부재 → 마이페이지·정보수정 실패). Management API로 `0001` 적용 + 기존 사용자 백필(`0005_backfill_profiles.sql`, `habitree.ai@gmail.com`→admin). `on_auth_user_created` 트리거 생성 확인.
