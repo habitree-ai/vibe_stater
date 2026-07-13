@@ -18,15 +18,19 @@ export function Footer() {
               코딩을 몰라도 만드는 우리의 온라인 공간.
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
-              {profile.socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  className="rounded-full border border-border/70 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-                >
-                  {s.label}
-                </a>
-              ))}
+              {profile.socials.map((s) => {
+                const external = /^https?:\/\//.test(s.href);
+                return (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+                    className="rounded-full border border-border/70 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                  >
+                    {s.label}
+                  </a>
+                );
+              })}
             </div>
           </div>
 

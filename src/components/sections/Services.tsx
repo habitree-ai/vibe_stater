@@ -225,7 +225,7 @@ function ReadTreeMockup() {
         <span className="size-2.5 rounded-full bg-amber-400/80" />
         <span className="size-2.5 rounded-full bg-emerald-400/80" />
         <div className="mx-auto rounded bg-zinc-800 px-3 py-0.5 font-mono text-[0.65rem] text-zinc-400">
-          readingtree.vercel.app
+          read.habitree.io
         </div>
       </div>
       <div className="grid grid-cols-[5.5rem_1fr_4.5rem] text-xs">

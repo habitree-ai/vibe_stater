@@ -87,10 +87,9 @@ export const profile: Profile = {
     { label: "제작 사례", value: "8건" },
   ],
   socials: [
-    { label: "YouTube", href: "https://youtube.com" },
-    { label: "GitHub", href: "https://github.com" },
-    { label: "ReadTree", href: "#projects" },
-    { label: "LINKMAP", href: "#projects" },
+    { label: "YouTube", href: "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ" },
+    { label: "ReadTree", href: "https://read.habitree.io" },
+    { label: "LINKMAP", href: "https://linkmap.biz" },
   ],
 };
 
@@ -138,7 +137,7 @@ export const projects: Project[] = [
     category: "콘텐츠",
     summary: "AI·바이브코딩·독서 인사이트를 영상으로 정리하는 채널.",
     tags: ["영상", "AI"],
-    url: "https://youtube.com",
+    url: "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ",
     external: true,
   },
 ];
@@ -385,8 +384,8 @@ export const liveServices: LiveService[] = [
   {
     id: "readtree",
     name: "ReadTree",
-    url: "https://readingtree-tan.vercel.app",
-    domain: "readingtree.vercel.app",
+    url: "https://read.habitree.io",
+    domain: "read.habitree.io",
     description:
       "읽고 기록하면 독서나무가 자라는 독서 습관 플랫폼. 읽은 모든 페이지가 자산이 됩니다.",
     features: [
@@ -402,7 +401,7 @@ export const youtubeChannel = {
   name: "YouTube 채널",
   category: "콘텐츠",
   description: "AI·바이브코딩·독서 인사이트를 영상으로 정리하는 채널.",
-  url: "https://youtube.com",
+  url: "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ",
 };
 
 // 자료(Resources) 섹션 — 모두 무료 · 교육용

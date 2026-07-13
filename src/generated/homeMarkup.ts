@@ -32,15 +32,15 @@ export const homeMarkup = `
         </div>
       </div>
       <div class="rv">
-        <a class="demo" href="https://linkmap.biz" target="_blank" rel="noopener" data-cursor>
+        <a class="demo" href="https://linkmap.biz" target="_blank" rel="noopener noreferrer" data-cursor>
           <div class="demo-bar"><span style="background:#f87171"></span><span style="background:#fbbf24"></span><span style="background:#34d399"></span>
             <span class="demo-url">🔒 linkmap.biz</span></div>
           <div class="demo-body">
             <span class="demo-tag">● 바이브 코딩 플랫폼</span>
-            <h3>한 곳에서<br><em>서비스를 시각화하세요</em></h3>
-            <p>구글 계정 하나로, 3분 뒤엔 배포돼 있어요.</p>
-            <span class="pill">🚀 내 홈페이지 만들기</span>
-            <div class="micro"><span>✓ 무료 플랜</span><span>✓ AES-256</span></div>
+            <h3>초보자부터 개발자까지<br><em>한 플랫폼에서</em></h3>
+            <p>Google 계정 하나면 GitHub 가입부터 배포까지 자동으로.</p>
+            <span class="pill">🚀 3분 만에 내 홈페이지 만들기</span>
+            <div class="micro"><span>✓ 무료 플랜</span><span>✓ Google 계정 OK</span><span>✓ AES-256 암호화</span></div>
           </div>
         </a>
       </div>
@@ -85,7 +85,7 @@ export const homeMarkup = `
       <p>직접 만들어 지금 돌리고 있는 서비스입니다. 카드를 누르면 라이브로 바로 갑니다.</p>
     </div>
     <div class="bento">
-      <a class="card big rv" href="https://linkmap.biz" target="_blank" rel="noopener" data-cursor>
+      <a class="card big rv" href="https://linkmap.biz" target="_blank" rel="noopener noreferrer" data-cursor>
         <div>
           <span class="live"><span class="dot"></span> 서비스 · 라이브</span>
           <h3>LINKMAP</h3>
@@ -103,14 +103,14 @@ export const homeMarkup = `
           <small>10초 데모 영상이 자동재생되는 자리</small>
         </div>
       </a>
-      <a class="card rv" href="https://readingtree.vercel.app" target="_blank" rel="noopener" data-cursor>
+      <a class="card rv" href="https://read.habitree.io" target="_blank" rel="noopener noreferrer" data-cursor>
         <span class="live"><span class="dot"></span> 서비스 · 라이브</span>
         <h3>ReadTree</h3>
-        <span class="host">readingtree.vercel.app ↗</span>
+        <span class="host">read.habitree.io ↗</span>
         <p class="desc">읽고 기록하면 <b>독서나무가 자라는</b> 습관 플랫폼. 읽은 모든 페이지가 자산이 됩니다.</p>
         <div class="tags"><span>#독서</span><span>#필사</span><span>#습관</span></div>
       </a>
-      <a class="card dark rv" href="https://youtube.com" target="_blank" rel="noopener" data-cursor>
+      <a class="card dark rv" href="https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ" target="_blank" rel="noopener noreferrer" data-cursor>
         <span class="live" style="color:var(--moss)"><span class="dot" style="background:var(--moss)"></span> 콘텐츠</span>
         <h3>YouTube 채널</h3>
         <p>AI·바이브코딩·독서 인사이트를 영상으로 정리하는 채널.</p>
@@ -209,7 +209,7 @@ export const homeMarkup = `
         <div class="kicker">✦ 바이브코딩 실습 과정</div>
         <h2>나만의 서비스를 <span class="hand">직접 만들어<svg viewBox="0 0 320 12" preserveAspectRatio="none"><path d="M3 8 Q90 2 170 7 T317 5"/></svg></span> 보세요</h2>
         <p class="sub">LINKMAP 템플릿으로 Supabase·Stripe·Resend까지 직접 연결합니다. 코드를 몰라도, 제가 했던 그대로 따라오시면 출시까지 함께합니다.</p>
-        <div class="btn-row"><a href="/education" class="btn" style="background:var(--moss);color:var(--ink)">교육 과정 보기</a><a href="https://linkmap.biz" target="_blank" rel="noopener" class="btn-text">LINKMAP 살펴보기</a></div>
+        <div class="btn-row"><a href="/education" class="btn" style="background:var(--moss);color:var(--ink)">교육 과정 보기</a><a href="https://linkmap.biz" target="_blank" rel="noopener noreferrer" class="btn-text">LINKMAP 살펴보기</a></div>
       </div>
       <div class="steps">
         <div class="step rv"><div class="n">01</div><h4>기획과 IA</h4><p>화면·데이터 구조를 설계.</p></div>
