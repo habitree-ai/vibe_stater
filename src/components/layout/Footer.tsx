@@ -20,11 +20,14 @@ export function Footer() {
             <div className="flex flex-wrap gap-2 pt-1">
               {profile.socials.map((s) => {
                 const external = /^https?:\/\//.test(s.href);
+                // 서비스 링크(LINKMAP·ReadTree)는 같은 탭 이동, 콘텐츠(YouTube)만 새 탭.
+                const newTab = /youtube\.com/i.test(s.href);
                 return (
                   <a
                     key={s.label}
                     href={s.href}
-                    {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+                    {...(external && { rel: "noopener noreferrer" })}
+                    {...(newTab && { target: "_blank" })}
                     className="rounded-full border border-border/70 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
                   >
                     {s.label}

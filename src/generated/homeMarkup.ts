@@ -32,7 +32,7 @@ export const homeMarkup = `
         </div>
       </div>
       <div class="rv">
-        <a class="demo" href="https://linkmap.biz" target="_blank" rel="noopener noreferrer" data-cursor>
+        <a class="demo" href="https://linkmap.biz" rel="noopener noreferrer" data-cursor>
           <div class="demo-bar"><span style="background:#f87171"></span><span style="background:#fbbf24"></span><span style="background:#34d399"></span>
             <span class="demo-url">🔒 linkmap.biz</span></div>
           <div class="demo-body">
@@ -85,7 +85,7 @@ export const homeMarkup = `
       <p>직접 만들어 지금 돌리고 있는 서비스입니다. 카드를 누르면 라이브로 바로 갑니다.</p>
     </div>
     <div class="bento">
-      <a class="card big rv" href="https://linkmap.biz" target="_blank" rel="noopener noreferrer" data-cursor>
+      <a class="card big rv" href="https://linkmap.biz" rel="noopener noreferrer" data-cursor>
         <div>
           <span class="live"><span class="dot"></span> 서비스 · 라이브</span>
           <h3>LINKMAP</h3>
@@ -103,7 +103,7 @@ export const homeMarkup = `
           <small>10초 데모 영상이 자동재생되는 자리</small>
         </div>
       </a>
-      <a class="card rv" href="https://read.habitree.io" target="_blank" rel="noopener noreferrer" data-cursor>
+      <a class="card rv" href="https://read.habitree.io" rel="noopener noreferrer" data-cursor>
         <span class="live"><span class="dot"></span> 서비스 · 라이브</span>
         <h3>ReadTree</h3>
         <span class="host">read.habitree.io ↗</span>
@@ -209,7 +209,7 @@ export const homeMarkup = `
         <div class="kicker">✦ 바이브코딩 실습 과정</div>
         <h2>나만의 서비스를 <span class="hand">직접 만들어<svg viewBox="0 0 320 12" preserveAspectRatio="none"><path d="M3 8 Q90 2 170 7 T317 5"/></svg></span> 보세요</h2>
         <p class="sub">LINKMAP 템플릿으로 Supabase·Stripe·Resend까지 직접 연결합니다. 코드를 몰라도, 제가 했던 그대로 따라오시면 출시까지 함께합니다.</p>
-        <div class="btn-row"><a href="/education" class="btn" style="background:var(--moss);color:var(--ink)">교육 과정 보기</a><a href="https://linkmap.biz" target="_blank" rel="noopener noreferrer" class="btn-text">LINKMAP 살펴보기</a></div>
+        <div class="btn-row"><a href="/education" class="btn" style="background:var(--moss);color:var(--ink)">교육 과정 보기</a><a href="https://linkmap.biz" rel="noopener noreferrer" class="btn-text">LINKMAP 살펴보기</a></div>
       </div>
       <div class="steps">
         <div class="step rv"><div class="n">01</div><h4>기획과 IA</h4><p>화면·데이터 구조를 설계.</p></div>
