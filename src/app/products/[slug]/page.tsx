@@ -5,7 +5,13 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { products, findProduct, productTypeLabel, formatPrice } from "@/data/sample";
+import {
+  products,
+  findProduct,
+  productTypeLabel,
+  productStatusLabel,
+  formatPrice,
+} from "@/data/sample";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -97,27 +103,67 @@ export default async function ProductDetailPage({
           <aside className="lg:sticky lg:top-24">
             <Card>
               <CardContent className="space-y-4 py-2">
-                <Badge variant="secondary" className="w-fit">
-                  {productTypeLabel[product.type]}
-                </Badge>
-                <div className="font-heading text-3xl font-bold">
-                  {formatPrice(product.price, product.currency)}
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary" className="w-fit">
+                    {productTypeLabel[product.type]}
+                  </Badge>
+                  {product.status !== "ready" && (
+                    <Badge variant="outline" className="w-fit text-muted-foreground">
+                      {productStatusLabel[product.status]}
+                    </Badge>
+                  )}
                 </div>
-                <Link
-                  href={`/contact?type=${encodeURIComponent("상담 신청")}`}
-                  className={buttonVariants({ variant: "default", className: "h-11 w-full text-base" })}
-                >
-                  구매 문의하기
-                </Link>
+                <div className="font-heading text-3xl font-bold">
+                  {product.status === "ready"
+                    ? formatPrice(product.price, product.currency)
+                    : productStatusLabel[product.status]}
+                </div>
+
+                {product.action ? (
+                  product.action.external ? (
+                    <a
+                      href={product.action.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={buttonVariants({
+                        variant: "default",
+                        className: "h-11 w-full text-base",
+                      })}
+                    >
+                      {product.action.label} ↗
+                    </a>
+                  ) : (
+                    <Link
+                      href={product.action.href}
+                      className={buttonVariants({
+                        variant: "default",
+                        className: "h-11 w-full text-base",
+                      })}
+                    >
+                      {product.action.label}
+                    </Link>
+                  )
+                ) : (
+                  <div
+                    aria-disabled
+                    className={buttonVariants({
+                      variant: "default",
+                      className: "h-11 w-full cursor-not-allowed text-base opacity-60",
+                    })}
+                  >
+                    준비 중이에요
+                  </div>
+                )}
+
                 <Link
                   href="/products"
                   className={buttonVariants({ variant: "outline", className: "h-11 w-full text-base" })}
                 >
-                  다른 상품 보기
+                  다른 자료 보기
                 </Link>
-                <p className="text-xs text-muted-foreground">
-                  * 온라인 결제는 준비 중입니다. 구매를 원하시면 문의해 주시면 안내드릴게요.
-                </p>
+                {product.statusNote && (
+                  <p className="text-xs text-muted-foreground">* {product.statusNote}</p>
+                )}
               </CardContent>
             </Card>
           </aside>

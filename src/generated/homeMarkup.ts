@@ -127,17 +127,17 @@ export const homeMarkup = `
       <p>전자책·강의·1:1 커피챗까지, 전부 교육 목적으로 공개해요. 공짜예요. 도움됐으면 커피 한 잔만.</p>
     </div>
     <div class="res-feature">
-      <a class="card rv" href="/products" data-cursor>
-        <div class="kicker" style="color:var(--clay)">전자책</div>
+      <a class="card rv" href="/products/vibe-1in-saas" data-cursor>
+        <div class="kicker" style="color:var(--clay)">전자책 · 준비중</div>
         <h3 style="font-size:1.5rem">바이브코딩으로 시작하는 1인 SaaS</h3>
-        <p class="desc">기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책.</p>
-        <span class="stamp">교육용 100% 무료</span>
+        <p class="desc">기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책. 완성되면 무료로 공개해요.</p>
+        <span class="stamp">준비중</span>
       </a>
-      <a class="card rv" href="/education" data-cursor>
-        <div class="kicker" style="color:var(--clay)">강의</div>
+      <a class="card rv" href="https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ/playlists" target="_blank" rel="noopener noreferrer" data-cursor>
+        <div class="kicker" style="color:var(--clay)">강의 · 준비중</div>
         <h3 style="font-size:1.5rem">LINKMAP 실전 강의</h3>
-        <p class="desc">Supabase·Stripe·Resend를 LINKMAP으로 연결하는 영상 강의.</p>
-        <span class="stamp">교육용 100% 무료</span>
+        <p class="desc">LINKMAP으로 서비스를 연결하는 영상 강의. 제작되는 대로 유튜브 재생목록에 순차 공개해요.</p>
+        <span class="stamp">준비중 · 유튜브 ↗</span>
       </a>
     </div>
     <a class="card rv" href="/coffee-chat" data-cursor>
@@ -207,16 +207,17 @@ export const homeMarkup = `
     <div class="wrap">
       <div class="rv">
         <div class="kicker">✦ 바이브코딩 실습 과정</div>
-        <h2>나만의 서비스를 <span class="hand">직접 만들어<svg viewBox="0 0 320 12" preserveAspectRatio="none"><path d="M3 8 Q90 2 170 7 T317 5"/></svg></span> 보세요</h2>
-        <p class="sub">LINKMAP 템플릿으로 Supabase·Stripe·Resend까지 직접 연결합니다. 코드를 몰라도, 제가 했던 그대로 따라오시면 출시까지 함께합니다.</p>
-        <div class="btn-row"><a href="/education" class="btn" style="background:var(--moss);color:var(--ink)">교육 과정 보기</a><a href="https://linkmap.biz" rel="noopener noreferrer" class="btn-text">LINKMAP 살펴보기</a></div>
+        <h2>코딩을 몰라도 <span class="hand">내 홈페이지를<svg viewBox="0 0 320 12" preserveAspectRatio="none"><path d="M3 8 Q90 2 170 7 T317 5"/></svg></span> 직접 만들어요</h2>
+        <p class="sub">구글 계정 만들기부터 내 홈페이지 공개까지, 하나씩 무작정 따라 하기. 어려운 용어 없이, 클릭으로 따라오면 됩니다.</p>
+        <div class="btn-row"><a href="/education" class="btn" style="background:var(--moss);color:var(--ink)">무작정 따라하기 보기</a><a href="https://linkmap.biz" rel="noopener noreferrer" class="btn-text">LINKMAP 살펴보기</a></div>
       </div>
       <div class="steps">
-        <div class="step rv"><div class="n">01</div><h4>기획과 IA</h4><p>화면·데이터 구조를 설계.</p></div>
-        <div class="step rv"><div class="n">02</div><h4>Next.js 화면</h4><p>랜딩·콘텐츠를 빠르게 구현.</p></div>
-        <div class="step rv"><div class="n">03</div><h4>Supabase</h4><p>인증·DB·RLS 권한 연결.</p></div>
-        <div class="step rv"><div class="n">04</div><h4>Stripe 결제</h4><p>Checkout·Webhook 완성.</p></div>
-        <div class="step rv"><div class="n">05</div><h4>LINKMAP 배포</h4><p>환경변수 정리 후 Vercel.</p></div>
+        <div class="step rv"><div class="n">01</div><h4>구글 계정 만들기</h4><p>모든 것의 시작. 계정 하나로 전부 로그인.</p></div>
+        <div class="step rv"><div class="n">02</div><h4>AI 서비스 가입</h4><p>ChatGPT·Claude에 가입하고 옆에서 도움받기.</p></div>
+        <div class="step rv"><div class="n">03</div><h4>내 홈페이지 만들기</h4><p>템플릿 고르고 원클릭 배포로 공개.</p></div>
+        <div class="step rv"><div class="n">04</div><h4>내 마음대로 고치기</h4><p>글·사진·색을 바꿔 내 것으로.</p></div>
+        <div class="step rv"><div class="n">05</div><h4>데이터 연결</h4><p>신청·문의 정보를 저장하는 창고 연결.</p></div>
+        <div class="step rv"><div class="n">06</div><h4>결제 받기</h4><p>카드 결제를 붙여 판매까지.</p></div>
       </div>
     </div>
   </section>

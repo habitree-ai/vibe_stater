@@ -26,6 +26,12 @@ export type Project = {
 
 export type ProductType = "ebook" | "course" | "template" | "consulting";
 
+// 자료 상태: ready(바로 이용) · soon(준비중) · inquiry(별도 문의)
+export type ProductStatus = "ready" | "soon" | "inquiry";
+
+// 상세 페이지 주요 버튼(외부 배포/유튜브/문의 등으로 연결)
+export type ProductAction = { label: string; href: string; external?: boolean };
+
 export type FaqItem = { q: string; a: string };
 
 export type Product = {
@@ -36,6 +42,9 @@ export type Product = {
   currency: "KRW";
   summary: string;
   slug: string;
+  status: ProductStatus;
+  statusNote?: string; // 준비중/문의 안내 문구
+  action?: ProductAction; // 상세 페이지 주요 버튼(없으면 준비중 안내만 노출)
   // 상세 페이지(기획서 8.2)용 필드
   outcome: string; // 핵심 결과물
   forWhom: string[];
@@ -43,6 +52,11 @@ export type Product = {
   howToUse: string;
   faq: FaqItem[];
 };
+
+// 교육 자료 상태별 외부 연결 (강의=유튜브 재생목록, 템플릿=LINKMAP 원클릭 배포)
+export const YOUTUBE_PLAYLISTS_URL =
+  "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ/playlists";
+export const LINKMAP_DEPLOY_URL = "https://linkmap.biz";
 
 export type Post = {
   id: string;
@@ -62,6 +76,12 @@ export const productTypeLabel: Record<ProductType, string> = {
   course: "강의",
   template: "템플릿",
   consulting: "컨설팅",
+};
+
+export const productStatusLabel: Record<ProductStatus, string> = {
+  ready: "바로 시작",
+  soon: "준비중",
+  inquiry: "별도 문의",
 };
 
 export function formatPrice(price: number, currency: "KRW" = "KRW"): string {
@@ -149,19 +169,21 @@ export const products: Product[] = [
     type: "ebook",
     price: 0,
     currency: "KRW",
-    summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책.",
+    summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책. (준비중)",
     slug: "vibe-1in-saas",
+    status: "soon",
+    statusNote: "전자책을 집필하고 있어요. 완성되면 이곳에서 무료로 가장 먼저 공개할게요.",
     outcome: "나만의 서비스 아이디어를 실제 배포 가능한 형태로 설계하는 능력",
     forWhom: [
       "코드는 모르지만 서비스를 만들고 싶은 분",
       "AI 도구로 빠르게 프로토타입을 만들고 싶은 분",
       "사이드 프로젝트를 끝까지 출시해본 적 없는 분",
     ],
-    includes: ["PDF 전자책 180p", "예제 프롬프트 모음", "체크리스트 템플릿"],
-    howToUse: "구매 후 마이페이지 > 내 자료실에서 PDF를 즉시 다운로드할 수 있습니다.",
+    includes: ["PDF 전자책 (준비중)", "예제 프롬프트 모음", "체크리스트 템플릿"],
+    howToUse: "완성되면 마이페이지 > 내 자료실에서 바로 내려받을 수 있도록 준비하고 있어요.",
     faq: [
       { q: "개발 지식이 필요한가요?", a: "아니요. 비개발자 기준으로 단계별로 설명합니다." },
-      { q: "환불이 가능한가요?", a: "디지털 상품 특성상 다운로드 전에 한해 환불 가능합니다." },
+      { q: "언제 공개되나요?", a: "집필이 끝나는 대로 이 페이지에서 무료로 공개할 예정이에요." },
     ],
   },
   {
@@ -170,19 +192,24 @@ export const products: Product[] = [
     type: "course",
     price: 0,
     currency: "KRW",
-    summary: "Supabase·Stripe·Resend를 LINKMAP으로 연결하는 영상 강의.",
+    summary:
+      "LINKMAP으로 서비스를 연결하는 영상 강의. (준비중 · 유튜브 재생목록에 순차 공개)",
     slug: "linkmap-course",
-    outcome: "외부 서비스를 연결한 동작하는 개인 플랫폼 한 개",
+    status: "soon",
+    statusNote:
+      "강의 영상을 제작하고 있어요. 완성되는 영상부터 유튜브 재생목록에 순차 업데이트됩니다.",
+    action: { label: "유튜브에서 미리 보기", href: YOUTUBE_PLAYLISTS_URL, external: true },
+    outcome: "외부 서비스를 연결한, 동작하는 나만의 홈페이지 한 개",
     forWhom: [
-      "Supabase·Stripe 연동에서 매번 막히는 분",
+      "서비스 연결에서 매번 막히는 분",
       "환경변수·배포가 두려운 분",
-      "이 사이트 같은 플랫폼을 직접 만들고 싶은 분",
+      "이 사이트 같은 홈페이지를 직접 만들고 싶은 분",
     ],
-    includes: ["영상 강의 12강", "LINKMAP 체크리스트", "질문 게시판 접근"],
-    howToUse: "구매 후 마이페이지 > 수강 가능한 교육에서 바로 시청할 수 있습니다.",
+    includes: ["영상 강의 (제작 시 순차 업데이트)", "LINKMAP 체크리스트", "질문 게시판 접근"],
+    howToUse: "강의는 유튜브 재생목록으로 공개돼요. 제작되는 대로 이 페이지와 재생목록에 순차 반영됩니다.",
     faq: [
-      { q: "수강 기간 제한이 있나요?", a: "구매 후 무제한으로 다시 볼 수 있습니다." },
-      { q: "실습 환경이 필요한가요?", a: "무료 등급의 Supabase·Vercel 계정이면 충분합니다." },
+      { q: "어디서 볼 수 있나요?", a: "유튜브 재생목록으로 공개하며, 제작되는 영상부터 순차 업데이트됩니다." },
+      { q: "실습 환경이 필요한가요?", a: "무료 등급의 계정이면 충분합니다. 강의에서 함께 준비합니다." },
     ],
   },
   {
@@ -191,18 +218,21 @@ export const products: Product[] = [
     type: "template",
     price: 0,
     currency: "KRW",
-    summary: "이 사이트의 기반이 된 Next.js 개인 플랫폼 템플릿.",
+    summary: "LINKMAP 원클릭 배포로 3분 만에 내 홈페이지를 시작하는 템플릿.",
     slug: "creator-platform-template",
-    outcome: "랜딩·콘텐츠·상품·결제 구조를 갖춘 Next.js 프로젝트 코드",
+    status: "ready",
+    action: { label: "LINKMAP으로 원클릭 배포", href: LINKMAP_DEPLOY_URL, external: true },
+    outcome: "랜딩·콘텐츠·상품 구조를 갖춘 내 홈페이지 한 개 (배포까지 완료)",
     forWhom: [
       "처음부터 만들기보다 검증된 구조에서 시작하고 싶은 분",
-      "개인 브랜드/판매 플랫폼이 필요한 분",
+      "개인 브랜드/판매 홈페이지가 필요한 분",
     ],
-    includes: ["Next.js 프로젝트 소스", "Supabase 스키마 SQL", "환경변수 가이드"],
-    howToUse: "구매 후 제공되는 저장소 링크에서 코드를 내려받아 사용합니다.",
+    includes: ["LINKMAP 원클릭 배포 템플릿", "홈페이지 기본 구조", "이후 수정 가이드"],
+    howToUse:
+      "LINKMAP에 구글 계정으로 로그인 → 템플릿 선택 → 원클릭 배포하면, 내 주소로 홈페이지가 바로 만들어져요.",
     faq: [
-      { q: "상업적 사용이 가능한가요?", a: "네, 본인 프로젝트에 자유롭게 사용할 수 있습니다." },
-      { q: "업데이트가 제공되나요?", a: "주요 업데이트는 동일 저장소로 무료 제공됩니다." },
+      { q: "코드를 몰라도 되나요?", a: "네. LINKMAP에서 템플릿을 고르고 버튼 한 번이면 배포됩니다." },
+      { q: "배포한 뒤에 고칠 수 있나요?", a: "네, 글·사진·색을 자유롭게 바꿔 내 것으로 만들 수 있어요." },
     ],
   },
   {
@@ -211,18 +241,25 @@ export const products: Product[] = [
     type: "consulting",
     price: 0,
     currency: "KRW",
-    summary: "당신의 아이디어를 함께 설계하고 출시까지 돕는 60분 세션.",
+    summary: "아이디어를 함께 설계하고 출시까지 돕는 1:1 세션. 일정·방식은 별도 문의로 정해요.",
     slug: "1on1-consulting",
+    status: "inquiry",
+    statusNote: "정해진 상품이 아니라, 필요에 맞춰 진행해요. 아래 버튼으로 편하게 문의해 주세요.",
+    action: {
+      label: "별도 문의하기",
+      href: `/contact?type=${encodeURIComponent("컨설팅 문의")}`,
+      external: false,
+    },
     outcome: "구체적인 실행 로드맵과 다음 2주 액션 플랜",
     forWhom: [
       "아이디어는 있지만 어디서 시작할지 막막한 분",
-      "기술 스택/우선순위 결정에 도움이 필요한 분",
+      "무엇부터 할지 우선순위 결정에 도움이 필요한 분",
     ],
-    includes: ["60분 화상 세션", "세션 요약 노트", "후속 질문 1회"],
-    howToUse: "구매 후 문의 페이지로 일정을 조율해 드립니다.",
+    includes: ["1:1 세션(온라인)", "세션 요약 노트", "후속 질문 1회"],
+    howToUse: "문의를 남겨 주시면 일정과 방식을 함께 조율해 진행합니다.",
     faq: [
-      { q: "어떤 방식으로 진행되나요?", a: "화상 회의로 진행하며 녹화본을 공유합니다." },
-      { q: "준비할 게 있나요?", a: "사전 질문지를 보내드리니 간단히 답변만 주시면 됩니다." },
+      { q: "어떻게 진행되나요?", a: "문의 후 일정을 잡아 온라인으로 진행하며 요약 노트를 드려요." },
+      { q: "비용이 있나요?", a: "내용과 범위에 따라 달라 별도 문의로 안내드립니다." },
     ],
   },
 ];
@@ -258,31 +295,37 @@ export const posts: Post[] = [
   },
 ];
 
+// 초보자 눈높이 커리큘럼 — '무작정 따라하기' 컨셉(어려운 용어 없이 클릭으로 따라오기)
 export const educationModules: EducationModule[] = [
   {
     step: "01",
-    title: "기획과 정보구조(IA)",
-    desc: "만들 서비스를 정의하고 화면과 데이터 구조를 설계합니다.",
+    title: "구글 계정 만들기",
+    desc: "모든 것의 시작이에요. 구글 계정 하나면 앞으로 쓸 서비스에 전부 로그인할 수 있어요. 이미 있다면 이 단계는 건너뛰어도 됩니다.",
   },
   {
     step: "02",
-    title: "Next.js로 화면 만들기",
-    desc: "샘플 데이터로 랜딩과 콘텐츠 페이지를 빠르게 구현합니다.",
+    title: "AI 서비스에 가입하기",
+    desc: "ChatGPT·Claude 같은 AI 도구에 가입해요. 앞으로 '무엇을 만들지'만 말하면 AI가 옆에서 도와줍니다.",
   },
   {
     step: "03",
-    title: "Supabase로 인증·DB 연결",
-    desc: "회원가입/로그인과 데이터베이스, RLS 권한을 붙입니다.",
+    title: "내 홈페이지 만들기",
+    desc: "LINKMAP에서 템플릿을 고르고 버튼 한 번(원클릭 배포)이면, 세상에 공개되는 내 홈페이지가 생겨요. 코드는 몰라도 됩니다.",
   },
   {
     step: "04",
-    title: "Stripe로 결제 붙이기",
-    desc: "Checkout과 Webhook으로 판매와 권한 부여까지 완성합니다.",
+    title: "내 마음대로 고치기",
+    desc: "글·사진·색을 바꿔 내 것으로 만들어요. AI에게 '이 부분 이렇게 바꿔줘'라고 말하듯 요청하면 됩니다.",
   },
   {
     step: "05",
-    title: "LINKMAP으로 연결·배포",
-    desc: "환경변수와 서비스 연결을 정리하고 Vercel에 배포합니다.",
+    title: "내 정보 담아두기 (데이터 연결)",
+    desc: "방문자가 남긴 신청·문의 같은 정보를 저장하는 '창고'를 연결해요. 어려운 말 같지만, 클릭 몇 번이면 됩니다.",
+  },
+  {
+    step: "06",
+    title: "결제 받기 (결제 연동)",
+    desc: "내가 만든 걸 팔고 싶다면 카드 결제를 붙여요. 손님이 결제하면 나에게 자동으로 알림이 오도록 연결합니다.",
   },
 ];
 
@@ -294,10 +337,10 @@ export const newsletter = {
 };
 
 export const education = {
-  title: "바이브코딩으로 나만의 서비스를 만들어보세요",
+  title: "코딩을 몰라도, 내 홈페이지를 직접 만들어요",
   description:
-    "LINKMAP 템플릿으로 Supabase·Stripe·Resend까지 직접 연결하는 실습 과정. 코드를 몰라도, 출시까지 함께합니다.",
-  cta: "교육 과정 보기",
+    "구글 계정 만들기부터 내 홈페이지 공개까지, 하나씩 무작정 따라 하기. 어려운 용어 없이, 클릭으로 따라오면 됩니다.",
+  cta: "무작정 따라하기 보기",
 };
 
 // 조회 헬퍼 (추후 DB 쿼리로 대체)
@@ -413,6 +456,8 @@ export type Resource = {
   tag: string;
   cta: string;
   href: string;
+  status?: "soon"; // 준비중(실제 자료가 아직 없는 항목)
+  external?: boolean; // 외부 링크(유튜브 등)로 이동
   signup?: { current: number; total: number; note: string };
 };
 
@@ -421,19 +466,22 @@ export const resources: Resource[] = [
     id: "ebook",
     type: "전자책",
     name: "바이브코딩으로 시작하는 1인 SaaS",
-    summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책.",
-    tag: "무료 · 교육용",
-    cta: "받기",
+    summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책. 완성되면 무료로 공개해요.",
+    tag: "준비중",
+    status: "soon",
+    cta: "준비중",
     href: "/products/vibe-1in-saas",
   },
   {
     id: "course",
     type: "강의",
     name: "LINKMAP 실전 강의",
-    summary: "Supabase·Stripe·Resend를 LINKMAP으로 연결하는 영상 강의.",
-    tag: "무료 · 교육용",
-    cta: "받기",
-    href: "/products/linkmap-course",
+    summary: "LINKMAP으로 서비스를 연결하는 영상 강의. 제작되는 대로 유튜브 재생목록에 순차 공개해요.",
+    tag: "준비중 · 유튜브",
+    status: "soon",
+    cta: "유튜브 재생목록 보기",
+    href: YOUTUBE_PLAYLISTS_URL,
+    external: true,
   },
   {
     id: "coffeechat",

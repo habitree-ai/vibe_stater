@@ -51,16 +51,22 @@ export function Resources() {
 
 function ResourceCard({ resource }: { resource: Resource }) {
   const isCoffee = resource.id === "coffeechat";
+  const isSoon = resource.status === "soon";
   const pct = resource.signup
     ? Math.round((resource.signup.current / resource.signup.total) * 100)
     : 0;
-  return (
-    <Link
-      href={resource.href}
-      className="lift gradient-border group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card"
-    >
+
+  const cardClass =
+    "lift gradient-border group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card";
+  const inner = (
+    <>
       {/* 상단 비주얼 */}
       <div className="relative grid aspect-[5/3] place-items-center overflow-hidden bg-gradient-to-br from-accent/40 via-card to-primary/10">
+        {isSoon && (
+          <span className="absolute right-3 top-3 rounded-full border border-border/70 bg-background/85 px-2.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground backdrop-blur">
+            준비중
+          </span>
+        )}
         {isCoffee ? (
           <span className="text-3xl opacity-70" aria-hidden>
             ☕
@@ -101,10 +107,23 @@ function ResourceCard({ resource }: { resource: Resource }) {
             <span className="size-1.5 rounded-full bg-primary" /> {resource.tag}
           </span>
           <span className="text-sm font-medium text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {resource.cta} →
+            {resource.cta} {resource.external ? "↗" : "→"}
           </span>
         </div>
       </div>
+    </>
+  );
+
+  if (resource.external) {
+    return (
+      <a href={resource.href} target="_blank" rel="noreferrer" className={cardClass}>
+        {inner}
+      </a>
+    );
+  }
+  return (
+    <Link href={resource.href} className={cardClass}>
+      {inner}
     </Link>
   );
 }
