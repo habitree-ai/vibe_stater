@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/Reveal";
-import { products, productTypeLabel, formatPrice } from "@/data/sample";
+import { products, productTypeLabel, productStatusLabel, formatPrice } from "@/data/sample";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -38,6 +38,14 @@ export default function ProductsPage() {
                   >
                     {productTypeLabel[product.type]}
                   </Badge>
+                  {product.status !== "ready" && (
+                    <Badge
+                      variant="outline"
+                      className="absolute right-3 top-3 border-border/70 bg-background/80 text-muted-foreground backdrop-blur"
+                    >
+                      {productStatusLabel[product.status]}
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-5">
                   <h3 className="font-display text-base font-semibold leading-snug tracking-tight">
@@ -48,10 +56,12 @@ export default function ProductsPage() {
                     <span
                       className={cn(
                         "font-display text-lg font-semibold",
-                        product.price === 0 && "text-primary"
+                        product.status === "ready" && product.price === 0 && "text-primary"
                       )}
                     >
-                      {formatPrice(product.price, product.currency)}
+                      {product.status === "ready"
+                        ? formatPrice(product.price, product.currency)
+                        : productStatusLabel[product.status]}
                     </span>
                     <span className="text-sm font-medium text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                       자세히 →

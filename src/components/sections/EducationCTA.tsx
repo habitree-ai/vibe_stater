@@ -54,7 +54,7 @@ export function EducationCTA() {
 
               {/* 커리큘럼 미리보기 */}
               <div className="space-y-2.5">
-                {educationModules.slice(0, 5).map((m) => (
+                {educationModules.slice(0, 6).map((m) => (
                   <div
                     key={m.step}
                     className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur transition-colors hover:bg-white/10"

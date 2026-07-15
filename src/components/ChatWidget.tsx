@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// AI 챗봇 — 참조 디자인의 플로팅 버튼+패널을 복원. 실제 응답은 /api/chat(Anthropic).
+// AI 챗봇 — 참조 디자인의 플로팅 버튼+패널을 복원. 실제 응답은 /api/chat(OpenAI).
+// 모델·말투(기본지침)는 관리자가 /admin/settings 에서 바꾼다.
 type Msg = { role: "user" | "assistant"; content: string };
 
 const SUGGESTIONS = [

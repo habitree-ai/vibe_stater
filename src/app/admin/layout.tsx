@@ -4,8 +4,10 @@ import { requireAdmin } from "@/lib/admin";
 // 관리자 영역 공통 레이아웃 — 가드 1곳 + 상단 관리자 내비.
 // /admin/* 모든 하위 라우트는 여기서 관리자 접근을 보장한다.
 const adminNav = [
-  { href: "/admin/coffee-chat", label: "커피챗" },
+  { href: "/admin", label: "대시보드" },
+  { href: "/admin/settings", label: "연동설정" },
   { href: "/admin/contact", label: "문의" },
+  { href: "/admin/coffee-chat", label: "커피챗" },
   { href: "/admin/subscribers", label: "구독자" },
   { href: "/admin/logs", label: "활동로그" },
 ];
