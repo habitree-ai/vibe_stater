@@ -35,7 +35,7 @@ export const homeMarkup = `
         <a class="demo" href="https://linkmap.biz" rel="noopener noreferrer" data-cursor>
           <div class="demo-bar"><span style="background:#f87171"></span><span style="background:#fbbf24"></span><span style="background:#34d399"></span>
             <span class="demo-url">🔒 linkmap.biz</span></div>
-          <img class="demo-shot" src="/img/linkmap-oneclick.png" alt="LINKMAP 원클릭 배포 — 3분 안에 내 홈페이지 만들기" width="1185" height="843" />
+          <img class="demo-shot" src="/img/linkmap-main.png" alt="LINKMAP 메인 화면 — 한 플랫폼에서 3분 만에 배포" width="1798" height="872" />
         </a>
       </div>
     </div>
