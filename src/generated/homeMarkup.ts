@@ -35,13 +35,7 @@ export const homeMarkup = `
         <a class="demo" href="https://linkmap.biz" rel="noopener noreferrer" data-cursor>
           <div class="demo-bar"><span style="background:#f87171"></span><span style="background:#fbbf24"></span><span style="background:#34d399"></span>
             <span class="demo-url">🔒 linkmap.biz</span></div>
-          <div class="demo-body">
-            <span class="demo-tag">● 바이브 코딩 플랫폼</span>
-            <h3>초보자부터 개발자까지<br><em>한 플랫폼에서</em></h3>
-            <p>Google 계정 하나면 GitHub 가입부터 배포까지 자동으로.</p>
-            <span class="pill">🚀 3분 만에 내 홈페이지 만들기</span>
-            <div class="micro"><span>✓ 무료 플랜</span><span>✓ Google 계정 OK</span><span>✓ AES-256 암호화</span></div>
-          </div>
+          <img class="demo-shot" src="/img/linkmap-oneclick.png" alt="LINKMAP 원클릭 배포 — 3분 안에 내 홈페이지 만들기" width="1185" height="843" />
         </a>
       </div>
     </div>
@@ -58,10 +52,25 @@ export const homeMarkup = `
   <section class="about" id="about">
     <div class="wrap sec about-grid">
       <div class="rv">
-        <div class="polaroid">
-          <div class="photo"><div class="grain"></div><span>📷 본인 사진이 들어갈 자리</span></div>
-          <div class="cap">— 퇴근 후, 또 뭔가 만드는 중</div>
-        </div>
+        <figure class="idcard">
+          <div class="idcard-grain"></div>
+          <div class="idcard-top">
+            <span class="idcard-kicker">지금 하는 일</span>
+            <span class="idcard-live"><span class="dot"></span> 만드는 중</span>
+          </div>
+          <p class="idcard-motto">읽고 · 만들고 ·
+            <span class="hand">나눕니다<svg viewBox="0 0 300 12" preserveAspectRatio="none"><path d="M3 8 Q90 3 160 7 T297 6"/></svg></span>
+          </p>
+          <ul class="idcard-facts">
+            <li><b>제조 ERP</b> 현장에서 시스템을 굴립니다</li>
+            <li><b>AX · AI 전환</b>을 실무에 붙입니다</li>
+            <li>퇴근 후엔 <b>1인 SaaS</b>를 만듭니다</li>
+          </ul>
+          <svg class="idcard-sign" viewBox="0 0 200 34" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M6 24 C 24 4, 40 6, 46 22 S 72 32, 94 12 T 148 18 Q 176 22, 194 8"/>
+          </svg>
+          <figcaption class="idcard-cap">— 퇴근 후, 또 뭔가 만드는 중</figcaption>
+        </figure>
       </div>
       <div class="rv">
         <div class="kicker">소개</div>
@@ -98,16 +107,20 @@ export const homeMarkup = `
             <li>30+ 서비스 · 프로젝트 템플릿</li>
           </ul>
         </div>
-        <div class="demo-mini">
-          <div class="play">▶</div>
-          <small>10초 데모 영상이 자동재생되는 자리</small>
-        </div>
+        <figure class="shot">
+          <div class="shot-bar"><i style="background:#f87171"></i><i style="background:#fbbf24"></i><i style="background:#34d399"></i><span class="u">🔒 linkmap.biz</span></div>
+          <img src="/img/linkmap-main.png" alt="LINKMAP 메인 화면 — 한 플랫폼에서 3분 만에 배포" loading="lazy" width="1798" height="872" />
+        </figure>
       </a>
       <a class="card rv" href="https://read.habitree.io" rel="noopener noreferrer" data-cursor>
         <span class="live"><span class="dot"></span> 서비스 · 라이브</span>
         <h3>ReadTree</h3>
         <span class="host">read.habitree.io ↗</span>
         <p class="desc">읽고 기록하면 <b>독서나무가 자라는</b> 습관 플랫폼. 읽은 모든 페이지가 자산이 됩니다.</p>
+        <figure class="shot">
+          <div class="shot-bar"><i style="background:#f87171"></i><i style="background:#fbbf24"></i><i style="background:#34d399"></i><span class="u">🔒 read.habitree.io</span></div>
+          <img src="/img/readtree-main.png" alt="ReadTree 대시보드 — 독서 기록으로 자라는 독서나무" loading="lazy" width="1723" height="886" />
+        </figure>
         <div class="tags"><span>#독서</span><span>#필사</span><span>#습관</span></div>
       </a>
       <a class="card dark rv" href="https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ" target="_blank" rel="noopener noreferrer" data-cursor>
