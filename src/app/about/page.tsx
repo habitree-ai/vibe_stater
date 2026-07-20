@@ -23,7 +23,16 @@ export default function AboutPage() {
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
         <div className="grid gap-10 md:grid-cols-[1fr_1.6fr]">
-          <div className="aspect-square max-w-sm rounded-2xl bg-gradient-to-br from-muted to-accent/40 ring-1 ring-border" />
+          {/* ReadTree 캐릭터 — 메이커(남자) + 수달 마스코트 */}
+          <div className="relative aspect-square max-w-sm overflow-hidden rounded-2xl bg-gradient-to-br from-muted to-accent/40 ring-1 ring-border">
+            <img
+              src="/img/about-characters.png"
+              alt="노트북 앞의 메이커 캐릭터와 책을 읽는 ReadTree 수달 마스코트"
+              width={1200}
+              height={1200}
+              className="h-full w-full object-cover object-bottom"
+            />
+          </div>
           <div className="space-y-6">
             <p className="text-base leading-relaxed text-muted-foreground">{profile.bio}</p>
             <div className="flex flex-wrap gap-2">
@@ -33,14 +42,6 @@ export default function AboutPage() {
                 </Badge>
               ))}
             </div>
-            <dl className="flex flex-wrap gap-x-10 gap-y-4 pt-2">
-              {profile.stats.map((s) => (
-                <div key={s.label}>
-                  <dt className="text-xs text-muted-foreground">{s.label}</dt>
-                  <dd className="font-heading text-2xl font-semibold">{s.value}</dd>
-                </div>
-              ))}
-            </dl>
           </div>
         </div>
       </section>

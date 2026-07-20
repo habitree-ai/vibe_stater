@@ -2,7 +2,6 @@
 // 타입은 추후 Supabase 응답과 호환되도록 설계한다. (doc/03_sample_content.md 참조)
 // 백엔드 연동 단계에서는 이 파일의 export만 데이터 소스로 교체하면 된다.
 
-export type Stat = { label: string; value: string };
 export type Social = { label: string; href: string };
 
 export type Profile = {
@@ -10,7 +9,6 @@ export type Profile = {
   tagline: string;
   bio: string;
   keywords: string[];
-  stats: Stat[];
   socials: Social[];
 };
 
@@ -101,11 +99,6 @@ export const profile: Profile = {
   tagline: "AI 시대, 읽고 만들고 연결하는 우리의 공간",
   bio: "제조기업 ERP PM이자 AX(AI 전환) 담당자로 일하며, 곁에서 AI·바이브코딩·독서를 함께 공부합니다. 가르치기보다, 직접 읽고 만들어 본 과정을 기록하고 나누는 사람입니다.",
   keywords: ["AI", "바이브코딩", "독서", "서비스 기획", "LINKMAP"],
-  stats: [
-    { label: "누적 독자", value: "12,000+" },
-    { label: "뉴스레터 구독", value: "2,300+" },
-    { label: "제작 사례", value: "8건" },
-  ],
   socials: [
     { label: "YouTube", href: "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ" },
     { label: "ReadTree", href: "https://read.habitree.io" },
