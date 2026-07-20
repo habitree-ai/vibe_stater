@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
+import { CardCover } from "@/components/ui/CardCover";
 import { Reveal } from "@/components/ui/Reveal";
 import { products, productTypeLabel, productStatusLabel, formatPrice } from "@/data/sample";
 import { cn } from "@/lib/utils";
@@ -31,22 +32,22 @@ export default function ProductsPage() {
                 href={`/products/${product.slug}`}
                 className="lift gradient-border group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card"
               >
-                <div className="relative aspect-[5/4] overflow-hidden bg-gradient-to-br from-accent/40 via-card to-primary/10">
+                <CardCover cover={product.cover} fallbackMark="📦" className="aspect-[5/4]">
                   <Badge
                     variant="secondary"
-                    className="absolute left-3 top-3 bg-background/80 backdrop-blur"
+                    className="absolute left-3 top-3 z-10 bg-background/80 backdrop-blur"
                   >
                     {productTypeLabel[product.type]}
                   </Badge>
                   {product.status !== "ready" && (
                     <Badge
                       variant="outline"
-                      className="absolute right-3 top-3 border-border/70 bg-background/80 text-muted-foreground backdrop-blur"
+                      className="absolute right-3 top-3 z-10 border-border/70 bg-background/80 text-muted-foreground backdrop-blur"
                     >
                       {productStatusLabel[product.status]}
                     </Badge>
                   )}
-                </div>
+                </CardCover>
                 <div className="flex flex-1 flex-col gap-2 p-5">
                   <h3 className="font-display text-base font-semibold leading-snug tracking-tight">
                     {product.name}

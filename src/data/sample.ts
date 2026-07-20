@@ -20,6 +20,17 @@ export type Project = {
   tags: string[];
   url: string;
   external: boolean;
+  cover?: Cover; // 서비스 실제 화면(스크린샷)
+};
+
+// 카드 상단 비주얼. 실제 자료/서비스 화면이 있으면 그 이미지를, 없으면 브랜드 캐릭터를 쓴다.
+// fit: "cover"=화면 캡처(꽉 채움) · "contain"=일러스트(여백 유지) · kicker=이미지 위 한 줄 설명
+export type Cover = {
+  src: string;
+  alt: string;
+  fit?: "cover" | "contain";
+  position?: string; // object-position (기본 center)
+  kicker?: string;
 };
 
 export type ProductType = "ebook" | "course" | "template" | "consulting";
@@ -41,6 +52,7 @@ export type Product = {
   summary: string;
   slug: string;
   status: ProductStatus;
+  cover?: Cover; // 카드 상단 비주얼
   statusNote?: string; // 준비중/문의 안내 문구
   action?: ProductAction; // 상세 페이지 주요 버튼(없으면 준비중 안내만 노출)
   // 상세 페이지(기획서 8.2)용 필드
@@ -65,6 +77,7 @@ export type Post = {
   excerpt: string;
   date: string; // ISO (YYYY-MM-DD)
   slug: string;
+  cover?: Cover; // 카드 상단 비주얼
   body: string; // 문단은 빈 줄(\n\n)로 구분
 };
 
@@ -127,18 +140,24 @@ export const aboutPage = {
     items: [
       {
         img: "/img/about/man-code.png",
+        w: 322,
+        h: 288,
         alt: "모니터 앞에서 코딩하는 메이커 캐릭터",
         title: "만들어요",
         desc: "코드를 몰라도 시작할 수 있는 도구를 직접 만들고 운영합니다. LINKMAP과 ReadTree는 제가 매일 쓰는 서비스예요.",
       },
       {
         img: "/img/about/man-read.png",
+        w: 324,
+        h: 288,
         alt: "책을 읽는 메이커 캐릭터",
         title: "읽어요",
         desc: "AI가 답을 대신 써주는 시대일수록 더 많이 읽습니다. 읽은 것을 필사하고 정리해 생각의 재료로 쌓아둡니다.",
       },
       {
         img: "/img/about/man-record.png",
+        w: 318,
+        h: 288,
         alt: "카메라 앞에서 영상을 녹화하는 메이커 캐릭터",
         title: "나눠요",
         desc: "잘된 결과만이 아니라 헤맨 과정까지 영상과 글로 남깁니다. 같은 자리에서 막힌 분이 시간을 아끼도록.",
@@ -231,8 +250,14 @@ export const projects: Project[] = [
     summary:
       "서비스 연결·환경변수·체크리스트를 한 곳에서 관리하는 바이브코딩 온보딩 도구.",
     tags: ["환경관리", "온보딩"],
-    url: "#projects",
-    external: false,
+    url: LINKMAP_DEPLOY_URL,
+    external: true,
+    cover: {
+      src: "/img/linkmap-main.png",
+      alt: "LINKMAP 메인 화면 — 한 플랫폼에서 3분 만에 배포",
+      position: "left top",
+      kicker: "지금 운영 중 · 라이브",
+    },
   },
   {
     id: "readtree",
@@ -240,8 +265,14 @@ export const projects: Project[] = [
     category: "서비스",
     summary: "읽고 필사하며 생각을 키우는 독서 기반 성장 서비스.",
     tags: ["독서", "필사"],
-    url: "#projects",
-    external: false,
+    url: "https://read.habitree.io",
+    external: true,
+    cover: {
+      src: "/img/readtree-main.png",
+      alt: "ReadTree 대시보드 — 독서 기록으로 자라는 독서나무",
+      position: "left top",
+      kicker: "지금 운영 중 · 라이브",
+    },
   },
   {
     id: "youtube",
@@ -251,6 +282,12 @@ export const projects: Project[] = [
     tags: ["영상", "AI"],
     url: "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ",
     external: true,
+    cover: {
+      src: "/img/about/otter-cheer.png",
+      alt: "응원하는 하비트리 캐릭터",
+      fit: "contain",
+      kicker: "새 영상 순차 공개",
+    },
   },
 ];
 
@@ -264,6 +301,10 @@ export const products: Product[] = [
     summary: "코드를 몰라도 괜찮아요. 아이디어 한 문장에서 배포까지, 15분이면 읽는 입문 전자책.",
     slug: "vibe-1in-saas",
     status: "ready",
+    cover: {
+      src: "/img/covers/ebook-vibe.png",
+      alt: "전자책 표지 — 바이브코딩으로 시작하는 1인 SaaS",
+    },
     action: { label: "전자책 읽기 (무료)", href: EBOOK_VIBE_URL, external: true },
     outcome: "내 아이디어를 한 문장으로 정리한 기획 + AI에게 그대로 붙여넣을 첫 프롬프트",
     forWhom: [
@@ -294,6 +335,12 @@ export const products: Product[] = [
       "LINKMAP으로 서비스를 연결하는 영상 강의. (준비중 · 유튜브 재생목록에 순차 공개)",
     slug: "linkmap-course",
     status: "soon",
+    cover: {
+      src: "/img/about/man-record.png",
+      alt: "카메라 앞에서 강의 영상을 촬영하는 모습",
+      fit: "contain",
+      kicker: "영상 제작 중 · 순차 공개",
+    },
     statusNote:
       "강의 영상을 제작하고 있어요. 완성되는 영상부터 유튜브 재생목록에 순차 업데이트됩니다.",
     action: { label: "유튜브에서 미리 보기", href: YOUTUBE_PLAYLISTS_URL, external: true },
@@ -319,6 +366,12 @@ export const products: Product[] = [
     summary: "LINKMAP 원클릭 배포로 3분 만에 내 홈페이지를 시작하는 템플릿.",
     slug: "creator-platform-template",
     status: "ready",
+    cover: {
+      src: "/img/linkmap-main.png",
+      alt: "LINKMAP 원클릭 배포 화면",
+      position: "left top",
+      kicker: "원클릭 배포 3분",
+    },
     action: { label: "LINKMAP으로 원클릭 배포", href: LINKMAP_DEPLOY_URL, external: true },
     outcome: "랜딩·콘텐츠·상품 구조를 갖춘 내 홈페이지 한 개 (배포까지 완료)",
     forWhom: [
@@ -342,6 +395,12 @@ export const products: Product[] = [
     summary: "아이디어를 함께 설계하고 출시까지 돕는 1:1 세션. 일정·방식은 별도 문의로 정해요.",
     slug: "1on1-consulting",
     status: "inquiry",
+    cover: {
+      src: "/img/about/otter-coffee.png",
+      alt: "커피잔을 든 하비트리 캐릭터",
+      fit: "contain",
+      kicker: "온라인 1:1 세션",
+    },
     statusNote: "정해진 상품이 아니라, 필요에 맞춰 진행해요. 아래 버튼으로 편하게 문의해 주세요.",
     action: {
       label: "별도 문의하기",
@@ -371,6 +430,12 @@ export const posts: Post[] = [
       "AI와 함께라면 비개발자도 실서비스를 출시할 수 있습니다. 그 첫 단계를 정리했습니다.",
     date: "2026-06-01",
     slug: "build-without-code",
+    cover: {
+      src: "/img/about/otter-idea.png",
+      alt: "아이디어 전구를 든 하비트리 캐릭터",
+      fit: "contain",
+      kicker: "아이디어 한 문장에서 시작",
+    },
     body: "예전에는 서비스를 만들려면 먼저 프로그래밍 언어부터 배워야 했습니다. 하지만 지금은 순서가 달라졌습니다.\n\n가장 먼저 할 일은 '무엇을 만들지'를 한 문장으로 정의하는 것입니다. 그다음 AI에게 작은 단위로 요청하며 화면 하나, 기능 하나씩 쌓아갑니다.\n\n중요한 것은 완성이 아니라 배포입니다. 일단 세상에 내놓고, 피드백을 받아 고쳐나가는 과정에서 진짜 실력이 붙습니다.",
   },
   {
@@ -380,6 +445,12 @@ export const posts: Post[] = [
     excerpt: "가장 흔한 배포 실패 원인과 LINKMAP으로 해결하는 방법.",
     date: "2026-05-20",
     slug: "env-deploy-fix",
+    cover: {
+      src: "/img/linkmap-main.png",
+      alt: "LINKMAP 서비스 화면 — 환경변수와 연결 체크리스트",
+      position: "left top",
+      kicker: "LINKMAP 연결 체크리스트",
+    },
     body: "배포가 실패하는 이유의 절반은 환경변수입니다. 로컬에서는 잘 되는데 프로덕션에서 깨지는 전형적인 패턴이죠.\n\n키 이름 오타, 미등록, Preview/Production 환경 불일치가 대표적인 원인입니다.\n\nLINKMAP은 어떤 서비스가 어떤 키를 요구하는지 체크리스트로 관리해, 누락을 배포 전에 잡아냅니다.",
   },
   {
@@ -389,6 +460,12 @@ export const posts: Post[] = [
     excerpt: "ReadTree로 3개월간 필사하며 얻은 변화 기록.",
     date: "2026-05-08",
     slug: "10min-copywriting",
+    cover: {
+      src: "/img/readtree-main.png",
+      alt: "ReadTree 화면 — 필사 기록으로 자라는 독서나무",
+      position: "left top",
+      kicker: "ReadTree 3개월 기록",
+    },
     body: "필사는 단순히 베껴 쓰는 행위가 아닙니다. 좋은 문장의 호흡과 구조를 몸으로 익히는 훈련입니다.\n\n매일 10분, 인상 깊은 문단 하나를 옮겨 적는 것만으로 생각의 밀도가 달라졌습니다.\n\nReadTree로 기록을 쌓으니, 흩어졌던 메모가 나만의 문장 라이브러리가 되었습니다.",
   },
 ];
@@ -554,6 +631,7 @@ export type Resource = {
   tag: string;
   cta: string;
   href: string;
+  cover?: Cover; // 카드 상단 비주얼
   status?: "soon"; // 준비중(실제 자료가 아직 없는 항목)
   external?: boolean; // 외부 링크(유튜브 등)로 이동
   signup?: { current: number; total: number; note: string };
@@ -568,6 +646,10 @@ export const resources: Resource[] = [
       "코드를 몰라도 괜찮아요. 아이디어 한 문장에서 배포까지, 15분이면 읽는 입문서 (A4 5쪽).",
     tag: "무료 · 바로 읽기",
     cta: "전자책 읽기",
+    cover: {
+      src: "/img/covers/ebook-vibe.png",
+      alt: "전자책 표지 — 바이브코딩으로 시작하는 1인 SaaS",
+    },
     href: EBOOK_VIBE_URL,
     external: true,
   },
@@ -579,6 +661,12 @@ export const resources: Resource[] = [
     tag: "준비중 · 유튜브",
     status: "soon",
     cta: "유튜브 재생목록 보기",
+    cover: {
+      src: "/img/about/man-record.png",
+      alt: "카메라 앞에서 강의 영상을 촬영하는 모습",
+      fit: "contain",
+      kicker: "영상 제작 중 · 순차 공개",
+    },
     href: YOUTUBE_PLAYLISTS_URL,
     external: true,
   },
@@ -590,6 +678,12 @@ export const resources: Resource[] = [
       "신청자 100명이 모이면 추첨을 통해, 원하시는 방식(온라인·오프라인)으로 세션을 무료로 진행합니다.",
     tag: "무료 · 추첨",
     cta: "커피챗 신청",
+    cover: {
+      src: "/img/about/otter-coffee.png",
+      alt: "커피잔을 든 하비트리 캐릭터",
+      fit: "contain",
+      kicker: "추첨 무료 · 온라인/오프라인",
+    },
     href: "/contact",
     signup: { current: 37, total: 100, note: "63명 더 모이면 추첨이 시작돼요" },
   },

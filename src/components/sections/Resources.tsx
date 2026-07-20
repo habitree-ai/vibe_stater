@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { CardCover } from "@/components/ui/CardCover";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { resources, supportBanner, type Resource } from "@/data/sample";
@@ -61,22 +62,17 @@ function ResourceCard({ resource }: { resource: Resource }) {
   const inner = (
     <>
       {/* 상단 비주얼 */}
-      <div className="relative grid aspect-[5/3] place-items-center overflow-hidden bg-gradient-to-br from-accent/40 via-card to-primary/10">
+      <CardCover
+        cover={resource.cover}
+        fallbackMark={isCoffee ? "☕" : resource.type === "전자책" ? "📘" : "🎬"}
+        className="aspect-[5/3]"
+      >
         {isSoon && (
-          <span className="absolute right-3 top-3 rounded-full border border-border/70 bg-background/85 px-2.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground backdrop-blur">
+          <span className="absolute right-3 top-3 z-10 rounded-full border border-border/70 bg-background/85 px-2.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground backdrop-blur">
             준비중
           </span>
         )}
-        {isCoffee ? (
-          <span className="text-3xl opacity-70" aria-hidden>
-            ☕
-          </span>
-        ) : (
-          <span className="text-3xl opacity-30" aria-hidden>
-            {resource.type === "전자책" ? "📘" : "🎬"}
-          </span>
-        )}
-      </div>
+      </CardCover>
       <div className="flex flex-1 flex-col gap-2 p-5">
         <Badge variant="secondary" className="w-fit bg-primary/10 text-primary">
           {resource.type}

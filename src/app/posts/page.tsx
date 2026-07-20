@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
+import { CardCover } from "@/components/ui/CardCover";
 import { Reveal } from "@/components/ui/Reveal";
 import { posts, formatDate } from "@/data/sample";
 
@@ -30,11 +31,14 @@ export default function PostsPage() {
                 href={`/posts/${post.slug}`}
                 className="lift group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card"
               >
-                <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-primary/15 via-card to-accent/30">
-                  <Badge variant="secondary" className="absolute left-3 top-3 bg-background/80 backdrop-blur">
+                <CardCover cover={post.cover} fallbackMark="📝" className="aspect-video">
+                  <Badge
+                    variant="secondary"
+                    className="absolute left-3 top-3 z-10 bg-background/80 backdrop-blur"
+                  >
                     {post.tag}
                   </Badge>
-                </div>
+                </CardCover>
                 <div className="flex flex-1 flex-col gap-2 p-5">
                   <span className="text-xs text-muted-foreground">{formatDate(post.date)}</span>
                   <h3 className="font-display text-base font-semibold leading-snug tracking-tight transition-colors group-hover:text-primary">

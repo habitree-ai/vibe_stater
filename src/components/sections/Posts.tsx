@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { CardCover } from "@/components/ui/CardCover";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { posts, formatDate } from "@/data/sample";
@@ -35,11 +36,14 @@ export function Posts() {
               href={`/posts/${featured.slug}`}
               className="lift group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-primary/15 via-card to-accent/30">
-                <Badge variant="secondary" className="absolute left-4 top-4 bg-background/80 backdrop-blur">
+              <CardCover cover={featured.cover} fallbackMark="📝" className="aspect-[16/10]">
+                <Badge
+                  variant="secondary"
+                  className="absolute left-4 top-4 z-10 bg-background/80 backdrop-blur"
+                >
                   {featured.tag}
                 </Badge>
-              </div>
+              </CardCover>
               <div className="flex flex-1 flex-col gap-3 p-6">
                 <span className="text-xs text-muted-foreground">{formatDate(featured.date)}</span>
                 <h3 className="font-display text-xl font-semibold leading-snug tracking-tight transition-colors group-hover:text-primary sm:text-2xl">
@@ -59,7 +63,12 @@ export function Posts() {
                   href={`/posts/${post.slug}`}
                   className="lift group flex h-full items-center gap-5 rounded-2xl border border-border/70 bg-card p-5"
                 >
-                  <div className="hidden size-24 shrink-0 rounded-xl bg-gradient-to-br from-primary/15 to-accent/30 sm:block" />
+                  <CardCover
+                    cover={post.cover}
+                    fallbackMark="📝"
+                    className="hidden size-24 shrink-0 rounded-xl sm:block"
+                    imgClassName={post.cover?.fit === "contain" ? "p-2" : undefined}
+                  />
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{post.tag}</Badge>

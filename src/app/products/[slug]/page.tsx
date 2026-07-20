@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CardCover } from "@/components/ui/CardCover";
 import {
   products,
   findProduct,
@@ -49,7 +50,11 @@ export default async function ProductDetailPage({
         <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-start">
           {/* 본문 */}
           <div className="space-y-10">
-            <div className="aspect-video rounded-2xl bg-gradient-to-br from-accent/40 to-primary/10 ring-1 ring-border" />
+            <CardCover
+              cover={product.cover}
+              fallbackMark="📦"
+              className="group aspect-video rounded-2xl ring-1 ring-border"
+            />
 
             <div className="space-y-3">
               <h2 className="font-heading text-xl font-semibold">핵심 결과물</h2>

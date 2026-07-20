@@ -144,12 +144,18 @@ export const homeMarkup = `
         <div class="kicker" style="color:var(--clay)">전자책 · 무료 공개</div>
         <h3 style="font-size:1.5rem">바이브코딩으로 시작하는 1인 SaaS</h3>
         <p class="desc">코드를 몰라도 괜찮아요. 아이디어 한 문장에서 배포까지, 15분이면 읽는 입문서.</p>
+        <figure class="res-thumb">
+          <img src="/img/covers/ebook-vibe.png" alt="전자책 표지 — 바이브코딩으로 시작하는 1인 SaaS" loading="lazy" width="1400" height="1120" />
+        </figure>
         <span class="stamp">바로 읽기 ↗</span>
       </a>
       <a class="card rv" href="https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ/playlists" target="_blank" rel="noopener noreferrer" data-cursor>
         <div class="kicker" style="color:var(--clay)">강의 · 준비중</div>
         <h3 style="font-size:1.5rem">LINKMAP 실전 강의</h3>
         <p class="desc">LINKMAP으로 서비스를 연결하는 영상 강의. 제작되는 대로 유튜브 재생목록에 순차 공개해요.</p>
+        <figure class="res-thumb ill">
+          <img src="/img/about/man-record.png" alt="카메라 앞에서 강의 영상을 촬영하는 모습" loading="lazy" width="318" height="288" />
+        </figure>
         <span class="stamp">준비중 · 유튜브 ↗</span>
       </a>
     </div>

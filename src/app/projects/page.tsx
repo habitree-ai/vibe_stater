@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
+import { CardCover } from "@/components/ui/CardCover";
 import { Reveal } from "@/components/ui/Reveal";
 import { projects } from "@/data/sample";
 
@@ -29,12 +30,10 @@ export default function ProjectsPage() {
               <Link
                 href={project.url}
                 {...(project.external ? { target: "_blank", rel: "noreferrer" } : {})}
-                className="lift gradient-border group relative flex h-full min-h-[13rem] flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-6"
+                className="lift gradient-border group relative flex h-full min-h-[13rem] flex-col overflow-hidden rounded-2xl border border-border/70 bg-card"
               >
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 -z-10 opacity-80 bg-[radial-gradient(120%_120%_at_100%_0%,color-mix(in_oklch,var(--primary),transparent_82%),transparent_60%)]"
-                />
+                <CardCover cover={project.cover} fallbackMark="🧩" className="aspect-[16/10]" />
+                <div className="flex flex-1 flex-col p-6">
                 <div className="flex items-center justify-between gap-2">
                   <Badge variant="outline" className="border-border/80 bg-background/60 backdrop-blur">
                     {project.category}
@@ -43,7 +42,7 @@ export default function ProjectsPage() {
                     {project.external ? "↗" : "→"}
                   </span>
                 </div>
-                <div className="mt-auto space-y-2 pt-8">
+                <div className="mt-auto space-y-2 pt-6">
                   <h3 className="font-display text-xl font-semibold tracking-tight">{project.name}</h3>
                   <p className="text-sm text-muted-foreground">{project.summary}</p>
                   <div className="flex flex-wrap gap-1.5 pt-1">
@@ -53,6 +52,7 @@ export default function ProjectsPage() {
                       </span>
                     ))}
                   </div>
+                </div>
                 </div>
               </Link>
             </Reveal>

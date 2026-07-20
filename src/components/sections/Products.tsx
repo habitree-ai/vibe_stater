@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { CardCover } from "@/components/ui/CardCover";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { products, productTypeLabel, formatPrice } from "@/data/sample";
@@ -34,18 +35,14 @@ export function Products() {
                 href={`/products/${product.slug}`}
                 className="lift gradient-border group flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card"
               >
-                <div className="relative aspect-[5/4] overflow-hidden bg-gradient-to-br from-accent/40 via-card to-primary/10">
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(80%_80%_at_50%_0%,color-mix(in_oklch,var(--primary),transparent_75%),transparent)]"
-                  />
+                <CardCover cover={product.cover} fallbackMark="📦" className="aspect-[5/4]">
                   <Badge
                     variant="secondary"
-                    className="absolute left-3 top-3 bg-background/80 backdrop-blur"
+                    className="absolute left-3 top-3 z-10 bg-background/80 backdrop-blur"
                   >
                     {productTypeLabel[product.type]}
                   </Badge>
-                </div>
+                </CardCover>
                 <div className="flex flex-1 flex-col gap-2 p-5">
                   <h3 className="font-display text-base font-semibold leading-snug tracking-tight">
                     {product.name}
