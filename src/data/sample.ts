@@ -55,6 +55,8 @@ export type Product = {
 export const YOUTUBE_PLAYLISTS_URL =
   "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ/playlists";
 export const LINKMAP_DEPLOY_URL = "https://linkmap.biz";
+// 전자책 본문(정적 HTML). 화면에서 읽고, 인쇄하면 A4 5쪽 PDF가 된다.
+export const EBOOK_VIBE_URL = "/ebook/vibe-1in-saas.html";
 
 export type Post = {
   id: string;
@@ -104,6 +106,103 @@ export const profile: Profile = {
     { label: "ReadTree", href: "https://read.habitree.io" },
     { label: "LINKMAP", href: "https://linkmap.biz" },
   ],
+};
+
+// 소개(About) 페이지 문구.
+// 원칙: 확인할 수 없는 수치·성과는 쓰지 않는다. 신뢰는 '확인 가능한 사실'(실제 운영 중인
+// 서비스, 무료 공개 정책, 본업 이력)과 '지키는 약속'으로 만든다.
+export const aboutPage = {
+  intro: {
+    paragraphs: [
+      "낮에는 제조기업에서 ERP 프로젝트를 이끌고, AI 전환(AX) 업무를 맡고 있습니다. 현장의 데이터와 프로세스를 어떻게 바꿔야 사람들이 실제로 일을 더 잘하게 되는지 고민하는 게 본업이에요.",
+      "퇴근 후에는 필요한 도구를 직접 만듭니다. 서비스 연결이 매번 막혀서 LINKMAP을 만들었고, 읽은 걸 자꾸 잊어버려서 ReadTree를 만들었어요. 둘 다 지금 운영 중이고, 저부터 매일 씁니다.",
+      "그 과정에서 막혔던 지점, 돌아간 길, 결국 통했던 방법을 글과 영상으로 남깁니다. 전문가라서가 아니라 같은 자리에서 헤매 본 사람이라, 그 기록이 도움이 될 거라고 믿어요.",
+    ],
+    bubble: "오늘도 함께 성장해요!",
+  },
+  makes: {
+    eyebrow: "What I do",
+    title: "읽고, 만들고, 나눕니다",
+    description: "거창한 계획보다, 오늘 하나 만들고 하나 기록하는 쪽을 택합니다.",
+    items: [
+      {
+        img: "/img/about/man-code.png",
+        alt: "모니터 앞에서 코딩하는 메이커 캐릭터",
+        title: "만들어요",
+        desc: "코드를 몰라도 시작할 수 있는 도구를 직접 만들고 운영합니다. LINKMAP과 ReadTree는 제가 매일 쓰는 서비스예요.",
+      },
+      {
+        img: "/img/about/man-read.png",
+        alt: "책을 읽는 메이커 캐릭터",
+        title: "읽어요",
+        desc: "AI가 답을 대신 써주는 시대일수록 더 많이 읽습니다. 읽은 것을 필사하고 정리해 생각의 재료로 쌓아둡니다.",
+      },
+      {
+        img: "/img/about/man-record.png",
+        alt: "카메라 앞에서 영상을 녹화하는 메이커 캐릭터",
+        title: "나눠요",
+        desc: "잘된 결과만이 아니라 헤맨 과정까지 영상과 글로 남깁니다. 같은 자리에서 막힌 분이 시간을 아끼도록.",
+      },
+    ],
+  },
+  promises: {
+    eyebrow: "Promise",
+    title: "이 네 가지는 지킵니다",
+    description: "숫자로 증명하는 대신, 지킬 수 있는 약속을 적어 둡니다.",
+    items: [
+      {
+        title: "모든 자료는 무료로 공개합니다",
+        desc: "전자책·강의·템플릿은 교육 목적으로 누구나 무료로 쓸 수 있어요. 응원은 100% 선택이고, 자료 이용에 전혀 영향을 주지 않습니다.",
+      },
+      {
+        title: "직접 만들어 쓰는 것만 소개합니다",
+        desc: "제가 쓰지 않는 도구는 추천하지 않아요. 여기 소개하는 서비스는 전부 제가 만들고 지금도 운영 중인 것들입니다.",
+      },
+      {
+        title: "과장된 수치 대신 과정을 공개합니다",
+        desc: "구독자 수나 성과를 부풀려 적지 않습니다. 대신 어디서 막혔고 어떻게 풀었는지를 그대로 적어요.",
+      },
+      {
+        title: "문의에는 제가 직접 답장합니다",
+        desc: "자동 응답이 아니라 제가 읽고 답합니다. 답이 조금 늦어질 수는 있어도, 빠뜨리지는 않아요.",
+      },
+    ],
+  },
+  proof: {
+    eyebrow: "Proof",
+    title: "직접 만들어, 지금 운영 중입니다",
+    description: "말보다 확인이 빠릅니다. 아래 서비스는 지금 접속해 바로 써 볼 수 있어요.",
+  },
+  careerSection: {
+    eyebrow: "Career",
+    title: "지나온 길",
+    description: "화려한 이력은 아니지만, 한 줄씩 직접 겪은 시간입니다.",
+  },
+  faq: {
+    eyebrow: "FAQ",
+    title: "자주 받는 질문",
+    note: "여기에 없는 질문은 언제든 문의로 보내 주세요. 제가 직접 읽고 답장드립니다.",
+    items: [
+      {
+        q: "개발자세요?",
+        a: "아니요. 본업은 제조기업 ERP PM이고, 개발은 필요해서 배웠습니다. 그래서 비개발자가 어디서 막히는지를 잘 압니다.",
+      },
+      {
+        q: "왜 전부 무료인가요?",
+        a: "제가 배운 것도 대부분 누군가 먼저 공개해 준 자료 덕분이었어요. 그래서 교육 목적으로 공개하고, 응원은 원하는 분만 하시면 됩니다.",
+      },
+      {
+        q: "연락은 어떻게 하나요?",
+        a: "문의 폼으로 남겨 주시면 제가 직접 읽고 답장드려요. 1:1 커피챗도 신청받고 있습니다.",
+      },
+    ],
+  },
+  cta: {
+    title: "궁금한 게 있으면 편하게 물어보세요",
+    desc: "거창한 질문이 아니어도 괜찮아요. “이건 어디서부터 시작해요?” 한 줄이면 충분합니다.",
+    primary: { label: "문의하기", href: "/contact" },
+    secondary: { label: "응원하기", href: "/support" },
+  },
 };
 
 export const career: CareerItem[] = [
@@ -162,21 +261,27 @@ export const products: Product[] = [
     type: "ebook",
     price: 0,
     currency: "KRW",
-    summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책. (준비중)",
+    summary: "코드를 몰라도 괜찮아요. 아이디어 한 문장에서 배포까지, 15분이면 읽는 입문 전자책.",
     slug: "vibe-1in-saas",
-    status: "soon",
-    statusNote: "전자책을 집필하고 있어요. 완성되면 이곳에서 무료로 가장 먼저 공개할게요.",
-    outcome: "나만의 서비스 아이디어를 실제 배포 가능한 형태로 설계하는 능력",
+    status: "ready",
+    action: { label: "전자책 읽기 (무료)", href: EBOOK_VIBE_URL, external: true },
+    outcome: "내 아이디어를 한 문장으로 정리한 기획 + AI에게 그대로 붙여넣을 첫 프롬프트",
     forWhom: [
       "코드는 모르지만 서비스를 만들고 싶은 분",
       "AI 도구로 빠르게 프로토타입을 만들고 싶은 분",
       "사이드 프로젝트를 끝까지 출시해본 적 없는 분",
     ],
-    includes: ["PDF 전자책 (준비중)", "예제 프롬프트 모음", "체크리스트 템플릿"],
-    howToUse: "완성되면 마이페이지 > 내 자료실에서 바로 내려받을 수 있도록 준비하고 있어요.",
+    includes: [
+      "본문 5장 (바이브코딩 입문 → 기획 → 프롬프트 → 배포)",
+      "복붙용 프롬프트 4단 공식 · 예시 3종",
+      "한 문장 기획 템플릿 · 공개 전 체크리스트 10",
+    ],
+    howToUse:
+      "브라우저에서 바로 읽을 수 있어요. 인쇄(Ctrl+P)하면 A4 5쪽 PDF로 저장되니, 빈칸은 손으로 채워보세요.",
     faq: [
-      { q: "개발 지식이 필요한가요?", a: "아니요. 비개발자 기준으로 단계별로 설명합니다." },
-      { q: "언제 공개되나요?", a: "집필이 끝나는 대로 이 페이지에서 무료로 공개할 예정이에요." },
+      { q: "개발 지식이 필요한가요?", a: "아니요. 비개발자 기준으로 용어부터 풀어서 설명합니다." },
+      { q: "얼마나 걸리나요?", a: "A4 5쪽 분량으로, 15분이면 끝까지 읽을 수 있습니다." },
+      { q: "정말 무료인가요?", a: "네. 교육 목적으로 공개하며, 후원은 전적으로 선택입니다." },
     ],
   },
   {
@@ -459,11 +564,12 @@ export const resources: Resource[] = [
     id: "ebook",
     type: "전자책",
     name: "바이브코딩으로 시작하는 1인 SaaS",
-    summary: "기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책. 완성되면 무료로 공개해요.",
-    tag: "준비중",
-    status: "soon",
-    cta: "준비중",
-    href: "/products/vibe-1in-saas",
+    summary:
+      "코드를 몰라도 괜찮아요. 아이디어 한 문장에서 배포까지, 15분이면 읽는 입문서 (A4 5쪽).",
+    tag: "무료 · 바로 읽기",
+    cta: "전자책 읽기",
+    href: EBOOK_VIBE_URL,
+    external: true,
   },
   {
     id: "course",
