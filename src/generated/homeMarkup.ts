@@ -140,11 +140,11 @@ export const homeMarkup = `
       <p>전자책·강의·1:1 커피챗까지, 전부 교육 목적으로 공개해요. 공짜예요. 도움됐으면 커피 한 잔만.</p>
     </div>
     <div class="res-feature">
-      <a class="card rv" href="/products/vibe-1in-saas" data-cursor>
-        <div class="kicker" style="color:var(--clay)">전자책 · 준비중</div>
+      <a class="card rv" href="/ebook/vibe-1in-saas.html" target="_blank" rel="noopener noreferrer" data-cursor>
+        <div class="kicker" style="color:var(--clay)">전자책 · 무료 공개</div>
         <h3 style="font-size:1.5rem">바이브코딩으로 시작하는 1인 SaaS</h3>
-        <p class="desc">기획부터 배포까지, 코드를 몰라도 서비스를 만드는 전자책. 완성되면 무료로 공개해요.</p>
-        <span class="stamp">준비중</span>
+        <p class="desc">코드를 몰라도 괜찮아요. 아이디어 한 문장에서 배포까지, 15분이면 읽는 입문서.</p>
+        <span class="stamp">바로 읽기 ↗</span>
       </a>
       <a class="card rv" href="https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ/playlists" target="_blank" rel="noopener noreferrer" data-cursor>
         <div class="kicker" style="color:var(--clay)">강의 · 준비중</div>
