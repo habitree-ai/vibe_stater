@@ -54,8 +54,8 @@ export default function AboutPage() {
               <img
                 src="/img/about-characters.png"
                 alt="노트북 앞의 메이커 캐릭터와 책을 읽는 ReadTree 수달 마스코트"
-                width={1200}
-                height={1200}
+                width={768}
+                height={768}
                 className="h-full w-full object-cover object-bottom"
               />
             </div>
@@ -126,8 +126,8 @@ export default function AboutPage() {
                     <img
                       src={item.img}
                       alt={item.alt}
-                      width={420}
-                      height={380}
+                      width={item.w}
+                      height={item.h}
                       loading="lazy"
                       className="h-36 w-auto object-contain"
                     />
@@ -162,8 +162,8 @@ export default function AboutPage() {
             src="/img/about/otter-cheer.png"
             alt=""
             aria-hidden
-            width={300}
-            height={447}
+            width={172}
+            height={256}
             loading="lazy"
             className="pointer-events-none absolute right-4 top-2 hidden h-32 w-auto lg:block"
           />
@@ -239,8 +239,8 @@ export default function AboutPage() {
             src="/img/about/otter-coffee.png"
             alt=""
             aria-hidden
-            width={300}
-            height={456}
+            width={169}
+            height={256}
             loading="lazy"
             className="pointer-events-none absolute right-6 top-6 hidden h-32 w-auto lg:block"
           />
@@ -278,8 +278,8 @@ export default function AboutPage() {
                   src="/img/about/otter-idea.png"
                   alt=""
                   aria-hidden
-                  width={300}
-                  height={378}
+                  width={229}
+                  height={288}
                   loading="lazy"
                   className="h-36 w-auto shrink-0 object-contain"
                 />
@@ -313,8 +313,8 @@ export default function AboutPage() {
                 src="/img/about/otter-read.png"
                 alt=""
                 aria-hidden
-                width={300}
-                height={332}
+                width={203}
+                height={224}
                 loading="lazy"
                 className="h-28 w-auto shrink-0 object-contain"
               />

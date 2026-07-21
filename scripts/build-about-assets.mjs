@@ -82,16 +82,27 @@ async function buildDuo() {
     .png()
     .toBuffer();
 
-  const man = await sharp(await cutout(manSrc)).trim({ threshold: 1 }).resize({ width: 980 }).png().toBuffer();
-  const otter = await sharp(await cutout(otterSrc)).trim({ threshold: 1 }).resize({ width: 380 }).png().toBuffer();
+  // 카드 표시 폭(max-w-sm = 384px)의 2배인 768px 캔버스에 맞춰 한 번만 확대한다.
+  const man = await sharp(await cutout(manSrc))
+    .trim({ threshold: 1 })
+    .resize({ width: 627, kernel: "lanczos3" })
+    .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 })
+    .png()
+    .toBuffer();
+  const otter = await sharp(await cutout(otterSrc))
+    .trim({ threshold: 1 })
+    .resize({ width: 243, kernel: "lanczos3" })
+    .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 })
+    .png()
+    .toBuffer();
   const manMeta = await sharp(man).metadata();
   const otterMeta = await sharp(otter).metadata();
 
-  const W = 1200, H = 1200;
+  const W = 768, H = 768;
   await sharp({ create: { width: W, height: H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
     .composite([
-      { input: man, left: W - manMeta.width, top: Math.max(0, H - manMeta.height - 40) },
-      { input: otter, left: 28, top: H - otterMeta.height - 30 },
+      { input: man, left: W - manMeta.width, top: Math.max(0, H - manMeta.height - 26) },
+      { input: otter, left: 18, top: H - otterMeta.height - 19 },
     ])
     .png({ compressionLevel: 9 })
     .toFile("public/img/about-characters.png");
@@ -102,15 +113,25 @@ async function buildDuo() {
 // ------------------------------------------------- 2) 섹션 장식용 캐릭터 컷
 // man1 §03 "상황별 다양한 모션" 행 / sd_1 §02 "다양한 포즈 & 각도" 행에서 뽑는다.
 // height 는 각 컷 아래 한글 캡션에 닿지 않도록 잘라 둔 값이다.
+//
+// out: 화면 표시 높이(CSS px)의 2배로 한 번만 확대한다. 과하게 키워 두면 브라우저가 다시
+// 축소하면서 리샘플이 두 번 일어나 오히려 흐려진다. 선화라 확대 후 언샤프로 윤곽을 세운다.
 const CUTS = [
-  { name: "man-code", src: "img/man1.png", left: 838, top: 322, width: 132, height: 134, width_out: 420 },
-  { name: "man-read", src: "img/man1.png", left: 52, top: 334, width: 142, height: 122, width_out: 420 },
-  { name: "man-record", src: "img/man1.png", left: 1016, top: 322, width: 138, height: 134, width_out: 420 },
-  { name: "otter-read", src: "img/sd_1.png", left: 1060, top: 174, width: 84, height: 94, width_out: 300 },
-  { name: "otter-idea", src: "img/sd_1.png", left: 1233, top: 168, width: 77, height: 100, width_out: 300 },
-  { name: "otter-cheer", src: "img/sd_1.png", left: 1427, top: 174, width: 65, height: 94, width_out: 300 },
-  { name: "otter-coffee", src: "img/sd_1.png", left: 1326, top: 298, width: 76, height: 92, width_out: 300 },
+  { name: "man-code", src: "img/man1.png", left: 838, top: 322, width: 132, height: 134, out: 288 },
+  { name: "man-read", src: "img/man1.png", left: 52, top: 334, width: 142, height: 122, out: 288 },
+  { name: "man-record", src: "img/man1.png", left: 1016, top: 322, width: 138, height: 134, out: 288 },
+  { name: "otter-read", src: "img/sd_1.png", left: 1060, top: 174, width: 84, height: 94, out: 224 },
+  { name: "otter-idea", src: "img/sd_1.png", left: 1233, top: 168, width: 77, height: 100, out: 288 },
+  { name: "otter-cheer", src: "img/sd_1.png", left: 1427, top: 174, width: 65, height: 94, out: 256 },
+  { name: "otter-coffee", src: "img/sd_1.png", left: 1326, top: 298, width: 76, height: 92, out: 256 },
 ];
+
+// 확대 → 언샤프 마스크. 흐릿해진 선과 면 경계를 다시 세운다.
+function crisp(pipeline, height) {
+  return pipeline
+    .resize({ height, kernel: "lanczos3", fit: "inside" })
+    .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 });
+}
 
 async function buildCuts() {
   await mkdir(OUT_DIR, { recursive: true });
@@ -119,12 +140,11 @@ async function buildCuts() {
       .extract({ left: c.left, top: c.top, width: c.width, height: c.height })
       .png()
       .toBuffer();
-    await sharp(await cutout(raw))
-      .trim({ threshold: 1 })
-      .resize({ width: c.width_out })
-      .png({ compressionLevel: 9 })
-      .toFile(`${OUT_DIR}/${c.name}.png`);
-    console.log(`✓ ${OUT_DIR}/${c.name}.png`);
+    const trimmed = await sharp(await cutout(raw)).trim({ threshold: 1 }).png().toBuffer();
+    const out = await crisp(sharp(trimmed), c.out).png({ compressionLevel: 9 }).toBuffer();
+    const meta = await sharp(out).metadata();
+    await sharp(out).toFile(`${OUT_DIR}/${c.name}.png`);
+    console.log(`✓ ${OUT_DIR}/${c.name}.png ${meta.width}x${meta.height} ${(out.length / 1024) | 0}KB`);
   }
 }
 
