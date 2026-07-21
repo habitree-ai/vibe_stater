@@ -17,6 +17,20 @@ export const dynamic = "force-dynamic";
 
 const TOLERANCE_SEC = 5 * 60; // 재전송(replay) 방지 — 5분 이상 지난 서명은 거절
 
+// HMAC 키 후보 — 시크릿 형식에 따라 해석이 갈린다.
+//  · 평문(polar_whs_… 등): Polar SDK가 base64 인코딩해 넘기고 라이브러리가 디코딩 → 원문 바이트
+//  · whsec_ 접두사: Standard Webhooks 관례상 접두사를 떼고 base64 디코딩한 바이트
+// 어느 쪽이든 시크릿을 알아야만 만들 수 있으므로, 둘 다 대조해도 보안은 약해지지 않는다.
+function keyCandidates(secret: string): Buffer[] {
+  const keys = [Buffer.from(secret, "utf8")];
+  const stripped = secret.replace(/^whsec_/, "");
+  if (stripped !== secret) {
+    const decoded = Buffer.from(stripped, "base64");
+    if (decoded.length > 0) keys.push(decoded);
+  }
+  return keys;
+}
+
 function verifySignature(
   rawBody: string,
   headers: Headers,
@@ -33,16 +47,19 @@ function verifySignature(
     return { ok: false, reason: "timestamp 허용 범위 초과" };
   }
 
-  const expected = createHmac("sha256", Buffer.from(secret, "utf8"))
-    .update(`${id}.${timestamp}.${rawBody}`)
-    .digest("base64");
+  const signedPayload = `${id}.${timestamp}.${rawBody}`;
+  const expectedList = keyCandidates(secret).map((key) =>
+    createHmac("sha256", key).update(signedPayload).digest("base64")
+  );
 
   // "v1,<sig> v1,<sig2>" 형태 — 하나라도 일치하면 통과
   const provided = signature.split(" ").map((p) => p.split(",").pop() ?? "");
-  const expBuf = Buffer.from(expected, "utf8");
   const match = provided.some((p) => {
     const pBuf = Buffer.from(p, "utf8");
-    return pBuf.length === expBuf.length && timingSafeEqual(pBuf, expBuf);
+    return expectedList.some((exp) => {
+      const expBuf = Buffer.from(exp, "utf8");
+      return pBuf.length === expBuf.length && timingSafeEqual(pBuf, expBuf);
+    });
   });
   return match ? { ok: true } : { ok: false, reason: "서명 불일치" };
 }
