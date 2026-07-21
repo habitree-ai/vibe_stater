@@ -1,0 +1,1997 @@
+[
+  {
+    "num": 1,
+    "code": "HT-001",
+    "name": "히어로 · 노트북 데스크",
+    "group": "man",
+    "section": "히어로",
+    "char": "메이커",
+    "file": "/characters/HT-001.png",
+    "width": 476,
+    "height": 542,
+    "bytes": 192453,
+    "source": "img/man1.png",
+    "rect": [
+      232,
+      8,
+      242,
+      292
+    ]
+  },
+  {
+    "num": 2,
+    "code": "HT-002",
+    "name": "정면",
+    "group": "man",
+    "section": "턴어라운드",
+    "char": "메이커",
+    "file": "/characters/HT-002.png",
+    "width": 188,
+    "height": 332,
+    "bytes": 63562,
+    "source": "img/man1.png",
+    "rect": [
+      648,
+      58,
+      97,
+      184
+    ]
+  },
+  {
+    "num": 3,
+    "code": "HT-003",
+    "name": "3/4 좌",
+    "group": "man",
+    "section": "턴어라운드",
+    "char": "메이커",
+    "file": "/characters/HT-003.png",
+    "width": 148,
+    "height": 330,
+    "bytes": 61545,
+    "source": "img/man1.png",
+    "rect": [
+      748,
+      58,
+      92,
+      184
+    ]
+  },
+  {
+    "num": 4,
+    "code": "HT-004",
+    "name": "측면",
+    "group": "man",
+    "section": "턴어라운드",
+    "char": "메이커",
+    "file": "/characters/HT-004.png",
+    "width": 164,
+    "height": 338,
+    "bytes": 55794,
+    "source": "img/man1.png",
+    "rect": [
+      845,
+      58,
+      85,
+      184
+    ]
+  },
+  {
+    "num": 5,
+    "code": "HT-005",
+    "name": "후면",
+    "group": "man",
+    "section": "턴어라운드",
+    "char": "메이커",
+    "file": "/characters/HT-005.png",
+    "width": 138,
+    "height": 330,
+    "bytes": 49409,
+    "source": "img/man1.png",
+    "rect": [
+      932,
+      58,
+      78,
+      184
+    ]
+  },
+  {
+    "num": 6,
+    "code": "HT-006",
+    "name": "기본",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-006.png",
+    "width": 114,
+    "height": 148,
+    "bytes": 25535,
+    "source": "img/man1.png",
+    "rect": [
+      1044,
+      54,
+      94,
+      80
+    ]
+  },
+  {
+    "num": 7,
+    "code": "HT-007",
+    "name": "웃음",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-007.png",
+    "width": 108,
+    "height": 148,
+    "bytes": 25266,
+    "source": "img/man1.png",
+    "rect": [
+      1138,
+      54,
+      93,
+      80
+    ]
+  },
+  {
+    "num": 8,
+    "code": "HT-008",
+    "name": "생각",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-008.png",
+    "width": 112,
+    "height": 146,
+    "bytes": 26842,
+    "source": "img/man1.png",
+    "rect": [
+      1231,
+      54,
+      94,
+      80
+    ]
+  },
+  {
+    "num": 9,
+    "code": "HT-009",
+    "name": "놀람",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-009.png",
+    "width": 122,
+    "height": 148,
+    "bytes": 27126,
+    "source": "img/man1.png",
+    "rect": [
+      1325,
+      54,
+      93,
+      80
+    ]
+  },
+  {
+    "num": 10,
+    "code": "HT-010",
+    "name": "집중",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-010.png",
+    "width": 118,
+    "height": 148,
+    "bytes": 26246,
+    "source": "img/man1.png",
+    "rect": [
+      1418,
+      54,
+      94,
+      80
+    ]
+  },
+  {
+    "num": 11,
+    "code": "HT-011",
+    "name": "기쁨",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-011.png",
+    "width": 116,
+    "height": 154,
+    "bytes": 28466,
+    "source": "img/man1.png",
+    "rect": [
+      1048,
+      162,
+      84,
+      80
+    ]
+  },
+  {
+    "num": 12,
+    "code": "HT-012",
+    "name": "고민",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-012.png",
+    "width": 116,
+    "height": 148,
+    "bytes": 27890,
+    "source": "img/man1.png",
+    "rect": [
+      1136,
+      162,
+      88,
+      80
+    ]
+  },
+  {
+    "num": 13,
+    "code": "HT-013",
+    "name": "피곤",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-013.png",
+    "width": 142,
+    "height": 156,
+    "bytes": 32542,
+    "source": "img/man1.png",
+    "rect": [
+      1228,
+      162,
+      88,
+      80
+    ]
+  },
+  {
+    "num": 14,
+    "code": "HT-014",
+    "name": "감사",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-014.png",
+    "width": 128,
+    "height": 158,
+    "bytes": 29861,
+    "source": "img/man1.png",
+    "rect": [
+      1320,
+      162,
+      92,
+      80
+    ]
+  },
+  {
+    "num": 15,
+    "code": "HT-015",
+    "name": "확신",
+    "group": "man",
+    "section": "표정",
+    "char": "메이커",
+    "file": "/characters/HT-015.png",
+    "width": 136,
+    "height": 156,
+    "bytes": 30681,
+    "source": "img/man1.png",
+    "rect": [
+      1416,
+      162,
+      90,
+      80
+    ]
+  },
+  {
+    "num": 16,
+    "code": "HT-016",
+    "name": "독서 시간",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-016.png",
+    "width": 320,
+    "height": 244,
+    "bytes": 83552,
+    "source": "img/man1.png",
+    "rect": [
+      28,
+      334,
+      164,
+      124
+    ]
+  },
+  {
+    "num": 17,
+    "code": "HT-017",
+    "name": "노트 정리",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-017.png",
+    "width": 332,
+    "height": 260,
+    "bytes": 81916,
+    "source": "img/man1.png",
+    "rect": [
+      196,
+      316,
+      166,
+      142
+    ]
+  },
+  {
+    "num": 18,
+    "code": "HT-018",
+    "name": "노트북 작업",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-018.png",
+    "width": 322,
+    "height": 256,
+    "bytes": 76597,
+    "source": "img/man1.png",
+    "rect": [
+      366,
+      316,
+      168,
+      142
+    ]
+  },
+  {
+    "num": 19,
+    "code": "HT-019",
+    "name": "아이디어 떠올리기",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-019.png",
+    "width": 266,
+    "height": 246,
+    "bytes": 71287,
+    "source": "img/man1.png",
+    "rect": [
+      538,
+      316,
+      150,
+      142
+    ]
+  },
+  {
+    "num": 20,
+    "code": "HT-020",
+    "name": "화이트보드 기획",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-020.png",
+    "width": 284,
+    "height": 284,
+    "bytes": 98017,
+    "source": "img/man1.png",
+    "rect": [
+      690,
+      316,
+      142,
+      142
+    ]
+  },
+  {
+    "num": 21,
+    "code": "HT-021",
+    "name": "코딩 작업",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-021.png",
+    "width": 256,
+    "height": 244,
+    "bytes": 90538,
+    "source": "img/man1.png",
+    "rect": [
+      836,
+      316,
+      136,
+      142
+    ]
+  },
+  {
+    "num": 22,
+    "code": "HT-022",
+    "name": "유튜브 녹화",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-022.png",
+    "width": 290,
+    "height": 268,
+    "bytes": 82547,
+    "source": "img/man1.png",
+    "rect": [
+      1008,
+      316,
+      152,
+      142
+    ]
+  },
+  {
+    "num": 23,
+    "code": "HT-023",
+    "name": "커피 한 잔",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-023.png",
+    "width": 280,
+    "height": 262,
+    "bytes": 68091,
+    "source": "img/man1.png",
+    "rect": [
+      1170,
+      316,
+      144,
+      142
+    ]
+  },
+  {
+    "num": 24,
+    "code": "HT-024",
+    "name": "산책 · 사색",
+    "group": "man",
+    "section": "상황 모션",
+    "char": "메이커",
+    "file": "/characters/HT-024.png",
+    "width": 376,
+    "height": 260,
+    "bytes": 122088,
+    "source": "img/man1.png",
+    "rect": [
+      1318,
+      316,
+      194,
+      142
+    ]
+  },
+  {
+    "num": 25,
+    "code": "HT-025",
+    "name": "추천",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-025.png",
+    "width": 170,
+    "height": 160,
+    "bytes": 32946,
+    "source": "img/man1.png",
+    "rect": [
+      720,
+      522,
+      88,
+      80
+    ]
+  },
+  {
+    "num": 26,
+    "code": "HT-026",
+    "name": "핵심",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-026.png",
+    "width": 148,
+    "height": 160,
+    "bytes": 32334,
+    "source": "img/man1.png",
+    "rect": [
+      810,
+      522,
+      85,
+      80
+    ]
+  },
+  {
+    "num": 27,
+    "code": "HT-027",
+    "name": "생각 중",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-027.png",
+    "width": 146,
+    "height": 160,
+    "bytes": 31826,
+    "source": "img/man1.png",
+    "rect": [
+      898,
+      522,
+      87,
+      80
+    ]
+  },
+  {
+    "num": 28,
+    "code": "HT-028",
+    "name": "작업 중",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-028.png",
+    "width": 154,
+    "height": 150,
+    "bytes": 30677,
+    "source": "img/man1.png",
+    "rect": [
+      988,
+      522,
+      90,
+      80
+    ]
+  },
+  {
+    "num": 29,
+    "code": "HT-029",
+    "name": "독서 중",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-029.png",
+    "width": 140,
+    "height": 152,
+    "bytes": 35330,
+    "source": "img/man1.png",
+    "rect": [
+      1080,
+      522,
+      88,
+      80
+    ]
+  },
+  {
+    "num": 30,
+    "code": "HT-030",
+    "name": "성취",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-030.png",
+    "width": 166,
+    "height": 158,
+    "bytes": 35433,
+    "source": "img/man1.png",
+    "rect": [
+      1170,
+      522,
+      86,
+      80
+    ]
+  },
+  {
+    "num": 31,
+    "code": "HT-031",
+    "name": "안녕",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-031.png",
+    "width": 160,
+    "height": 160,
+    "bytes": 39020,
+    "source": "img/man1.png",
+    "rect": [
+      1258,
+      522,
+      90,
+      80
+    ]
+  },
+  {
+    "num": 32,
+    "code": "HT-032",
+    "name": "프로필",
+    "group": "man",
+    "section": "미니멀 라인",
+    "char": "메이커",
+    "file": "/characters/HT-032.png",
+    "width": 216,
+    "height": 200,
+    "bytes": 39221,
+    "source": "img/man1.png",
+    "rect": [
+      1403,
+      512,
+      108,
+      100
+    ]
+  },
+  {
+    "num": 33,
+    "code": "HT-033",
+    "name": "노트북",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-033.png",
+    "width": 154,
+    "height": 158,
+    "bytes": 31362,
+    "source": "img/man1.png",
+    "rect": [
+      28,
+      516,
+      78,
+      88
+    ]
+  },
+  {
+    "num": 34,
+    "code": "HT-034",
+    "name": "머그컵",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-034.png",
+    "width": 148,
+    "height": 120,
+    "bytes": 18579,
+    "source": "img/man1.png",
+    "rect": [
+      110,
+      516,
+      74,
+      88
+    ]
+  },
+  {
+    "num": 35,
+    "code": "HT-035",
+    "name": "책",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-035.png",
+    "width": 126,
+    "height": 130,
+    "bytes": 24069,
+    "source": "img/man1.png",
+    "rect": [
+      194,
+      516,
+      70,
+      88
+    ]
+  },
+  {
+    "num": 36,
+    "code": "HT-036",
+    "name": "노트",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-036.png",
+    "width": 112,
+    "height": 118,
+    "bytes": 15559,
+    "source": "img/man1.png",
+    "rect": [
+      282,
+      516,
+      60,
+      88
+    ]
+  },
+  {
+    "num": 37,
+    "code": "HT-037",
+    "name": "백팩",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-037.png",
+    "width": 124,
+    "height": 156,
+    "bytes": 27400,
+    "source": "img/man1.png",
+    "rect": [
+      358,
+      516,
+      62,
+      88
+    ]
+  },
+  {
+    "num": 38,
+    "code": "HT-038",
+    "name": "카메라",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-038.png",
+    "width": 118,
+    "height": 98,
+    "bytes": 19650,
+    "source": "img/man1.png",
+    "rect": [
+      436,
+      516,
+      62,
+      88
+    ]
+  },
+  {
+    "num": 39,
+    "code": "HT-039",
+    "name": "키보드",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-039.png",
+    "width": 192,
+    "height": 88,
+    "bytes": 27523,
+    "source": "img/man1.png",
+    "rect": [
+      508,
+      516,
+      98,
+      88
+    ]
+  },
+  {
+    "num": 40,
+    "code": "HT-040",
+    "name": "식물",
+    "group": "prop",
+    "section": "소품(메이커)",
+    "char": "메이커",
+    "file": "/characters/HT-040.png",
+    "width": 40,
+    "height": 136,
+    "bytes": 9016,
+    "source": "img/man1.png",
+    "rect": [
+      630,
+      516,
+      30,
+      88
+    ]
+  },
+  {
+    "num": 41,
+    "code": "HT-041",
+    "name": "히어로 · 책 읽기",
+    "group": "otter",
+    "section": "히어로",
+    "char": "오터",
+    "file": "/characters/HT-041.png",
+    "width": 426,
+    "height": 556,
+    "bytes": 317125,
+    "source": "img/sd_1.png",
+    "rect": [
+      78,
+      96,
+      214,
+      278
+    ]
+  },
+  {
+    "num": 42,
+    "code": "HT-042",
+    "name": "기본(행복)",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-042.png",
+    "width": 160,
+    "height": 138,
+    "bytes": 40706,
+    "source": "img/sd_1.png",
+    "rect": [
+      434,
+      54,
+      82,
+      76
+    ]
+  },
+  {
+    "num": 43,
+    "code": "HT-043",
+    "name": "활짝 웃음",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-043.png",
+    "width": 148,
+    "height": 142,
+    "bytes": 42895,
+    "source": "img/sd_1.png",
+    "rect": [
+      521,
+      54,
+      80,
+      76
+    ]
+  },
+  {
+    "num": 44,
+    "code": "HT-044",
+    "name": "신남",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-044.png",
+    "width": 150,
+    "height": 144,
+    "bytes": 35430,
+    "source": "img/sd_1.png",
+    "rect": [
+      607,
+      54,
+      80,
+      76
+    ]
+  },
+  {
+    "num": 45,
+    "code": "HT-045",
+    "name": "생각 집중",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-045.png",
+    "width": 150,
+    "height": 136,
+    "bytes": 31264,
+    "source": "img/sd_1.png",
+    "rect": [
+      696,
+      54,
+      79,
+      76
+    ]
+  },
+  {
+    "num": 46,
+    "code": "HT-046",
+    "name": "궁금함",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-046.png",
+    "width": 154,
+    "height": 138,
+    "bytes": 35073,
+    "source": "img/sd_1.png",
+    "rect": [
+      781,
+      54,
+      80,
+      76
+    ]
+  },
+  {
+    "num": 47,
+    "code": "HT-047",
+    "name": "우와",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-047.png",
+    "width": 140,
+    "height": 142,
+    "bytes": 34858,
+    "source": "img/sd_1.png",
+    "rect": [
+      867,
+      54,
+      80,
+      76
+    ]
+  },
+  {
+    "num": 48,
+    "code": "HT-048",
+    "name": "감동",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-048.png",
+    "width": 146,
+    "height": 140,
+    "bytes": 39678,
+    "source": "img/sd_1.png",
+    "rect": [
+      953,
+      54,
+      82,
+      76
+    ]
+  },
+  {
+    "num": 49,
+    "code": "HT-049",
+    "name": "의욕 충전",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-049.png",
+    "width": 150,
+    "height": 136,
+    "bytes": 41793,
+    "source": "img/sd_1.png",
+    "rect": [
+      432,
+      166,
+      87,
+      80
+    ]
+  },
+  {
+    "num": 50,
+    "code": "HT-050",
+    "name": "자신감",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-050.png",
+    "width": 122,
+    "height": 134,
+    "bytes": 35250,
+    "source": "img/sd_1.png",
+    "rect": [
+      519,
+      166,
+      86,
+      80
+    ]
+  },
+  {
+    "num": 51,
+    "code": "HT-051",
+    "name": "고민",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-051.png",
+    "width": 122,
+    "height": 136,
+    "bytes": 35569,
+    "source": "img/sd_1.png",
+    "rect": [
+      605,
+      166,
+      87,
+      80
+    ]
+  },
+  {
+    "num": 52,
+    "code": "HT-052",
+    "name": "피곤",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-052.png",
+    "width": 138,
+    "height": 136,
+    "bytes": 34053,
+    "source": "img/sd_1.png",
+    "rect": [
+      692,
+      166,
+      86,
+      80
+    ]
+  },
+  {
+    "num": 53,
+    "code": "HT-053",
+    "name": "졸림",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-053.png",
+    "width": 118,
+    "height": 134,
+    "bytes": 31023,
+    "source": "img/sd_1.png",
+    "rect": [
+      778,
+      166,
+      87,
+      80
+    ]
+  },
+  {
+    "num": 54,
+    "code": "HT-054",
+    "name": "당황",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-054.png",
+    "width": 118,
+    "height": 136,
+    "bytes": 36807,
+    "source": "img/sd_1.png",
+    "rect": [
+      865,
+      166,
+      86,
+      80
+    ]
+  },
+  {
+    "num": 55,
+    "code": "HT-055",
+    "name": "걱정",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-055.png",
+    "width": 158,
+    "height": 134,
+    "bytes": 39167,
+    "source": "img/sd_1.png",
+    "rect": [
+      951,
+      166,
+      87,
+      80
+    ]
+  },
+  {
+    "num": 56,
+    "code": "HT-056",
+    "name": "부끄러움",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-056.png",
+    "width": 152,
+    "height": 140,
+    "bytes": 39927,
+    "source": "img/sd_1.png",
+    "rect": [
+      432,
+      284,
+      87,
+      82
+    ]
+  },
+  {
+    "num": 57,
+    "code": "HT-057",
+    "name": "설렘",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-057.png",
+    "width": 132,
+    "height": 136,
+    "bytes": 37914,
+    "source": "img/sd_1.png",
+    "rect": [
+      519,
+      284,
+      86,
+      82
+    ]
+  },
+  {
+    "num": 58,
+    "code": "HT-058",
+    "name": "감사",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-058.png",
+    "width": 128,
+    "height": 138,
+    "bytes": 38962,
+    "source": "img/sd_1.png",
+    "rect": [
+      605,
+      284,
+      87,
+      82
+    ]
+  },
+  {
+    "num": 59,
+    "code": "HT-059",
+    "name": "감격",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-059.png",
+    "width": 148,
+    "height": 138,
+    "bytes": 40650,
+    "source": "img/sd_1.png",
+    "rect": [
+      692,
+      284,
+      86,
+      82
+    ]
+  },
+  {
+    "num": 60,
+    "code": "HT-060",
+    "name": "실망",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-060.png",
+    "width": 126,
+    "height": 132,
+    "bytes": 33962,
+    "source": "img/sd_1.png",
+    "rect": [
+      778,
+      284,
+      87,
+      82
+    ]
+  },
+  {
+    "num": 61,
+    "code": "HT-061",
+    "name": "지침",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-061.png",
+    "width": 158,
+    "height": 134,
+    "bytes": 36828,
+    "source": "img/sd_1.png",
+    "rect": [
+      865,
+      284,
+      86,
+      82
+    ]
+  },
+  {
+    "num": 62,
+    "code": "HT-062",
+    "name": "으쓱",
+    "group": "otter",
+    "section": "표정",
+    "char": "오터",
+    "file": "/characters/HT-062.png",
+    "width": 128,
+    "height": 134,
+    "bytes": 36626,
+    "source": "img/sd_1.png",
+    "rect": [
+      951,
+      284,
+      87,
+      82
+    ]
+  },
+  {
+    "num": 63,
+    "code": "HT-063",
+    "name": "정면",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-063.png",
+    "width": 122,
+    "height": 160,
+    "bytes": 43955,
+    "source": "img/sd_1.png",
+    "rect": [
+      1056,
+      54,
+      76,
+      82
+    ]
+  },
+  {
+    "num": 64,
+    "code": "HT-064",
+    "name": "3/4 좌",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-064.png",
+    "width": 114,
+    "height": 160,
+    "bytes": 35925,
+    "source": "img/sd_1.png",
+    "rect": [
+      1132,
+      54,
+      76,
+      82
+    ]
+  },
+  {
+    "num": 65,
+    "code": "HT-065",
+    "name": "좌측면",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-065.png",
+    "width": 112,
+    "height": 160,
+    "bytes": 31481,
+    "source": "img/sd_1.png",
+    "rect": [
+      1208,
+      54,
+      76,
+      82
+    ]
+  },
+  {
+    "num": 66,
+    "code": "HT-066",
+    "name": "후면",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-066.png",
+    "width": 116,
+    "height": 158,
+    "bytes": 25479,
+    "source": "img/sd_1.png",
+    "rect": [
+      1284,
+      54,
+      76,
+      82
+    ]
+  },
+  {
+    "num": 67,
+    "code": "HT-067",
+    "name": "우측면",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-067.png",
+    "width": 114,
+    "height": 160,
+    "bytes": 32168,
+    "source": "img/sd_1.png",
+    "rect": [
+      1360,
+      54,
+      76,
+      82
+    ]
+  },
+  {
+    "num": 68,
+    "code": "HT-068",
+    "name": "3/4 우",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-068.png",
+    "width": 108,
+    "height": 156,
+    "bytes": 35999,
+    "source": "img/sd_1.png",
+    "rect": [
+      1436,
+      54,
+      76,
+      82
+    ]
+  },
+  {
+    "num": 69,
+    "code": "HT-069",
+    "name": "책 읽기",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-069.png",
+    "width": 160,
+    "height": 172,
+    "bytes": 53350,
+    "source": "img/sd_1.png",
+    "rect": [
+      1056,
+      164,
+      92,
+      104
+    ]
+  },
+  {
+    "num": 70,
+    "code": "HT-070",
+    "name": "노트 작성",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-070.png",
+    "width": 160,
+    "height": 172,
+    "bytes": 50515,
+    "source": "img/sd_1.png",
+    "rect": [
+      1150,
+      164,
+      80,
+      104
+    ]
+  },
+  {
+    "num": 71,
+    "code": "HT-071",
+    "name": "아이디어",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-071.png",
+    "width": 150,
+    "height": 192,
+    "bytes": 49071,
+    "source": "img/sd_1.png",
+    "rect": [
+      1231,
+      164,
+      81,
+      104
+    ]
+  },
+  {
+    "num": 72,
+    "code": "HT-072",
+    "name": "발표하기",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-072.png",
+    "width": 172,
+    "height": 176,
+    "bytes": 57273,
+    "source": "img/sd_1.png",
+    "rect": [
+      1314,
+      164,
+      104,
+      104
+    ]
+  },
+  {
+    "num": 73,
+    "code": "HT-073",
+    "name": "응원",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-073.png",
+    "width": 132,
+    "height": 172,
+    "bytes": 43017,
+    "source": "img/sd_1.png",
+    "rect": [
+      1420,
+      164,
+      80,
+      104
+    ]
+  },
+  {
+    "num": 74,
+    "code": "HT-074",
+    "name": "걷기",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-074.png",
+    "width": 130,
+    "height": 170,
+    "bytes": 40189,
+    "source": "img/sd_1.png",
+    "rect": [
+      1056,
+      286,
+      94,
+      98
+    ]
+  },
+  {
+    "num": 75,
+    "code": "HT-075",
+    "name": "달리기",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-075.png",
+    "width": 142,
+    "height": 172,
+    "bytes": 42307,
+    "source": "img/sd_1.png",
+    "rect": [
+      1152,
+      286,
+      94,
+      98
+    ]
+  },
+  {
+    "num": 76,
+    "code": "HT-076",
+    "name": "가방 착용",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-076.png",
+    "width": 118,
+    "height": 172,
+    "bytes": 45820,
+    "source": "img/sd_1.png",
+    "rect": [
+      1248,
+      286,
+      74,
+      98
+    ]
+  },
+  {
+    "num": 77,
+    "code": "HT-077",
+    "name": "커피 한 잔",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-077.png",
+    "width": 114,
+    "height": 166,
+    "bytes": 42074,
+    "source": "img/sd_1.png",
+    "rect": [
+      1324,
+      286,
+      80,
+      98
+    ]
+  },
+  {
+    "num": 78,
+    "code": "HT-078",
+    "name": "휴식",
+    "group": "otter",
+    "section": "포즈 · 각도",
+    "char": "오터",
+    "file": "/characters/HT-078.png",
+    "width": 150,
+    "height": 168,
+    "bytes": 48600,
+    "source": "img/sd_1.png",
+    "rect": [
+      1406,
+      286,
+      94,
+      98
+    ]
+  },
+  {
+    "num": 79,
+    "code": "HT-079",
+    "name": "풀컬러",
+    "group": "otter",
+    "section": "라인 스타일",
+    "char": "오터",
+    "file": "/characters/HT-079.png",
+    "width": 214,
+    "height": 322,
+    "bytes": 99298,
+    "source": "img/sd_1.png",
+    "rect": [
+      1058,
+      482,
+      114,
+      176
+    ]
+  },
+  {
+    "num": 80,
+    "code": "HT-080",
+    "name": "미니멀 라인",
+    "group": "otter",
+    "section": "라인 스타일",
+    "char": "오터",
+    "file": "/characters/HT-080.png",
+    "width": 198,
+    "height": 274,
+    "bytes": 57764,
+    "source": "img/sd_1.png",
+    "rect": [
+      1172,
+      482,
+      113,
+      176
+    ]
+  },
+  {
+    "num": 81,
+    "code": "HT-081",
+    "name": "모노톤",
+    "group": "otter",
+    "section": "라인 스타일",
+    "char": "오터",
+    "file": "/characters/HT-081.png",
+    "width": 198,
+    "height": 342,
+    "bytes": 81878,
+    "source": "img/sd_1.png",
+    "rect": [
+      1285,
+      482,
+      114,
+      176
+    ]
+  },
+  {
+    "num": 82,
+    "code": "HT-082",
+    "name": "화이트 라인",
+    "group": "otter",
+    "section": "라인 스타일",
+    "char": "오터",
+    "file": "/characters/HT-082.png",
+    "width": 220,
+    "height": 316,
+    "bytes": 96835,
+    "source": "img/sd_1.png",
+    "rect": [
+      1399,
+      482,
+      113,
+      176
+    ]
+  },
+  {
+    "num": 83,
+    "code": "HT-083",
+    "name": "추천",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-083.png",
+    "width": 94,
+    "height": 112,
+    "bytes": 13199,
+    "source": "img/sd_1.png",
+    "rect": [
+      15,
+      700,
+      77,
+      80
+    ]
+  },
+  {
+    "num": 84,
+    "code": "HT-084",
+    "name": "핵심",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-084.png",
+    "width": 92,
+    "height": 112,
+    "bytes": 14973,
+    "source": "img/sd_1.png",
+    "rect": [
+      92,
+      700,
+      77,
+      80
+    ]
+  },
+  {
+    "num": 85,
+    "code": "HT-085",
+    "name": "생각 중",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-085.png",
+    "width": 100,
+    "height": 114,
+    "bytes": 17711,
+    "source": "img/sd_1.png",
+    "rect": [
+      169,
+      700,
+      77,
+      80
+    ]
+  },
+  {
+    "num": 86,
+    "code": "HT-086",
+    "name": "작업 중",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-086.png",
+    "width": 128,
+    "height": 116,
+    "bytes": 20355,
+    "source": "img/sd_1.png",
+    "rect": [
+      246,
+      700,
+      77,
+      80
+    ]
+  },
+  {
+    "num": 87,
+    "code": "HT-087",
+    "name": "독서 중",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-087.png",
+    "width": 112,
+    "height": 118,
+    "bytes": 20619,
+    "source": "img/sd_1.png",
+    "rect": [
+      323,
+      700,
+      77,
+      80
+    ]
+  },
+  {
+    "num": 88,
+    "code": "HT-088",
+    "name": "인사",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-088.png",
+    "width": 102,
+    "height": 126,
+    "bytes": 17161,
+    "source": "img/sd_1.png",
+    "rect": [
+      18,
+      798,
+      82,
+      80
+    ]
+  },
+  {
+    "num": 89,
+    "code": "HT-089",
+    "name": "파이팅",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-089.png",
+    "width": 138,
+    "height": 134,
+    "bytes": 19381,
+    "source": "img/sd_1.png",
+    "rect": [
+      104,
+      798,
+      78,
+      80
+    ]
+  },
+  {
+    "num": 90,
+    "code": "HT-090",
+    "name": "OK",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-090.png",
+    "width": 74,
+    "height": 130,
+    "bytes": 11646,
+    "source": "img/sd_1.png",
+    "rect": [
+      186,
+      798,
+      66,
+      80
+    ]
+  },
+  {
+    "num": 91,
+    "code": "HT-091",
+    "name": "프로필",
+    "group": "otter",
+    "section": "미니멀 라인",
+    "char": "오터",
+    "file": "/characters/HT-091.png",
+    "width": 118,
+    "height": 132,
+    "bytes": 19498,
+    "source": "img/sd_1.png",
+    "rect": [
+      254,
+      798,
+      81,
+      80
+    ]
+  },
+  {
+    "num": 92,
+    "code": "HT-092",
+    "name": "노트북",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-092.png",
+    "width": 124,
+    "height": 102,
+    "bytes": 22499,
+    "source": "img/sd_1.png",
+    "rect": [
+      430,
+      456,
+      70,
+      72
+    ]
+  },
+  {
+    "num": 93,
+    "code": "HT-093",
+    "name": "책",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-093.png",
+    "width": 104,
+    "height": 98,
+    "bytes": 19584,
+    "source": "img/sd_1.png",
+    "rect": [
+      502,
+      456,
+      62,
+      72
+    ]
+  },
+  {
+    "num": 94,
+    "code": "HT-094",
+    "name": "노트",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-094.png",
+    "width": 110,
+    "height": 100,
+    "bytes": 20834,
+    "source": "img/sd_1.png",
+    "rect": [
+      566,
+      456,
+      64,
+      72
+    ]
+  },
+  {
+    "num": 95,
+    "code": "HT-095",
+    "name": "펜",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-095.png",
+    "width": 56,
+    "height": 94,
+    "bytes": 6298,
+    "source": "img/sd_1.png",
+    "rect": [
+      630,
+      456,
+      34,
+      72
+    ]
+  },
+  {
+    "num": 96,
+    "code": "HT-096",
+    "name": "머그컵",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-096.png",
+    "width": 90,
+    "height": 90,
+    "bytes": 16569,
+    "source": "img/sd_1.png",
+    "rect": [
+      666,
+      456,
+      74,
+      72
+    ]
+  },
+  {
+    "num": 97,
+    "code": "HT-097",
+    "name": "카메라",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-097.png",
+    "width": 106,
+    "height": 86,
+    "bytes": 20516,
+    "source": "img/sd_1.png",
+    "rect": [
+      742,
+      456,
+      74,
+      72
+    ]
+  },
+  {
+    "num": 98,
+    "code": "HT-098",
+    "name": "백팩",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-098.png",
+    "width": 100,
+    "height": 114,
+    "bytes": 25294,
+    "source": "img/sd_1.png",
+    "rect": [
+      818,
+      456,
+      64,
+      72
+    ]
+  },
+  {
+    "num": 99,
+    "code": "HT-099",
+    "name": "식물",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-099.png",
+    "width": 70,
+    "height": 124,
+    "bytes": 16914,
+    "source": "img/sd_1.png",
+    "rect": [
+      884,
+      456,
+      54,
+      72
+    ]
+  },
+  {
+    "num": 100,
+    "code": "HT-100",
+    "name": "화이트보드",
+    "group": "prop",
+    "section": "소품(오터)",
+    "char": "오터",
+    "file": "/characters/HT-100.png",
+    "width": 114,
+    "height": 98,
+    "bytes": 17783,
+    "source": "img/sd_1.png",
+    "rect": [
+      940,
+      456,
+      98,
+      72
+    ]
+  },
+  {
+    "num": 101,
+    "code": "HT-101",
+    "name": "독서 시간",
+    "group": "scene",
+    "section": "상황 일러스트",
+    "char": "오터",
+    "file": "/characters/HT-101.png",
+    "width": 192,
+    "height": 188,
+    "bytes": 76629,
+    "source": "img/sd_1.png",
+    "rect": [
+      430,
+      552,
+      122,
+      100
+    ]
+  },
+  {
+    "num": 102,
+    "code": "HT-102",
+    "name": "아이디어 회의",
+    "group": "scene",
+    "section": "상황 일러스트",
+    "char": "오터",
+    "file": "/characters/HT-102.png",
+    "width": 230,
+    "height": 184,
+    "bytes": 86383,
+    "source": "img/sd_1.png",
+    "rect": [
+      552,
+      552,
+      122,
+      100
+    ]
+  },
+  {
+    "num": 103,
+    "code": "HT-103",
+    "name": "코딩 작업",
+    "group": "scene",
+    "section": "상황 일러스트",
+    "char": "오터",
+    "file": "/characters/HT-103.png",
+    "width": 216,
+    "height": 186,
+    "bytes": 84529,
+    "source": "img/sd_1.png",
+    "rect": [
+      674,
+      552,
+      122,
+      100
+    ]
+  },
+  {
+    "num": 104,
+    "code": "HT-104",
+    "name": "자연 산책",
+    "group": "scene",
+    "section": "상황 일러스트",
+    "char": "오터",
+    "file": "/characters/HT-104.png",
+    "width": 220,
+    "height": 184,
+    "bytes": 99978,
+    "source": "img/sd_1.png",
+    "rect": [
+      796,
+      552,
+      122,
+      100
+    ]
+  },
+  {
+    "num": 105,
+    "code": "HT-105",
+    "name": "카페 휴식",
+    "group": "scene",
+    "section": "상황 일러스트",
+    "char": "오터",
+    "file": "/characters/HT-105.png",
+    "width": 196,
+    "height": 192,
+    "bytes": 76543,
+    "source": "img/sd_1.png",
+    "rect": [
+      918,
+      552,
+      122,
+      100
+    ]
+  }
+]

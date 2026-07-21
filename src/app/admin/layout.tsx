@@ -5,6 +5,7 @@ import { requireAdmin } from "@/lib/admin";
 // /admin/* 모든 하위 라우트는 여기서 관리자 접근을 보장한다.
 const adminNav = [
   { href: "/admin", label: "대시보드" },
+  { href: "/admin/characters", label: "캐릭터" },
   { href: "/admin/settings", label: "연동설정" },
   { href: "/admin/contact", label: "문의" },
   { href: "/admin/coffee-chat", label: "커피챗" },

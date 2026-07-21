@@ -56,6 +56,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // 서버 소프트웨어 노출 제거.
   poweredByHeader: false,
+  // 캐릭터 자산 업로드(/admin/characters) — 고화질 원본 허용을 위해 기본 1MB 상향.
+  experimental: {
+    serverActions: { bodySizeLimit: "6mb" },
+  },
   // 개발 전용: 다른 기기(LAN)에서 dev 서버에 접속해 테스트할 때 교차 출처 차단 해제.
   allowedDevOrigins: ["172.20.2.31"],
   async headers() {
