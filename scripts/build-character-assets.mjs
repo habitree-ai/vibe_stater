@@ -46,6 +46,14 @@ export { SR_SCALE };
 // ---------------------------------------------------------------- 배경 제거
 // 가장자리에서 flood fill 해 '바깥 크림색 배경'만 투명 처리한다.
 // (build-about-assets.mjs와 동일 로직 — 내부 흰색(노트북 화면 등)은 보존)
+//
+// 2단 플러드필:
+//   1차(엄격) 거의 순백(≥248)만 — 시트의 진짜 배경.
+//   2차(완화) 1차 배경에 맞닿은 곳에서만 연한 무채색(≥224)까지 확장 — 원본 시트가
+//            캐릭터 발밑에 깔아 둔 드롭섀도를 걷어낸다. 이게 남으면 색이 있는 배경
+//            위에 얹었을 때 '뿌연 얼룩'으로 비친다.
+// 2차는 라인아트(흰 몸통 + 연회색 윤곽) 컷에서 윤곽이 끊기면 몸통까지 먹을 수 있어,
+// 불투명 면적이 절반 밑으로 떨어지면 1차 결과로 되돌린다.
 export async function cutout(buf) {
   const img = sharp(buf).ensureAlpha();
   const { width: w, height: h } = await img.metadata();
@@ -59,22 +67,52 @@ export async function cutout(buf) {
     // 밝은 회색 라인·흰 몸통(내부)이 배경으로 오인되지 않게 한다.
     return mn >= 248 && mx - mn <= 7;
   };
+  // 드롭섀도는 #F0F0E8~#F8F8F8 언저리의 연한 무채색. 캐릭터 크림색 배(#FFF3E0 계열)는
+  // 채도가 높아(mx-mn>22) 여기 걸리지 않는다.
+  const shadowLike = (i) => {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const mn = Math.min(r, g, b);
+    const mx = Math.max(r, g, b);
+    return mn >= 224 && mx - mn <= 22;
+  };
 
   const seen = new Uint8Array(w * h);
-  const stack = [];
-  for (let x = 0; x < w; x++) stack.push(x, (h - 1) * w + x);
-  for (let y = 0; y < h; y++) stack.push(y * w, y * w + w - 1);
+  const flood = (pred, seeds) => {
+    const stack = seeds.slice();
+    while (stack.length) {
+      const p = stack.pop();
+      if (seen[p] || !pred(p * 4)) continue;
+      seen[p] = 1;
+      const x = p % w, y = (p / w) | 0;
+      if (x > 0) stack.push(p - 1);
+      if (x < w - 1) stack.push(p + 1);
+      if (y > 0) stack.push(p - w);
+      if (y < h - 1) stack.push(p + w);
+    }
+  };
 
-  while (stack.length) {
-    const p = stack.pop();
-    if (seen[p] || !bgLike(p * 4)) continue;
-    seen[p] = 1;
+  const border = [];
+  for (let x = 0; x < w; x++) border.push(x, (h - 1) * w + x);
+  for (let y = 0; y < h; y++) border.push(y * w, y * w + w - 1);
+  flood(bgLike, border);
+
+  const strictBg = seen.reduce((n, v) => n + v, 0);
+  const strictOnly = Uint8Array.from(seen);
+  const seeds = [];
+  for (let p = 0; p < w * h; p++) {
+    if (!seen[p]) continue;
     const x = p % w, y = (p / w) | 0;
-    if (x > 0) stack.push(p - 1);
-    if (x < w - 1) stack.push(p + 1);
-    if (y > 0) stack.push(p - w);
-    if (y < h - 1) stack.push(p + w);
+    if (x > 0) seeds.push(p - 1);
+    if (x < w - 1) seeds.push(p + 1);
+    if (y > 0) seeds.push(p - w);
+    if (y < h - 1) seeds.push(p + w);
   }
+  flood(shadowLike, seeds);
+
+  // 안전장치: 2차가 몸통까지 먹었으면(남는 면적 < 1차의 절반) 1차 결과 사용
+  const softBg = seen.reduce((n, v) => n + v, 0);
+  const keptStrict = w * h - strictBg;
+  if (w * h - softBg < keptStrict * 0.5) seen.set(strictOnly);
 
   for (let p = 0; p < w * h; p++) if (seen[p]) data[p * 4 + 3] = 0;
   // 경계 한 겹은 반투명 처리로 부드럽게
@@ -89,6 +127,114 @@ export async function cutout(buf) {
     }
   }
 
+  return sharp(data, { raw: { width: w, height: h, channels: 4 } }).png().toBuffer();
+}
+
+// ------------------------------------------------- 크롭 자동 확장(잘림 방지)
+// 시트 정의 rect가 캐릭터를 살짝 물고 있으면(꼬리·귀·팔이 변에 걸림) 컷의 한쪽이
+// 칼로 자른 듯 평평해진다. 각 변을 '캐릭터 몸이 그 변에서 사라질 때까지' 넓힌다.
+//
+// 쫓아가는 대상은 아무 잉크가 아니라 '셀 한가운데에서 이어진 한 덩어리'다. 그래서
+// 캡션 글자(시트가 셀 밑에 달아 둔 라벨)나 옆 컷 조각은 아무리 변에 걸려 있어도
+// 확장을 유발하지 않는다 — SHEETS의 y 범위가 캡션을 일부러 잘라낸 의도를 지킨다.
+const EXPAND_MAX = 10; // 변당 최대 확장(원본 시트 px)
+
+// 캐릭터 잉크 = 어둡거나 채도가 있는 픽셀. 흰 배경·연한 드롭섀도는 잉크가 아니다.
+function isInk(d, i) {
+  const r = d[i], g = d[i + 1], b = d[i + 2];
+  const mn = Math.min(r, g, b), mx = Math.max(r, g, b);
+  return mn < 234 || mx - mn > 20;
+}
+
+export function autoExpand(sheet, rect, max = EXPAND_MAX) {
+  const { width: W, height: H, data } = sheet;
+  const [ox, oy, ow, oh] = rect;
+
+  // 탐색 범위: 원래 rect를 max만큼 넓힌 창(시트 밖으로는 안 나감)
+  const wx0 = Math.max(0, ox - max), wy0 = Math.max(0, oy - max);
+  const wx1 = Math.min(W, ox + ow + max), wy1 = Math.min(H, oy + oh + max);
+  const ww = wx1 - wx0, wh = wy1 - wy0;
+
+  // 셀 안쪽 60% 구간의 잉크를 씨앗으로 캐릭터 덩어리를 채운다
+  const body = new Uint8Array(ww * wh);
+  const stack = [];
+  const ix0 = ox + ((ow * 0.2) | 0), ix1 = ox + ow - ((ow * 0.2) | 0);
+  const iy0 = oy + ((oh * 0.2) | 0), iy1 = oy + oh - ((oh * 0.2) | 0);
+  for (let y = iy0; y < iy1; y++) {
+    for (let x = ix0; x < ix1; x++) {
+      const q = (y - wy0) * ww + (x - wx0);
+      if (!body[q] && isInk(data, (y * W + x) * 4)) { body[q] = 1; stack.push(q); }
+    }
+  }
+  while (stack.length) {
+    const p = stack.pop();
+    const x = p % ww, y = (p / ww) | 0;
+    for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+      const nx = x + dx, ny = y + dy;
+      if (nx < 0 || ny < 0 || nx >= ww || ny >= wh) continue;
+      const q = ny * ww + nx;
+      if (body[q] || !isInk(data, ((ny + wy0) * W + nx + wx0) * 4)) continue;
+      body[q] = 1;
+      stack.push(q);
+    }
+  }
+
+  let [x, y, w, h] = rect;
+  const grew = { l: 0, r: 0, t: 0, b: 0 };
+  const at = (px, py) => body[(py - wy0) * ww + (px - wx0)];
+  const colBody = (cx) => {
+    for (let yy = y; yy < y + h; yy++) if (at(cx, yy)) return true;
+    return false;
+  };
+  const rowBody = (ry) => {
+    for (let xx = x; xx < x + w; xx++) if (at(xx, ry)) return true;
+    return false;
+  };
+  for (let i = 0; i < max * 4; i++) {
+    let moved = false;
+    if (grew.l < max && x > wx0 && colBody(x)) { x--; w++; grew.l++; moved = true; }
+    if (grew.r < max && x + w < wx1 && colBody(x + w - 1)) { w++; grew.r++; moved = true; }
+    if (grew.t < max && y > wy0 && rowBody(y)) { y--; h++; grew.t++; moved = true; }
+    if (grew.b < max && y + h < wy1 && rowBody(y + h - 1)) { h++; grew.b++; moved = true; }
+    if (!moved) break;
+  }
+  return { rect: [x, y, w, h], grew };
+}
+
+// 확장으로 딸려 들어온 옆 컷 조각을 지운다.
+// 확장 뒤에도 테두리에 닿아 있는 '주력이 아닌' 성분 = 프레임 밖으로 이어지는 남의 몸.
+// 반짝임·하트·전구처럼 컷 안에 온전히 들어 있는 장식은 테두리에 닿지 않아 살아남는다.
+export async function dropIntruders(buf) {
+  const img = sharp(buf).ensureAlpha();
+  const { width: w, height: h } = await img.metadata();
+  const data = await img.raw().toBuffer();
+
+  const label = new Int32Array(w * h).fill(-1);
+  const comps = [];
+  for (let p0 = 0; p0 < w * h; p0++) {
+    if (data[p0 * 4 + 3] === 0 || label[p0] !== -1) continue;
+    const id = comps.length;
+    let area = 0, touches = false;
+    const stack = [p0];
+    label[p0] = id;
+    while (stack.length) {
+      const p = stack.pop();
+      area++;
+      const x = p % w, y = (p / w) | 0;
+      if (x === 0 || y === 0 || x === w - 1 || y === h - 1) touches = true;
+      for (const q of [p - 1, p + 1, p - w, p + w]) {
+        if (q < 0 || q >= w * h) continue;
+        if (Math.abs((q % w) - x) > 1) continue; // 좌우 랩 방지
+        if (label[q] === -1 && data[q * 4 + 3] > 0) { label[q] = id; stack.push(q); }
+      }
+    }
+    comps.push({ area, touches });
+  }
+  if (comps.length < 2) return buf;
+  const maxArea = Math.max(...comps.map((c) => c.area));
+  const kill = comps.map((c) => c.area !== maxArea && c.touches);
+  if (!kill.some(Boolean)) return buf;
+  for (let p = 0; p < w * h; p++) if (label[p] !== -1 && kill[label[p]]) data[p * 4 + 3] = 0;
   return sharp(data, { raw: { width: w, height: h, channels: 4 } }).png().toBuffer();
 }
 
@@ -345,8 +491,10 @@ export function crisp(pipeline, scale, w) {
 
 // 시트에서 셀 하나를 잘라 배경 제거·슬리버 정리·트림까지 마친 컷 버퍼를 만든다.
 // mult: 좌표 배율(원본 시트=1, 4x 초해상 시트=4). cover도 같이 배율 적용.
-export async function extractCut(img, cell, mult = 1) {
-  const [left, top, width, height] = cell.rect.map((v) => v * mult);
+// rect/grew는 autoExpand가 넓힌 좌표(원본 시트 기준). cover는 원래 rect 기준이라
+// 넓어진 만큼 밀어 준다.
+export async function extractCut(img, cell, mult = 1, rect = cell.rect, grew = { l: 0, t: 0 }) {
+  const [left, top, width, height] = rect.map((v) => v * mult);
   let pipeline = img.clone().extract({ left, top, width, height });
   if (cell.cover) {
     pipeline = sharp(await pipeline.png().toBuffer()).composite(
@@ -357,14 +505,21 @@ export async function extractCut(img, cell, mult = 1) {
             background: { r: 252, g: 252, b: 252, alpha: 255 },
           },
         },
-        left: cx * mult,
-        top: cy * mult,
+        left: (cx + grew.l) * mult,
+        top: (cy + grew.t) * mult,
       }))
     );
   }
   const raw = await pipeline.png().toBuffer();
-  const clean = await dropEdgeSlivers(await cutout(raw));
+  const clean = await dropEdgeSlivers(await dropIntruders(await cutout(raw)));
   return sharp(clean).trim({ threshold: 1 }).png().toBuffer();
+}
+
+// autoExpand용 원본 시트 픽셀(1x) 로더
+async function loadSheetPixels(src) {
+  const img = sharp(src).ensureAlpha();
+  const { width, height } = await img.metadata();
+  return { width, height, data: await img.raw().toBuffer() };
 }
 
 async function main() {
@@ -381,23 +536,26 @@ async function main() {
     const img = sharp(sheet.src);
     const srImg = srPath ? sharp(srPath) : null;
     if (!srPath) console.warn(`! ${sheet.src}: 초해상 시트 없음 → 란초스 폴백(품질 낮음)`);
+    const pixels = await loadSheetPixels(sheet.src);
 
     for (const row of sheet.rows) {
       for (const cell of cellsOf(row)) {
         num += 1;
         const code = `HT-${String(num).padStart(3, "0")}`;
+        // 변에 걸린 캐릭터가 있으면 그만큼 크롭을 넓혀 잘림을 없앤다
+        const { rect, grew } = autoExpand(pixels, cell.rect);
 
         let out;
         if (srImg) {
           // 4x 초해상 시트에서 컷 → 절반 다운스케일 = 기존과 같은 2x 크기, 라인은 SR 품질
-          const cut4 = await extractCut(srImg, cell, SR_SCALE);
+          const cut4 = await extractCut(srImg, cell, SR_SCALE, rect, grew);
           const m4 = await sharp(cut4).metadata();
           out = await sharp(cut4)
             .resize({ width: Math.round(m4.width / 2), kernel: "lanczos3" })
             .png({ compressionLevel: 9 })
             .toBuffer();
         } else {
-          const cut = await extractCut(img, cell, 1);
+          const cut = await extractCut(img, cell, 1, rect, grew);
           const meta = await sharp(cut).metadata();
           out = await crisp(sharp(cut), row.scale ?? 2, meta.width)
             .png({ compressionLevel: 9 })
