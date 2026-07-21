@@ -3,7 +3,8 @@
 //   node scripts/build-character-assets.mjs
 //
 // 입력:  img/man1.png, img/sd_1.png (1536x1024 캐릭터 가이드 시트)
-// 출력:  public/characters/HT-###.png   — 배경 투명 + 2x 업스케일(란초스+언샤프) 고화질 컷
+// 출력:  public/characters/HT-###.png   — Real-ESRGAN 4x 초해상 → 2x 다운스케일 고화질 컷
+//        (SR 실행 파일 없으면 란초스 2x 폴백)
 //        src/data/characters.json       — 자산 레지스트리(채번·이름·그룹·크기·출처 좌표)
 //        scripts/out/characters-contact.html — 검증용 라벨 콘택트시트(브라우저로 확인)
 //
@@ -11,11 +12,36 @@
 // 재실행해도 같은 번호가 같은 컷에 부여된다. 번호 체계는 doc/17_character_platform.md 참조.
 
 import { mkdir, rm, writeFile } from "node:fs/promises";
+import { existsSync, mkdirSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import sharp from "sharp";
 
 const OUT_DIR = "public/characters";
 const REGISTRY = "src/data/characters.json";
 const CONTACT = "scripts/out/characters-contact.html";
+
+// ------------------------------------------ AI 초해상(Real-ESRGAN) 시트 준비
+// 시트를 통째로 4x 초해상한 뒤 거기서 컷을 뜨면, 란초스 업스케일과는 차원이 다른
+// 선명한 라인이 나온다. 실행 파일이 없으면 기존 란초스 경로로 자동 폴백.
+// (실행 파일: local/tools/realesrgan/ — gitignore, README_windows.md 참조)
+const SR_SCALE = 4;
+const SR_DIR = "local/tools/sr";
+const SR_EXE = "local/tools/realesrgan/realesrgan-ncnn-vulkan.exe";
+
+export function ensureSrSheet(src) {
+  const base = src.split("/").pop().replace(/\.png$/, "");
+  const out = `${SR_DIR}/${base}_x${SR_SCALE}.png`;
+  if (existsSync(out)) return out;
+  if (!existsSync(SR_EXE)) return null;
+  mkdirSync(SR_DIR, { recursive: true });
+  console.log(`… ${src} 초해상(${SR_SCALE}x) 생성 중`);
+  const r = spawnSync(SR_EXE, ["-i", src, "-o", out, "-n", "realesrgan-x4plus-anime", "-s", String(SR_SCALE)], {
+    stdio: "ignore",
+  });
+  if (r.status !== 0 || !existsSync(out)) return null;
+  return out;
+}
+export { SR_SCALE };
 
 // ---------------------------------------------------------------- 배경 제거
 // 가장자리에서 flood fill 해 '바깥 크림색 배경'만 투명 처리한다.
@@ -246,7 +272,7 @@ export const SHEETS = [
       {
         section: "미니멀 라인",
         y: [798, 878],
-        edges: [[18, 100], [104, 182], [186, 252], [254, 335]],
+        edges: [[18, 100], [104, 176], [190, 252], [254, 335]],
         names: ["인사", "파이팅", "OK", "프로필"],
       },
       {
@@ -291,11 +317,35 @@ export function cellsOf(row) {
   }));
 }
 
-// 확대 + 언샤프 — 선화가 흐려지지 않게 2배까지만 키운다.
+// 확대 + 언샤프 — 선화가 흐려지지 않게 2배까지만 키운다. (SR 미가용 시 폴백용)
 export function crisp(pipeline, scale, w) {
   return pipeline
     .resize({ width: Math.round(w * scale), kernel: "lanczos3" })
     .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 });
+}
+
+// 시트에서 셀 하나를 잘라 배경 제거·슬리버 정리·트림까지 마친 컷 버퍼를 만든다.
+// mult: 좌표 배율(원본 시트=1, 4x 초해상 시트=4). cover도 같이 배율 적용.
+export async function extractCut(img, cell, mult = 1) {
+  const [left, top, width, height] = cell.rect.map((v) => v * mult);
+  let pipeline = img.clone().extract({ left, top, width, height });
+  if (cell.cover) {
+    pipeline = sharp(await pipeline.png().toBuffer()).composite(
+      cell.cover.map(([cx, cy, cw, ch]) => ({
+        input: {
+          create: {
+            width: cw * mult, height: ch * mult, channels: 4,
+            background: { r: 252, g: 252, b: 252, alpha: 255 },
+          },
+        },
+        left: cx * mult,
+        top: cy * mult,
+      }))
+    );
+  }
+  const raw = await pipeline.png().toBuffer();
+  const clean = await dropEdgeSlivers(await cutout(raw));
+  return sharp(clean).trim({ threshold: 1 }).png().toBuffer();
 }
 
 async function main() {
@@ -307,37 +357,33 @@ async function main() {
   let num = 0;
 
   for (const sheet of SHEETS) {
+    // AI 초해상 시트 우선(품질 ↑↑) — 없으면 원본 시트 + 란초스 폴백
+    const srPath = ensureSrSheet(sheet.src);
     const img = sharp(sheet.src);
+    const srImg = srPath ? sharp(srPath) : null;
+    if (!srPath) console.warn(`! ${sheet.src}: 초해상 시트 없음 → 란초스 폴백(품질 낮음)`);
+
     for (const row of sheet.rows) {
       for (const cell of cellsOf(row)) {
         num += 1;
         const code = `HT-${String(num).padStart(3, "0")}`;
-        const [left, top, width, height] = cell.rect;
 
-        let pipeline = img.clone().extract({ left, top, width, height });
-        // cover: 셀 안에 침범한 시트 텍스트를 배경색으로 덮는다(셀 로컬 좌표).
-        if (cell.cover) {
-          pipeline = sharp(await pipeline.png().toBuffer()).composite(
-            cell.cover.map(([cx, cy, cw, ch]) => ({
-              input: {
-                create: {
-                  width: cw, height: ch, channels: 4,
-                  background: { r: 252, g: 252, b: 252, alpha: 255 },
-                },
-              },
-              left: cx,
-              top: cy,
-            }))
-          );
+        let out;
+        if (srImg) {
+          // 4x 초해상 시트에서 컷 → 절반 다운스케일 = 기존과 같은 2x 크기, 라인은 SR 품질
+          const cut4 = await extractCut(srImg, cell, SR_SCALE);
+          const m4 = await sharp(cut4).metadata();
+          out = await sharp(cut4)
+            .resize({ width: Math.round(m4.width / 2), kernel: "lanczos3" })
+            .png({ compressionLevel: 9 })
+            .toBuffer();
+        } else {
+          const cut = await extractCut(img, cell, 1);
+          const meta = await sharp(cut).metadata();
+          out = await crisp(sharp(cut), row.scale ?? 2, meta.width)
+            .png({ compressionLevel: 9 })
+            .toBuffer();
         }
-        const raw = await pipeline.png().toBuffer();
-        const clean = await dropEdgeSlivers(await cutout(raw));
-        const cut = await sharp(clean).trim({ threshold: 1 }).png().toBuffer();
-        const meta = await sharp(cut).metadata();
-        const scale = row.scale ?? 2;
-        const out = await crisp(sharp(cut), scale, meta.width)
-          .png({ compressionLevel: 9 })
-          .toBuffer();
         const outMeta = await sharp(out).metadata();
         await writeFile(`${OUT_DIR}/${code}.png`, out);
 

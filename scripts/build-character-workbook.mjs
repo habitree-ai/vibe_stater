@@ -5,9 +5,9 @@
 // 출력(모두 gitignore 되는 local/ 아래):
 //   local/characters/index.html        — 단독 실행 관리 워크북(브라우저로 열기)
 //   local/characters/data.js           — 자산 상세 데이터(디테일 고도화 버전)
-//   local/characters/img/native/*.png  — 1x 무손실 컷(리사이즈·샤픈 없음, 진짜 원본)
-//   local/characters/img/x2/*.png      — 표준 2x (사이트와 동일 품질)
-//   local/characters/img/x3/*.png      — 고화질 3x (로컬 활용 최대 해상도)
+//   local/characters/img/native/*.png  — 1x 무손실 컷(원본 시트 그대로, 진짜 원본)
+//   local/characters/img/x2/*.png      — 표준 2x (사이트와 동일 — AI 초해상 유래)
+//   local/characters/img/x4/*.png      — 고화질 4x (Real-ESRGAN 초해상 풀해상도)
 //   local/characters/README.md         — 로컬 관리 방법 안내
 //
 // 시트 좌표·배경 제거 로직은 build-character-assets.mjs 를 그대로 import 하므로
@@ -18,9 +18,10 @@ import sharp from "sharp";
 import {
   SHEETS,
   cellsOf,
-  cutout,
-  dropEdgeSlivers,
   crisp,
+  extractCut,
+  ensureSrSheet,
+  SR_SCALE,
 } from "./build-character-assets.mjs";
 
 const OUT = "local/characters";
@@ -57,22 +58,16 @@ const ABOUT_EQUIV = {
 
 const GROUP_LABEL = { man: "메이커", otter: "오터", prop: "소품", scene: "상황", custom: "업로드" };
 
-async function variantOf(cut, scale, file) {
-  const meta = await sharp(cut).metadata();
-  let buf;
-  if (scale === 1) {
-    buf = await sharp(cut).png({ compressionLevel: 9 }).toBuffer();
-  } else {
-    buf = await crisp(sharp(cut), scale, meta.width).png({ compressionLevel: 9 }).toBuffer();
-  }
-  const m = await sharp(buf).metadata();
-  await writeFile(file, buf);
-  return { w: m.width, h: m.height, kb: Math.max(1, Math.round(buf.length / 1024)) };
+async function writeVariant(buf, file) {
+  const out = await sharp(buf).png({ compressionLevel: 9 }).toBuffer();
+  const m = await sharp(out).metadata();
+  await writeFile(file, out);
+  return { w: m.width, h: m.height, kb: Math.max(1, Math.round(out.length / 1024)) };
 }
 
 async function main() {
   await rm(OUT, { recursive: true, force: true });
-  for (const d of ["", "/img/native", "/img/x2", "/img/x3"]) {
+  for (const d of ["", "/img/native", "/img/x2", "/img/x4"]) {
     await mkdir(OUT + d, { recursive: true });
   }
 
@@ -81,34 +76,35 @@ async function main() {
 
   for (const sheet of SHEETS) {
     const img = sharp(sheet.src);
+    const srPath = ensureSrSheet(sheet.src);
+    const srImg = srPath ? sharp(srPath) : null;
+    if (!srPath) console.warn("! " + sheet.src + ": 초해상 시트 없음 → 란초스 폴백");
     for (const row of sheet.rows) {
       for (const cell of cellsOf(row)) {
         num += 1;
         const code = `HT-${String(num).padStart(3, "0")}`;
-        const [left, top, width, height] = cell.rect;
         const group = row.group ?? sheet.group;
 
-        // 시트 추출 파이프라인(사이트와 동일) → 무손실 컷 확보
-        let pipeline = img.clone().extract({ left, top, width, height });
-        if (cell.cover) {
-          pipeline = sharp(await pipeline.png().toBuffer()).composite(
-            cell.cover.map(([cx, cy, cw, ch]) => ({
-              input: { create: { width: cw, height: ch, channels: 4, background: { r: 252, g: 252, b: 252, alpha: 255 } } },
-              left: cx, top: cy,
-            }))
-          );
+        // native: 원본 시트 무손실 / x2·x4: AI 초해상 시트 유래(미가용 시 란초스 폴백)
+        const cut1 = await extractCut(img, cell, 1);
+        const variants = { native: await writeVariant(cut1, `${OUT}/img/native/${code}.png`) };
+        if (srImg) {
+          const cut4 = await extractCut(srImg, cell, SR_SCALE);
+          const m4 = await sharp(cut4).metadata();
+          const half = await sharp(cut4)
+            .resize({ width: Math.round(m4.width / 2), kernel: "lanczos3" })
+            .png({ compressionLevel: 9 }).toBuffer();
+          variants.x2 = await writeVariant(half, `${OUT}/img/x2/${code}.png`);
+          variants.x4 = await writeVariant(cut4, `${OUT}/img/x4/${code}.png`);
+        } else {
+          const m1 = await sharp(cut1).metadata();
+          const up = (s) => crisp(sharp(cut1), s, m1.width).png({ compressionLevel: 9 }).toBuffer();
+          variants.x2 = await writeVariant(await up(2), `${OUT}/img/x2/${code}.png`);
+          variants.x4 = await writeVariant(await up(4), `${OUT}/img/x4/${code}.png`);
         }
-        const raw = await pipeline.png().toBuffer();
-        const clean = await dropEdgeSlivers(await cutout(raw));
-        const cut = await sharp(clean).trim({ threshold: 1 }).png().toBuffer();
-
-        // 3단계 화질 생성
-        const variants = {
-          native: await variantOf(cut, 1, `${OUT}/img/native/${code}.png`),
-          x2: await variantOf(cut, 2, `${OUT}/img/x2/${code}.png`),
-          x3: await variantOf(cut, 3, `${OUT}/img/x3/${code}.png`),
-        };
-        for (const [k, v] of Object.entries(variants)) v.file = `img/${k === "native" ? "native" : k}/${code}.png`;
+        variants.native.file = `img/native/${code}.png`;
+        variants.x2.file = `img/x2/${code}.png`;
+        variants.x4.file = `img/x4/${code}.png`;
 
         const usageKey = `${sheet.char}|${row.section}`;
         assets.push({
@@ -153,7 +149,7 @@ async function main() {
     `# 캐릭터 자산 워크북 (내부 관리용)
 
 - **열기**: 이 폴더의 \`index.html\` 을 브라우저로 연다(서버 불필요, 오프라인 동작).
-- **화질 3단계**: \`img/native\`(1x 무손실) · \`img/x2\`(사이트 동일) · \`img/x3\`(최대 해상도).
+- **화질 3단계**: \`img/native\`(1x 원본) · \`img/x2\`(사이트 동일·AI 초해상 유래) · \`img/x4\`(Real-ESRGAN 4x 풀해상도).
 - **메모·즐겨찾기**: 브라우저(localStorage)에 저장 — 상단 "메모 내보내기"로 JSON 백업.
 - **재생성**: 리포 루트에서 \`node scripts/build-character-workbook.mjs\` (이 폴더를 전부 덮어씀 — 메모는 브라우저에 있으므로 안전).
 - 이 폴더(\`local/\`)는 .gitignore 대상 — 커밋·배포되지 않는다.
@@ -161,7 +157,7 @@ async function main() {
   );
 
   const total = assets.reduce(
-    (a, x) => a + x.variants.native.kb + x.variants.x2.kb + x.variants.x3.kb,
+    (a, x) => a + x.variants.native.kb + x.variants.x2.kb + x.variants.x4.kb,
     0
   );
   console.log(`\n✓ ${assets.length}컷 × 3화질 생성 (${(total / 1024).toFixed(1)}MB) → ${OUT}/`);
