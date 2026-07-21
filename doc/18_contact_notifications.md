@@ -43,8 +43,10 @@
    (앱 이름 예: habitree-notify).
 2. **REST API 키 복사** → `KAKAO_REST_API_KEY` 로 저장.
 3. **플랫폼 등록**: 앱 설정 > 플랫폼 > Web → `https://vibe.habitree.io` 등록.
-4. **Redirect URI**: 제품 설정 > 카카오 로그인 활성화 → Redirect URI에
-   `https://vibe.habitree.io/kakao-oauth` 등록 (페이지가 실제로 없어도 된다 — 주소창의 code만 쓴다).
+4. **카카오 로그인 활성화**: 제품 설정 > 카카오 로그인 > 활성화 설정 **ON**
+   (꺼져 있으면 동의 화면에서 `KOE004`가 뜬다). 이어서 Redirect URI에
+   `https://vibe.habitree.io/kakao-oauth` 등록 — 이 주소에는 실제 착지 페이지가 있어
+   인가 코드와 실행할 명령을 복사 버튼과 함께 보여준다(오류 코드도 한국어로 해설).
 5. **동의항목**: 카카오 로그인 > 동의항목 → **카카오톡 메시지 전송(talk_message)** 을 '선택 동의'로 설정.
 6. **토큰 발급·저장**: 리포 루트에서
 
