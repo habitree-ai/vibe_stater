@@ -154,7 +154,7 @@ export const homeMarkup = `
         <h3 style="font-size:1.5rem">LINKMAP 실전 강의</h3>
         <p class="desc">LINKMAP으로 서비스를 연결하는 영상 강의. 제작되는 대로 유튜브 재생목록에 순차 공개해요.</p>
         <figure class="res-thumb ill">
-          <img src="/img/about/man-record.png" alt="카메라 앞에서 강의 영상을 촬영하는 모습" loading="lazy" width="318" height="288" />
+          <img src="/img/about/man-record.png" alt="카메라 앞에서 강의 영상을 촬영하는 모습" loading="lazy" width="256" height="288" />
         </figure>
         <span class="stamp">준비중 · 유튜브 ↗</span>
       </a>

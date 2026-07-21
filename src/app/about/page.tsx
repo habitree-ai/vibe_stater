@@ -313,7 +313,7 @@ export default function AboutPage() {
                 src="/img/about/otter-read.png"
                 alt=""
                 aria-hidden
-                width={203}
+                width={204}
                 height={224}
                 loading="lazy"
                 className="h-28 w-auto shrink-0 object-contain"

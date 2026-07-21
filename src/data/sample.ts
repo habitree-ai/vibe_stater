@@ -140,7 +140,7 @@ export const aboutPage = {
     items: [
       {
         img: "/img/about/man-code.png",
-        w: 322,
+        w: 301,
         h: 288,
         alt: "모니터 앞에서 코딩하는 메이커 캐릭터",
         title: "만들어요",
@@ -148,7 +148,7 @@ export const aboutPage = {
       },
       {
         img: "/img/about/man-read.png",
-        w: 324,
+        w: 342,
         h: 288,
         alt: "책을 읽는 메이커 캐릭터",
         title: "읽어요",
@@ -156,7 +156,7 @@ export const aboutPage = {
       },
       {
         img: "/img/about/man-record.png",
-        w: 318,
+        w: 256,
         h: 288,
         alt: "카메라 앞에서 영상을 녹화하는 메이커 캐릭터",
         title: "나눠요",

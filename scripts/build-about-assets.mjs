@@ -3,98 +3,68 @@
 //   node scripts/build-about-assets.mjs
 //
 // 입력: img/man1.png, img/sd_1.png (캐릭터 가이드 시트, 각 1536x1024)
+//       + local/tools/sr/*_x4.png (Real-ESRGAN 초해상 캐시 — 있으면 고품질 경로)
 // 출력: public/img/about-characters.png (인트로용 듀오) + public/img/about/*.png (섹션 장식용 컷)
 //
-// 가이드 시트는 크림색 배경 위에 캐릭터가 격자로 놓여 있다. 가장자리에서 flood fill 해
-// '바깥 배경'만 투명 처리하므로 노트북·책 페이지 같은 내부 흰색은 그대로 남는다.
+// 배경 제거·초해상 캐시는 build-character-assets.mjs 와 공유한다.
+// SR 캐시가 있으면 4x 시트에서 잘라 목표 크기로 '다운스케일'하므로(업스케일 없음)
+// 라인이 뭉개지지 않는다. 없으면 기존 란초스+언샤프 폴백.
 
 import { mkdir } from "node:fs/promises";
 import sharp from "sharp";
+import { cutout, dropEdgeSlivers, ensureSrSheet, SR_SCALE } from "./build-character-assets.mjs";
 
 const OUT_DIR = "public/img/about";
 
-// ---------------------------------------------------------------- 배경 제거
-async function cutout(buf) {
-  const img = sharp(buf).ensureAlpha();
-  const { width: w, height: h } = await img.metadata();
-  const data = await img.raw().toBuffer();
+// 시트 소스 준비: SR 캐시가 있으면 {img, mult:4}, 없으면 {img, mult:1}
+function srcOf(path) {
+  const sr = ensureSrSheet(path);
+  if (!sr) console.warn(`! ${path}: 초해상 캐시 없음 → 원본+란초스 폴백`);
+  return sr ? { img: sharp(sr), mult: SR_SCALE } : { img: sharp(path), mult: 1 };
+}
 
-  const bgLike = (i) => {
-    const r = data[i], g = data[i + 1], b = data[i + 2];
-    const mn = Math.min(r, g, b);
-    const mx = Math.max(r, g, b);
-    return mn > 226 && mx - mn < 22; // 크림/화이트 계열
-  };
-
-  const seen = new Uint8Array(w * h);
-  const stack = [];
-  for (let x = 0; x < w; x++) stack.push(x, (h - 1) * w + x);
-  for (let y = 0; y < h; y++) stack.push(y * w, y * w + w - 1);
-
-  while (stack.length) {
-    const p = stack.pop();
-    if (seen[p] || !bgLike(p * 4)) continue;
-    seen[p] = 1;
-    const x = p % w, y = (p / w) | 0;
-    if (x > 0) stack.push(p - 1);
-    if (x < w - 1) stack.push(p + 1);
-    if (y > 0) stack.push(p - w);
-    if (y < h - 1) stack.push(p + w);
+// 원본 좌표 rect를 소스 배율에 맞춰 잘라 배경 제거·트림까지 마친 컷 버퍼.
+async function cutFrom(src, rect, cover) {
+  const [l, t, w, h] = rect.map((v) => v * src.mult);
+  let pipeline = src.img.clone().extract({ left: l, top: t, width: w, height: h });
+  if (cover) {
+    pipeline = sharp(await pipeline.png().toBuffer()).composite(
+      cover.map(([cx, cy, cw, ch]) => ({
+        input: {
+          create: {
+            width: cw * src.mult, height: ch * src.mult, channels: 4,
+            background: { r: 252, g: 252, b: 252, alpha: 255 },
+          },
+        },
+        left: cx * src.mult,
+        top: cy * src.mult,
+      }))
+    );
   }
+  const raw = await pipeline.png().toBuffer();
+  const clean = await dropEdgeSlivers(await cutout(raw));
+  return sharp(clean).trim({ threshold: 1 }).png().toBuffer();
+}
 
-  for (let p = 0; p < w * h; p++) if (seen[p]) data[p * 4 + 3] = 0;
-  // 경계 한 겹은 반투명으로 부드럽게
-  for (let y = 1; y < h - 1; y++) {
-    for (let x = 1; x < w - 1; x++) {
-      const p = y * w + x;
-      if (seen[p] || data[p * 4 + 3] === 0) continue;
-      if (seen[p - 1] || seen[p + 1] || seen[p - w] || seen[p + w]) {
-        const i = p * 4;
-        if (Math.min(data[i], data[i + 1], data[i + 2]) > 200) data[i + 3] = 90;
-      }
-    }
-  }
-
-  return sharp(data, { raw: { width: w, height: h, channels: 4 } }).png().toBuffer();
+// 목표 크기로 정리: SR(다운스케일)은 그대로, 폴백(업스케일)은 언샤프로 보정
+function finalize(buf, resizeOpt, mult) {
+  let p = sharp(buf).resize({ ...resizeOpt, kernel: "lanczos3" });
+  if (mult === 1) p = p.sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 });
+  return p.png({ compressionLevel: 9 }).toBuffer();
 }
 
 // -------------------------------------------------- 1) 인트로용 듀오 이미지
 // 남자 캐릭터(크게, 노트북·머그 포함) + 수달 마스코트(작게, 앞쪽)
 async function buildDuo() {
-  const MAN = { left: 232, top: 8, width: 242, height: 292 };
-  const manSrc = await sharp("img/man1.png")
-    .extract(MAN)
-    // 좌상단에 걸리는 로고/태그라인 텍스트를 배경색으로 덮는다.
-    .composite([
-      {
-        input: {
-          create: { width: 96, height: 150, channels: 4, background: { r: 250, g: 249, b: 245, alpha: 255 } },
-        },
-        left: 0,
-        top: 0,
-      },
-    ])
-    .png()
-    .toBuffer();
+  const man1 = srcOf("img/man1.png");
+  const sd1 = srcOf("img/sd_1.png");
 
-  const otterSrc = await sharp("img/sd_1.png")
-    .extract({ left: 78, top: 96, width: 214, height: 278 })
-    .png()
-    .toBuffer();
+  // 좌상단에 걸리는 로고/태그라인 텍스트는 배경색으로 덮는다.
+  const manCut = await cutFrom(man1, [232, 8, 242, 292], [[0, 0, 96, 150]]);
+  const otterCut = await cutFrom(sd1, [78, 96, 214, 278]);
 
-  // 카드 표시 폭(max-w-sm = 384px)의 2배인 768px 캔버스에 맞춰 한 번만 확대한다.
-  const man = await sharp(await cutout(manSrc))
-    .trim({ threshold: 1 })
-    .resize({ width: 627, kernel: "lanczos3" })
-    .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 })
-    .png()
-    .toBuffer();
-  const otter = await sharp(await cutout(otterSrc))
-    .trim({ threshold: 1 })
-    .resize({ width: 243, kernel: "lanczos3" })
-    .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 })
-    .png()
-    .toBuffer();
+  const man = await finalize(manCut, { width: 627 }, man1.mult);
+  const otter = await finalize(otterCut, { width: 243 }, sd1.mult);
   const manMeta = await sharp(man).metadata();
   const otterMeta = await sharp(otter).metadata();
 
@@ -107,15 +77,13 @@ async function buildDuo() {
     .png({ compressionLevel: 9 })
     .toFile("public/img/about-characters.png");
 
-  console.log("✓ public/img/about-characters.png");
+  console.log("✓ public/img/about-characters.png 768x768");
 }
 
 // ------------------------------------------------- 2) 섹션 장식용 캐릭터 컷
 // man1 §03 "상황별 다양한 모션" 행 / sd_1 §02 "다양한 포즈 & 각도" 행에서 뽑는다.
 // height 는 각 컷 아래 한글 캡션에 닿지 않도록 잘라 둔 값이다.
-//
-// out: 화면 표시 높이(CSS px)의 2배로 한 번만 확대한다. 과하게 키워 두면 브라우저가 다시
-// 축소하면서 리샘플이 두 번 일어나 오히려 흐려진다. 선화라 확대 후 언샤프로 윤곽을 세운다.
+// out: 화면 표시 높이(CSS px)의 2배.
 const CUTS = [
   { name: "man-code", src: "img/man1.png", left: 838, top: 322, width: 132, height: 134, out: 288 },
   { name: "man-read", src: "img/man1.png", left: 52, top: 334, width: 142, height: 122, out: 288 },
@@ -126,26 +94,21 @@ const CUTS = [
   { name: "otter-coffee", src: "img/sd_1.png", left: 1326, top: 298, width: 76, height: 92, out: 256 },
 ];
 
-// 확대 → 언샤프 마스크. 흐릿해진 선과 면 경계를 다시 세운다.
-function crisp(pipeline, height) {
-  return pipeline
-    .resize({ height, kernel: "lanczos3", fit: "inside" })
-    .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 });
-}
-
 async function buildCuts() {
   await mkdir(OUT_DIR, { recursive: true });
+  const sources = new Map();
+  const dims = {};
   for (const c of CUTS) {
-    const raw = await sharp(c.src)
-      .extract({ left: c.left, top: c.top, width: c.width, height: c.height })
-      .png()
-      .toBuffer();
-    const trimmed = await sharp(await cutout(raw)).trim({ threshold: 1 }).png().toBuffer();
-    const out = await crisp(sharp(trimmed), c.out).png({ compressionLevel: 9 }).toBuffer();
+    if (!sources.has(c.src)) sources.set(c.src, srcOf(c.src));
+    const src = sources.get(c.src);
+    const cut = await cutFrom(src, [c.left, c.top, c.width, c.height]);
+    const out = await finalize(cut, { height: c.out, fit: "inside" }, src.mult);
     const meta = await sharp(out).metadata();
     await sharp(out).toFile(`${OUT_DIR}/${c.name}.png`);
+    dims[c.name] = { w: meta.width, h: meta.height };
     console.log(`✓ ${OUT_DIR}/${c.name}.png ${meta.width}x${meta.height} ${(out.length / 1024) | 0}KB`);
   }
+  console.log("\n페이지 width/height 갱신용:", JSON.stringify(dims));
 }
 
 await buildDuo();

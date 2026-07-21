@@ -94,24 +94,31 @@ export async function cutout(buf) {
 
 // ------------------------------------------------- 경계 슬리버 자동 제거
 // 셀 경계에 걸친 옆 컷의 조각(팔·소품 일부)을 지운다.
-// 규칙: 알파>0 연결 성분 중 '이미지 테두리에 닿아 있고' 면적이 최대 성분의 8% 미만이면 제거.
+// 규칙 1: '이미지 테두리에 닿아 있고' 면적이 최대 성분의 8% 미만인 성분 제거.
+// 규칙 2: 가장자리 8% 구간에 있는 '얇은 세로줄'(폭 ≤2%·높이 ≥50%) 제거
+//         — 시트 셀 구분선이 크롭 안쪽으로 1~2px 들어온 경우(테두리 미접촉이라 규칙 1로 안 잡힘).
 export async function dropEdgeSlivers(buf) {
   const img = sharp(buf).ensureAlpha();
   const { width: w, height: h } = await img.metadata();
   const data = await img.raw().toBuffer();
 
   const label = new Int32Array(w * h).fill(-1);
-  const comps = []; // {area, touches}
+  const comps = []; // {area, touches, bbox}
   for (let p0 = 0; p0 < w * h; p0++) {
     if (data[p0 * 4 + 3] === 0 || label[p0] !== -1) continue;
     const id = comps.length;
     let area = 0, touches = false;
+    let minx = w, maxx = 0, miny = h, maxy = 0;
     const stack = [p0];
     label[p0] = id;
     while (stack.length) {
       const p = stack.pop();
       area++;
       const x = p % w, y = (p / w) | 0;
+      if (x < minx) minx = x;
+      if (x > maxx) maxx = x;
+      if (y < miny) miny = y;
+      if (y > maxy) maxy = y;
       if (x === 0 || y === 0 || x === w - 1 || y === h - 1) touches = true;
       for (const q of [p - 1, p + 1, p - w, p + w]) {
         if (q < 0 || q >= w * h) continue;
@@ -123,11 +130,23 @@ export async function dropEdgeSlivers(buf) {
         }
       }
     }
-    comps.push({ area, touches });
+    comps.push({ area, touches, minx, maxx, miny, maxy });
   }
   if (comps.length < 2) return buf;
   const maxArea = Math.max(...comps.map((c) => c.area));
-  const kill = comps.map((c) => c.touches && c.area < maxArea * 0.08);
+  const kill = comps.map((c) => {
+    if (c.area === maxArea) return false;
+    if (c.touches && c.area < maxArea * 0.08) return true; // 규칙 1
+    const bw = c.maxx - c.minx + 1;
+    const bh = c.maxy - c.miny + 1;
+    // 규칙 2a: 좌우 20% 구간의 얇은 세로줄(셀 테두리 유입)
+    if ((c.minx <= w * 0.2 || c.maxx >= w * 0.8) && bw <= Math.max(4, w * 0.025) && bh >= h * 0.5) return true;
+    // 규칙 2b: 상하 20% 구간의 얇은 가로줄
+    if ((c.miny <= h * 0.2 || c.maxy >= h * 0.8) && bh <= Math.max(4, h * 0.025) && bw >= w * 0.5) return true;
+    // 규칙 3: 속이 빈 사각 프레임/모서리(셀 테두리 상자) — bbox는 크고 면적은 얇은 획뿐
+    if (bw >= w * 0.6 && bh >= h * 0.6 && c.area <= bw * bh * 0.06) return true;
+    return false;
+  });
   if (!kill.some(Boolean)) return buf;
   for (let p = 0; p < w * h; p++) {
     if (label[p] !== -1 && kill[label[p]]) data[p * 4 + 3] = 0;
@@ -202,7 +221,7 @@ export const SHEETS = [
         group: "prop",
         y: [516, 604],
         edges: [
-          [28, 106], [110, 184], [194, 264], [282, 342],
+          [28, 106], [110, 184], [194, 264], [282, 348],
           [358, 420], [436, 498], [508, 606], [630, 660],
         ],
         names: ["노트북", "머그컵", "책", "노트", "백팩", "카메라", "키보드", "식물"],

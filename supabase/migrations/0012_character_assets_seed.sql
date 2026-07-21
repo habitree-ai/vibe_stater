@@ -1,5 +1,4 @@
--- 0012: 캐릭터 자산 시드 — 시트 추출본 HT-001~HT-105 등록
--- (scripts/build-character-assets.mjs 가 생성한 src/data/characters.json 기준 — Real-ESRGAN 초해상 파이프라인)
+-- 0012: 캐릭터 자산 시드 — 시트 추출본 HT-001~HT-105 (Real-ESRGAN 초해상 파이프라인)
 insert into public.character_assets
   (num, name, "group", section, char_label, src, width, height, tags, origin)
 values
@@ -21,11 +20,11 @@ values
 (16, '독서 시간', 'man', '상황 모션', '메이커', '/characters/HT-016.png', 316, 232, array['메이커','상황 모션']::text[], 'repo'),
 (17, '노트 정리', 'man', '상황 모션', '메이커', '/characters/HT-017.png', 329, 255, array['메이커','상황 모션']::text[], 'repo'),
 (18, '노트북 작업', 'man', '상황 모션', '메이커', '/characters/HT-018.png', 320, 245, array['메이커','상황 모션']::text[], 'repo'),
-(19, '아이디어 떠올리기', 'man', '상황 모션', '메이커', '/characters/HT-019.png', 285, 237, array['메이커','상황 모션']::text[], 'repo'),
+(19, '아이디어 떠올리기', 'man', '상황 모션', '메이커', '/characters/HT-019.png', 243, 237, array['메이커','상황 모션']::text[], 'repo'),
 (20, '화이트보드 기획', 'man', '상황 모션', '메이커', '/characters/HT-020.png', 282, 262, array['메이커','상황 모션']::text[], 'repo'),
-(21, '코딩 작업', 'man', '상황 모션', '메이커', '/characters/HT-021.png', 268, 237, array['메이커','상황 모션']::text[], 'repo'),
-(22, '유튜브 녹화', 'man', '상황 모션', '메이커', '/characters/HT-022.png', 260, 258, array['메이커','상황 모션']::text[], 'repo'),
-(23, '커피 한 잔', 'man', '상황 모션', '메이커', '/characters/HT-023.png', 263, 252, array['메이커','상황 모션']::text[], 'repo'),
+(21, '코딩 작업', 'man', '상황 모션', '메이커', '/characters/HT-021.png', 251, 237, array['메이커','상황 모션']::text[], 'repo'),
+(22, '유튜브 녹화', 'man', '상황 모션', '메이커', '/characters/HT-022.png', 235, 258, array['메이커','상황 모션']::text[], 'repo'),
+(23, '커피 한 잔', 'man', '상황 모션', '메이커', '/characters/HT-023.png', 245, 252, array['메이커','상황 모션']::text[], 'repo'),
 (24, '산책 · 사색', 'man', '상황 모션', '메이커', '/characters/HT-024.png', 360, 252, array['메이커','상황 모션']::text[], 'repo'),
 (25, '추천', 'man', '미니멀 라인', '메이커', '/characters/HT-025.png', 132, 154, array['메이커','미니멀 라인']::text[], 'repo'),
 (26, '핵심', 'man', '미니멀 라인', '메이커', '/characters/HT-026.png', 135, 153, array['메이커','미니멀 라인']::text[], 'repo'),
@@ -38,7 +37,7 @@ values
 (33, '노트북', 'prop', '소품(메이커)', '메이커', '/characters/HT-033.png', 153, 152, array['메이커','소품(메이커)']::text[], 'repo'),
 (34, '머그컵', 'prop', '소품(메이커)', '메이커', '/characters/HT-034.png', 86, 99, array['메이커','소품(메이커)']::text[], 'repo'),
 (35, '책', 'prop', '소품(메이커)', '메이커', '/characters/HT-035.png', 109, 127, array['메이커','소품(메이커)']::text[], 'repo'),
-(36, '노트', 'prop', '소품(메이커)', '메이커', '/characters/HT-036.png', 102, 103, array['메이커','소품(메이커)']::text[], 'repo'),
+(36, '노트', 'prop', '소품(메이커)', '메이커', '/characters/HT-036.png', 114, 117, array['메이커','소품(메이커)']::text[], 'repo'),
 (37, '백팩', 'prop', '소품(메이커)', '메이커', '/characters/HT-037.png', 100, 150, array['메이커','소품(메이커)']::text[], 'repo'),
 (38, '카메라', 'prop', '소품(메이커)', '메이커', '/characters/HT-038.png', 104, 88, array['메이커','소품(메이커)']::text[], 'repo'),
 (39, '키보드', 'prop', '소품(메이커)', '메이커', '/characters/HT-039.png', 160, 80, array['메이커','소품(메이커)']::text[], 'repo'),
@@ -109,15 +108,9 @@ values
 (104, '자연 산책', 'scene', '상황 일러스트', '오터', '/characters/HT-104.png', 214, 179, array['오터','상황 일러스트']::text[], 'repo'),
 (105, '카페 휴식', 'scene', '상황 일러스트', '오터', '/characters/HT-105.png', 193, 185, array['오터','상황 일러스트']::text[], 'repo')
 on conflict (num) do update set
-  name = excluded.name,
-  "group" = excluded."group",
-  section = excluded.section,
-  char_label = excluded.char_label,
-  src = excluded.src,
-  width = excluded.width,
-  height = excluded.height,
-  tags = excluded.tags,
-  updated_at = now();
+  name=excluded.name, "group"=excluded."group", section=excluded.section,
+  char_label=excluded.char_label, src=excluded.src, width=excluded.width,
+  height=excluded.height, tags=excluded.tags, updated_at=now();
 
 select setval(pg_get_serial_sequence('public.character_assets', 'num'),
   greatest((select max(num) from public.character_assets), 105), true);
