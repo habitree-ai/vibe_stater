@@ -226,15 +226,15 @@ export async function notifyContact(input: ContactNotification): Promise<Channel
         }
   );
 
+  // 실패뿐 아니라 '건너뜀' 사유도 남긴다 — 운영에서 키/토큰 누락을 바로 진단하기 위해.
   for (const r of results) {
-    if (r.status === "failed") {
-      await logActivity({
-        action: `notify.${r.channel}`,
-        level: "issue",
-        targetType: "contact_message",
-        message: r.detail,
-      });
-    }
+    if (r.status === "sent") continue;
+    await logActivity({
+      action: `notify.${r.channel}`,
+      level: r.status === "failed" ? "issue" : "info",
+      targetType: "contact_message",
+      message: `${r.status}: ${r.detail ?? ""}`,
+    });
   }
   return results;
 }
