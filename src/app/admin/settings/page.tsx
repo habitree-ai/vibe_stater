@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { getChatSettings } from "@/lib/chat-settings";
 import { Badge } from "@/components/ui/badge";
 import { ChatSettingsForm } from "./ChatSettingsForm";
+import { SubmitButton } from "@/components/ui/SubmitButton";
+import { sendTestNotification } from "./actions";
+import { kakaoLinkStatus } from "@/lib/notify";
 
 export const metadata: Metadata = { title: "연동설정" };
 
@@ -28,6 +31,7 @@ function collectIntegrations(): Integration[] {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const polar = process.env.POLAR_ACCESS_TOKEN;
   const resend = process.env.RESEND_API_KEY;
+  const kakao = process.env.KAKAO_REST_API_KEY;
 
   return [
     {
@@ -60,10 +64,17 @@ function collectIntegrations(): Integration[] {
     },
     {
       name: "Resend",
-      purpose: "이메일 발송 (선택)",
+      purpose: "문의 알림 메일 (doc/18)",
       ok: Boolean(resend),
       detail: mask(resend),
       envKey: "RESEND_API_KEY",
+    },
+    {
+      name: "카카오톡",
+      purpose: "문의 알림 '나에게 보내기' (doc/18)",
+      ok: Boolean(kakao),
+      detail: mask(kakao),
+      envKey: "KAKAO_REST_API_KEY",
     },
   ];
 }
@@ -78,6 +89,7 @@ export default async function AdminSettingsPage({
   // 접근 제어는 admin/layout.tsx의 requireAdmin()이 담당.
   const settings = await getChatSettings();
   const integrations = collectIntegrations();
+  const kakaoLink = await kakaoLinkStatus();
 
   return (
     <section className="py-8">
@@ -128,6 +140,34 @@ export default async function AdminSettingsPage({
           </li>
         ))}
       </ul>
+
+      {/* 1-2) 문의 알림 — 메일 + 카카오톡 */}
+      <h2 className="mt-12 font-heading text-lg font-semibold">문의 알림</h2>
+      <p className="mt-1 text-xs text-muted-foreground">
+        문의가 등록되면 운영자에게 메일과 카카오톡(나에게 보내기)으로 알립니다. 발송 실패는 접수를
+        막지 않고 활동로그에 남습니다. 최초 카카오 연동 방법은 <code>doc/18_contact_notifications.md</code>{" "}
+        참조.
+      </p>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
+        <div className="min-w-0 space-y-1">
+          <div className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className={`size-2 rounded-full ${kakaoLink.linked ? "bg-primary" : "bg-muted-foreground/40"}`}
+            />
+            <span className="text-sm font-medium">카카오톡 연동</span>
+            <Badge variant={kakaoLink.linked ? "default" : "outline"}>
+              {kakaoLink.linked ? "연동됨" : "미연동"}
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground">{kakaoLink.detail}</p>
+        </div>
+        <form action={sendTestNotification}>
+          <SubmitButton className="h-9 text-sm" pendingText="발송 중…">
+            알림 테스트 발송
+          </SubmitButton>
+        </form>
+      </div>
 
       {/* 2) 챗봇 설정 — 저장 시 즉시 반영 */}
       <h2 className="mt-12 font-heading text-lg font-semibold">AI 챗봇 설정</h2>

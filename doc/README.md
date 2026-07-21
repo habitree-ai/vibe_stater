@@ -35,6 +35,7 @@
 | 15 | [`15_site_enhancement_2026-07.md`](./15_site_enhancement_2026-07.md) | 사이트 전면 고도화(관리자 허브·SEO/내비·기술 위생) |
 | 16 | [`16_ebook_beginner_plan.md`](./16_ebook_beginner_plan.md) | 초보자용 무료 전자책 기획(A4 5쪽) |
 | 17 | [`17_character_platform.md`](./17_character_platform.md) | ⭐ 캐릭터 자산 플랫폼 — HT-### 채번·고화질 분리·대시보드 |
+| 18 | [`18_contact_notifications.md`](./18_contact_notifications.md) | ⭐ 문의 알림 — 메일(Resend)+카카오톡 나에게 보내기 |
 
 ## 서비스 셋업 가이드 시리즈
 - [`service-setup/README.md`](./service-setup/README.md) — 시리즈 인덱스·추가 절차

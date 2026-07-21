@@ -6,6 +6,7 @@ import { createServiceClient } from "@/lib/supabase/admin";
 import { getAdminUserId } from "@/lib/admin";
 import { logActivity } from "@/lib/log";
 import { findModel } from "@/lib/chat-models";
+import { notifyContact } from "@/lib/notify";
 
 function enc(s: string) {
   return encodeURIComponent(s);
@@ -90,4 +91,37 @@ export async function updateChatSettings(formData: FormData) {
 
   revalidatePath("/admin/settings");
   redirect("/admin/settings?success=" + enc("설정을 저장했습니다. 챗봇에 즉시 반영됩니다."));
+}
+
+// 문의 알림 테스트 발송 — 실제 문의와 같은 경로(notifyContact)로 보내 채널 상태를 확인한다.
+// (doc/18_contact_notifications.md)
+export async function sendTestNotification() {
+  const adminId = await getAdminUserId();
+  if (!adminId) {
+    redirect("/me?error=" + enc("권한이 없습니다."));
+  }
+
+  const results = await notifyContact({
+    name: "알림 테스트",
+    email: process.env.ADMIN_EMAIL || "test@habitree.io",
+    type: "테스트",
+    subject: "알림 연동 확인",
+    message: "관리자 화면에서 보낸 테스트 알림입니다. 이 메시지가 보이면 연동이 정상입니다.",
+  });
+
+  const label: Record<string, string> = { sent: "발송", skipped: "건너뜀", failed: "실패" };
+  const summary = results
+    .map((r) => `${r.channel === "email" ? "메일" : "카카오톡"} ${label[r.status]}${r.detail ? `(${r.detail})` : ""}`)
+    .join(" · ");
+
+  await logActivity({
+    action: "admin.notify.test",
+    level: results.some((r) => r.status === "failed") ? "issue" : "info",
+    userId: adminId,
+    message: summary,
+  });
+
+  revalidatePath("/admin/settings");
+  const anyFailed = results.some((r) => r.status === "failed");
+  redirect(`/admin/settings?${anyFailed ? "error" : "success"}=` + enc(summary));
 }

@@ -1,0 +1,240 @@
+import { createServiceClient } from "@/lib/supabase/admin";
+import { logActivity } from "@/lib/log";
+import { site } from "@/lib/site";
+
+// 운영자 알림 발송 — 이메일(Resend) + 카카오톡 '나에게 보내기'.
+// 설계 원칙(doc/18_contact_notifications.md):
+//  · best-effort: 어떤 실패도 호출부(문의 접수 흐름)를 막지 않는다.
+//  · 채널 미설정(키/토큰 없음)은 오류가 아니라 '건너뜀'.
+//  · 카카오 access 토큰은 DB(notification_tokens)에서 관리하고 만료 시 자동 갱신한다.
+
+export type ContactNotification = {
+  name: string;
+  email: string;
+  type?: string | null;
+  subject?: string | null;
+  message: string;
+};
+
+export type ChannelResult = {
+  channel: "email" | "kakao";
+  status: "sent" | "skipped" | "failed";
+  detail?: string;
+};
+
+const ADMIN_CONTACT_URL = `${site.url}/admin/contact`;
+
+// 외부 API가 응답하지 않을 때 무한 대기하지 않도록 모든 fetch에 건다.
+// (undici 기본 헤더 타임아웃은 300초라 폼 응답을 사실상 붙잡는다)
+const FETCH_TIMEOUT_MS = 5000;
+
+// 카카오 미리보기용 이메일 마스킹 — 로컬파트 앞 2자만 남긴다(a***@b.com).
+function maskEmail(email: string): string {
+  const [local, domain] = email.split("@");
+  if (!domain) return email.slice(0, 2) + "***";
+  const head = local.slice(0, 2);
+  return `${head}${local.length > 2 ? "***" : ""}@${domain}`;
+}
+
+// ------------------------------------------------------------------ 이메일
+async function sendEmail(input: ContactNotification): Promise<ChannelResult> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = process.env.ADMIN_EMAIL;
+  if (!apiKey || !to) {
+    return { channel: "email", status: "skipped", detail: "RESEND_API_KEY/ADMIN_EMAIL 미설정" };
+  }
+  const from = process.env.RESEND_FROM_EMAIL || "habitree <onboarding@resend.dev>";
+
+  const lines = [
+    `이름: ${input.name}`,
+    `이메일: ${input.email}`,
+    input.type ? `유형: ${input.type}` : null,
+    input.subject ? `제목: ${input.subject}` : null,
+    "",
+    input.message,
+    "",
+    `관리자에서 보기: ${ADMIN_CONTACT_URL}`,
+  ].filter((l) => l !== null);
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      subject: `[habitree 문의] ${input.type || "일반"} — ${input.name}`,
+      text: lines.join("\n"),
+    }),
+  });
+  if (!res.ok) {
+    return { channel: "email", status: "failed", detail: `Resend ${res.status}: ${(await res.text()).slice(0, 200)}` };
+  }
+  return { channel: "email", status: "sent" };
+}
+
+// ------------------------------------------------------ 카카오 토큰 관리
+type KakaoTokenRow = {
+  access_token: string | null;
+  refresh_token: string | null;
+  access_expires_at: string | null;
+};
+
+async function getKakaoAccessToken(): Promise<
+  { token: string } | { skip: string } | { fail: string }
+> {
+  const clientId = process.env.KAKAO_REST_API_KEY;
+  if (!clientId) return { skip: "KAKAO_REST_API_KEY 미설정" };
+  const service = createServiceClient();
+  if (!service) return { skip: "서비스 키 없음" };
+
+  const { data, error } = await service
+    .from("notification_tokens")
+    .select("access_token, refresh_token, access_expires_at")
+    .eq("id", "kakao")
+    .maybeSingle<KakaoTokenRow>();
+  if (error) return { fail: "토큰 조회 실패: " + error.message };
+  if (!data?.refresh_token) return { skip: "카카오 미연동(scripts/kakao-connect.mjs 참조)" };
+
+  // 여유 60초를 두고 유효하면 그대로 사용
+  const expiresAt = data.access_expires_at ? Date.parse(data.access_expires_at) : 0;
+  if (data.access_token && expiresAt - Date.now() > 60_000) {
+    return { token: data.access_token };
+  }
+
+  // 갱신 — 카카오는 만료 임박 시 새 refresh_token을 함께 내려준다(회전분 저장 필수)
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    client_id: clientId,
+    refresh_token: data.refresh_token,
+  });
+  if (process.env.KAKAO_CLIENT_SECRET) body.set("client_secret", process.env.KAKAO_CLIENT_SECRET);
+
+  const res = await fetch("https://kauth.kakao.com/oauth/token", {
+    method: "POST",
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" },
+    body,
+  });
+  if (!res.ok) {
+    return { fail: `카카오 토큰 갱신 실패 ${res.status}: ${(await res.text()).slice(0, 200)}` };
+  }
+  const tok = (await res.json()) as {
+    access_token: string;
+    expires_in: number;
+    refresh_token?: string;
+  };
+
+  // 회전된 refresh_token을 못 남기면 다음 갱신이 막힌다 — 실패를 반드시 남긴다.
+  // (발송 자체는 방금 받은 access 토큰으로 계속 진행 — best-effort 원칙)
+  const { error: upErr } = await service
+    .from("notification_tokens")
+    .update({
+      access_token: tok.access_token,
+      access_expires_at: new Date(Date.now() + tok.expires_in * 1000).toISOString(),
+      ...(tok.refresh_token ? { refresh_token: tok.refresh_token } : {}),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", "kakao");
+  if (upErr) {
+    await logActivity({
+      action: "notify.kakao.token_persist",
+      level: "error",
+      message:
+        (tok.refresh_token ? "회전된 refresh_token 저장 실패 — 재연동 필요할 수 있음: " : "access 토큰 저장 실패: ") +
+        upErr.message,
+    });
+  }
+
+  return { token: tok.access_token };
+}
+
+// ------------------------------------------------- 카카오 '나에게 보내기'
+async function sendKakao(input: ContactNotification): Promise<ChannelResult> {
+  const got = await getKakaoAccessToken();
+  if ("skip" in got) return { channel: "kakao", status: "skipped", detail: got.skip };
+  if ("fail" in got) return { channel: "kakao", status: "failed", detail: got.fail };
+
+  // 미리보기는 80자까지만 — 전체 내용은 관리자 링크에서 (개인정보 최소 노출)
+  const preview = input.message.length > 80 ? input.message.slice(0, 80) + "…" : input.message;
+  const text = [
+    "📮 새 문의 도착",
+    `${input.name} (${maskEmail(input.email)})`,
+    input.type ? `유형: ${input.type}` : null,
+    `"${preview}"`,
+  ]
+    .filter(Boolean)
+    .join("\n")
+    .slice(0, 200); // 텍스트 템플릿 최대 200자
+
+  const res = await fetch("https://kapi.kakao.com/v2/api/talk/memo/default/send", {
+    method: "POST",
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    headers: {
+      Authorization: `Bearer ${got.token}`,
+      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+    },
+    body: new URLSearchParams({
+      template_object: JSON.stringify({
+        object_type: "text",
+        text,
+        link: { web_url: ADMIN_CONTACT_URL, mobile_web_url: ADMIN_CONTACT_URL },
+        button_title: "관리자에서 보기",
+      }),
+    }),
+  });
+  if (!res.ok) {
+    return { channel: "kakao", status: "failed", detail: `카카오 ${res.status}: ${(await res.text()).slice(0, 200)}` };
+  }
+  return { channel: "kakao", status: "sent" };
+}
+
+// 관리자 화면용 연동 상태 — 토큰 값은 절대 노출하지 않고 상태만 요약한다.
+export async function kakaoLinkStatus(): Promise<{ linked: boolean; detail: string }> {
+  if (!process.env.KAKAO_REST_API_KEY) {
+    return { linked: false, detail: "KAKAO_REST_API_KEY 미설정 — doc/18 §3의 앱 생성부터 진행하세요." };
+  }
+  const service = createServiceClient();
+  if (!service) return { linked: false, detail: "서버 설정 오류(서비스 키 없음)" };
+
+  const { data, error } = await service
+    .from("notification_tokens")
+    .select("refresh_token, updated_at")
+    .eq("id", "kakao")
+    .maybeSingle<{ refresh_token: string | null; updated_at: string }>();
+  if (error) return { linked: false, detail: "토큰 조회 실패: " + error.message };
+  if (!data?.refresh_token) {
+    return { linked: false, detail: "토큰 없음 — node scripts/kakao-connect.mjs 로 1회 연동이 필요합니다." };
+  }
+  return {
+    linked: true,
+    detail: `연동 완료 · 마지막 토큰 갱신 ${new Date(data.updated_at).toLocaleString("ko-KR")}`,
+  };
+}
+
+// ------------------------------------------------------------------ 공개 API
+// 문의 접수 알림 — 두 채널 병렬 발송. 실패는 로그로만 남기고 절대 throw하지 않는다.
+export async function notifyContact(input: ContactNotification): Promise<ChannelResult[]> {
+  const settled = await Promise.allSettled([sendEmail(input), sendKakao(input)]);
+  const results: ChannelResult[] = settled.map((s, i) =>
+    s.status === "fulfilled"
+      ? s.value
+      : {
+          channel: i === 0 ? "email" : "kakao",
+          status: "failed",
+          detail: String(s.reason).slice(0, 200),
+        }
+  );
+
+  for (const r of results) {
+    if (r.status === "failed") {
+      await logActivity({
+        action: `notify.${r.channel}`,
+        level: "issue",
+        targetType: "contact_message",
+        message: r.detail,
+      });
+    }
+  }
+  return results;
+}

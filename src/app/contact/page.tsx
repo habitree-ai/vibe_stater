@@ -90,9 +90,24 @@ export default async function ContactPage({
               />
             </div>
 
+            {/* 허니팟 — 사람 눈에는 보이지 않는 필드. 봇이 채우면 서버에서 걸러낸다. */}
+            <div aria-hidden className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+              <label htmlFor="website">홈페이지(입력하지 마세요)</label>
+              <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+
             <SubmitButton pendingText="보내는 중…" className="h-11 w-full text-base">
               문의 보내기
             </SubmitButton>
+
+            <p className="text-center text-xs text-muted-foreground">
+              보내주신 내용은 문의 응대 목적으로만 사용하며, 알림을 위해 이메일 발송 서비스(Resend)와
+              카카오톡으로 전달됩니다. 자세한 내용은{" "}
+              <Link href="/privacy" className="underline hover:text-foreground">
+                개인정보처리방침
+              </Link>
+              에서 확인하실 수 있어요.
+            </p>
           </form>
         )}
       </section>
