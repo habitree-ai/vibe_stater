@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { Badge } from "@/components/ui/badge";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import { updateContactStatus } from "./actions";
+import { updateContactStatus, deleteContactMessage } from "./actions";
+import { DeleteButton } from "./DeleteButton";
 
 export const metadata: Metadata = { title: "문의 인박스" };
 
@@ -18,6 +19,7 @@ type ContactRow = {
   name: string;
   email: string;
   type: string | null;
+  phone: string | null;
   subject: string | null;
   message: string;
   status: string;
@@ -38,7 +40,7 @@ export default async function AdminContactPage({
   if (service) {
     const { data } = await service
       .from("contact_messages")
-      .select("id, name, email, type, subject, message, status, user_id, created_at")
+      .select("id, name, email, type, phone, subject, message, status, user_id, created_at")
       .order("created_at", { ascending: false });
     rows = (data as ContactRow[]) ?? [];
   }
@@ -85,10 +87,15 @@ export default async function AdminContactPage({
                     {r.type ? <Badge variant="outline">{r.type}</Badge> : null}
                     {r.user_id ? null : <Badge variant="outline">비회원</Badge>}
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="flex flex-wrap items-center gap-x-3 text-xs text-muted-foreground">
                     <a href={`mailto:${r.email}`} className="hover:underline">
                       {r.email}
                     </a>
+                    {r.phone ? (
+                      <a href={`tel:${r.phone}`} className="hover:underline">
+                        ☎ {r.phone}
+                      </a>
+                    ) : null}
                   </p>
                   {r.subject ? <p className="text-sm font-medium">{r.subject}</p> : null}
                   <p className="whitespace-pre-wrap text-sm text-muted-foreground">{r.message}</p>
@@ -97,7 +104,8 @@ export default async function AdminContactPage({
                   </p>
                 </div>
 
-                <form action={updateContactStatus} className="flex shrink-0 items-center gap-2">
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                <form action={updateContactStatus} className="flex items-center gap-2">
                   <input type="hidden" name="id" value={r.id} />
                   <select
                     name="status"
@@ -115,6 +123,11 @@ export default async function AdminContactPage({
                     변경
                   </SubmitButton>
                 </form>
+                <form action={deleteContactMessage}>
+                  <input type="hidden" name="id" value={r.id} />
+                  <DeleteButton name={r.name} />
+                </form>
+                </div>
               </div>
             </li>
           ))}

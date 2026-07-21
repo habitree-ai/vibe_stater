@@ -1,7 +1,8 @@
-# 18. 문의 알림 파이프라인 — 메일 + 카카오톡 '나에게 보내기'
+# 18. 운영자 알림 파이프라인 — 메일 + 카카오톡 '나에게 보내기'
 
-> 문의(/contact) 등록 시 운영자에게 **① 이메일(Resend)** 과 **② 카카오톡(나에게 보내기)** 로
-> 즉시 알림을 보낸다. 두 채널 모두 **best-effort** — 실패해도 문의 접수(DB 저장)는 막지 않는다.
+> **문의(/contact) 접수**와 **후원 결제 완료** 시 운영자에게 **① 이메일(Resend)** 과
+> **② 카카오톡(나에게 보내기)** 로 알림을 보낸다.
+> 두 채널 모두 **best-effort** — 실패해도 접수·결제 처리는 막지 않는다.
 
 ---
 
@@ -81,3 +82,39 @@
   재연동이 필요한 상황을 놓치지 않는다.
 - **확장**: `notifyContact` 와 같은 패턴으로 커피챗 신청·뉴스레터 구독 알림도 붙일 수 있다
   (notify.ts 에 채널 함수가 분리되어 있음).
+
+## 6. 후원 알림 (Polar 웹훅)
+
+후원 결제가 완료되면 Polar가 웹훅을 보내고, 금액·후원자·상품을 카카오톡과 메일로 알린다.
+
+| 구성 | 위치 |
+|---|---|
+| 엔드포인트 | `src/app/api/polar-webhook/route.ts` → `https://vibe.habitree.io/api/polar-webhook` |
+| 발송 | `notifyDonation()` (notify.ts) — 문의 알림과 같은 채널 함수를 공유 |
+| 기록 | `donations` 테이블(0015) — service_role 전용. `order_id` unique 로 중복 알림 차단 |
+
+**Polar 대시보드 설정 (1회)**
+1. Polar → Settings → Webhooks → **Add Endpoint**
+2. URL: `https://vibe.habitree.io/api/polar-webhook`
+3. Secret: `.env.local`·Vercel의 `POLAR_WEBHOOK_SECRET` 과 **같은 값**
+4. 이벤트: `order.created` (있으면 `order.paid` 도 함께 — 둘 다 처리하되 중복은 무시)
+
+**서명 검증**: Polar는 Standard Webhooks 규격을 쓴다.
+`webhook-id`·`webhook-timestamp`·`webhook-signature` 헤더를 받아
+`base64(HMAC-SHA256(secret, "id.timestamp.body"))` 와 대조하고, 5분이 지난 서명은 거절한다(replay 방지).
+검증 실패는 401, 정상·무시 대상은 202를 돌려준다.
+
+**카카오 메시지 예시**
+```
+💚 새 후원이 도착했어요
+금액: $15
+후원자: 홍길동 (ho***@example.com)
+상품: 응원 키트
+주문번호: ord_abc123…
+```
+
+## 7. 문의 관리 (관리자)
+
+- `/admin/contact` 에서 상태 변경(신규·확인·완료)과 **삭제**가 가능하다.
+- 삭제는 되돌릴 수 없으므로 확인 창을 거치고, 지운 내용 요약을 `admin.contact.delete`(issue) 로 남긴다.
+- 문의 폼의 **연락처는 선택 입력**(최대 30자)이며, 입력되면 메일 본문과 카카오 메시지(☎)에 함께 표시된다.

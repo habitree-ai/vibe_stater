@@ -55,6 +55,8 @@ export async function submitContact(formData: FormData) {
   const type = String(formData.get("type") || "").trim();
   const subject = String(formData.get("subject") || "").trim();
   const message = String(formData.get("message") || "").trim();
+  // 연락처는 선택 입력 — 자릿수만 제한하고 형식은 강제하지 않는다(해외번호·내선 등).
+  const phone = String(formData.get("phone") || "").trim().slice(0, 30);
   // 허니팟 — 사람에게는 보이지 않는 필드. 채워져 있으면 봇이므로 조용히 성공 처리.
   const trap = String(formData.get("website") || "").trim();
 
@@ -92,6 +94,7 @@ export async function submitContact(formData: FormData) {
     email,
     type: type || null,
     subject: subject || null,
+    phone: phone || null,
     message,
     ip_hash: ipHash,
   });
@@ -126,7 +129,7 @@ export async function submitContact(formData: FormData) {
   } else {
     const userId = user?.id ?? null;
     after(async () => {
-      const notified = await notifyContact({ name, email, type, subject, message });
+      const notified = await notifyContact({ name, email, phone, type, subject, message });
       await logActivity({
         action: "contact.notify",
         userId,

@@ -11,6 +11,7 @@ import { site } from "@/lib/site";
 export type ContactNotification = {
   name: string;
   email: string;
+  phone?: string | null;
   type?: string | null;
   subject?: string | null;
   message: string;
@@ -37,7 +38,8 @@ function maskEmail(email: string): string {
 }
 
 // ------------------------------------------------------------------ 이메일
-async function sendEmail(input: ContactNotification): Promise<ChannelResult> {
+// 제목·본문만 받아 보내는 범용 발송기(문의·후원 등 모든 알림이 공유).
+async function sendEmailRaw(subject: string, text: string): Promise<ChannelResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.ADMIN_EMAIL;
   if (!apiKey || !to) {
@@ -45,9 +47,23 @@ async function sendEmail(input: ContactNotification): Promise<ChannelResult> {
   }
   const from = process.env.RESEND_FROM_EMAIL || "habitree <onboarding@resend.dev>";
 
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to: [to], subject, text }),
+  });
+  if (!res.ok) {
+    return { channel: "email", status: "failed", detail: `Resend ${res.status}: ${(await res.text()).slice(0, 200)}` };
+  }
+  return { channel: "email", status: "sent" };
+}
+
+async function sendContactEmail(input: ContactNotification): Promise<ChannelResult> {
   const lines = [
     `이름: ${input.name}`,
     `이메일: ${input.email}`,
+    input.phone ? `연락처: ${input.phone}` : null,
     input.type ? `유형: ${input.type}` : null,
     input.subject ? `제목: ${input.subject}` : null,
     "",
@@ -56,21 +72,10 @@ async function sendEmail(input: ContactNotification): Promise<ChannelResult> {
     `관리자에서 보기: ${ADMIN_CONTACT_URL}`,
   ].filter((l) => l !== null);
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject: `[habitree 문의] ${input.type || "일반"} — ${input.name}`,
-      text: lines.join("\n"),
-    }),
-  });
-  if (!res.ok) {
-    return { channel: "email", status: "failed", detail: `Resend ${res.status}: ${(await res.text()).slice(0, 200)}` };
-  }
-  return { channel: "email", status: "sent" };
+  return sendEmailRaw(
+    `[habitree 문의] ${input.type || "일반"} — ${input.name}`,
+    lines.join("\n")
+  );
 }
 
 // ------------------------------------------------------ 카카오 토큰 관리
@@ -150,22 +155,15 @@ async function getKakaoAccessToken(): Promise<
 }
 
 // ------------------------------------------------- 카카오 '나에게 보내기'
-async function sendKakao(input: ContactNotification): Promise<ChannelResult> {
+// 텍스트 템플릿 발송 공통부 — 문의·후원 알림이 함께 쓴다.
+async function sendKakaoText(
+  text: string,
+  linkUrl: string,
+  buttonTitle: string
+): Promise<ChannelResult> {
   const got = await getKakaoAccessToken();
   if ("skip" in got) return { channel: "kakao", status: "skipped", detail: got.skip };
   if ("fail" in got) return { channel: "kakao", status: "failed", detail: got.fail };
-
-  // 미리보기는 80자까지만 — 전체 내용은 관리자 링크에서 (개인정보 최소 노출)
-  const preview = input.message.length > 80 ? input.message.slice(0, 80) + "…" : input.message;
-  const text = [
-    "📮 새 문의 도착",
-    `${input.name} (${maskEmail(input.email)})`,
-    input.type ? `유형: ${input.type}` : null,
-    `"${preview}"`,
-  ]
-    .filter(Boolean)
-    .join("\n")
-    .slice(0, 200); // 텍스트 템플릿 최대 200자
 
   const res = await fetch("https://kapi.kakao.com/v2/api/talk/memo/default/send", {
     method: "POST",
@@ -177,9 +175,9 @@ async function sendKakao(input: ContactNotification): Promise<ChannelResult> {
     body: new URLSearchParams({
       template_object: JSON.stringify({
         object_type: "text",
-        text,
-        link: { web_url: ADMIN_CONTACT_URL, mobile_web_url: ADMIN_CONTACT_URL },
-        button_title: "관리자에서 보기",
+        text: text.slice(0, 200), // 텍스트 템플릿 최대 200자
+        link: { web_url: linkUrl, mobile_web_url: linkUrl },
+        button_title: buttonTitle,
       }),
     }),
   });
@@ -187,6 +185,22 @@ async function sendKakao(input: ContactNotification): Promise<ChannelResult> {
     return { channel: "kakao", status: "failed", detail: `카카오 ${res.status}: ${(await res.text()).slice(0, 200)}` };
   }
   return { channel: "kakao", status: "sent" };
+}
+
+async function sendContactKakao(input: ContactNotification): Promise<ChannelResult> {
+  // 미리보기는 80자까지만 — 전체 내용은 관리자 링크에서 (개인정보 최소 노출)
+  const preview = input.message.length > 80 ? input.message.slice(0, 80) + "…" : input.message;
+  const text = [
+    "📮 새 문의 도착",
+    `${input.name} (${maskEmail(input.email)})`,
+    input.phone ? `☎ ${input.phone}` : null,
+    input.type ? `유형: ${input.type}` : null,
+    `"${preview}"`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return sendKakaoText(text, ADMIN_CONTACT_URL, "관리자에서 보기");
 }
 
 // 관리자 화면용 연동 상태 — 토큰 값은 절대 노출하지 않고 상태만 요약한다.
@@ -215,7 +229,7 @@ export async function kakaoLinkStatus(): Promise<{ linked: boolean; detail: stri
 // ------------------------------------------------------------------ 공개 API
 // 문의 접수 알림 — 두 채널 병렬 발송. 실패는 로그로만 남기고 절대 throw하지 않는다.
 export async function notifyContact(input: ContactNotification): Promise<ChannelResult[]> {
-  const settled = await Promise.allSettled([sendEmail(input), sendKakao(input)]);
+  const settled = await Promise.allSettled([sendContactEmail(input), sendContactKakao(input)]);
   const results: ChannelResult[] = settled.map((s, i) =>
     s.status === "fulfilled"
       ? s.value
@@ -233,6 +247,85 @@ export async function notifyContact(input: ContactNotification): Promise<Channel
       action: `notify.${r.channel}`,
       level: r.status === "failed" ? "issue" : "info",
       targetType: "contact_message",
+      message: `${r.status}: ${r.detail ?? ""}`,
+    });
+  }
+  return results;
+}
+
+// ------------------------------------------------------------- 후원 알림
+// Polar 결제 완료 웹훅에서 호출한다. 금액과 내역(후원자·상품·주문번호)을 카카오톡·메일로 보낸다.
+export type DonationNotification = {
+  orderId: string;
+  amountCents: number;
+  currency: string;
+  customerName?: string | null;
+  customerEmail?: string | null;
+  productName?: string | null;
+};
+
+// 통화 단위 표시 — Polar는 최소 단위(센트)로 준다.
+export function formatMoney(amountCents: number, currency: string): string {
+  const major = amountCents / 100;
+  const cur = (currency || "usd").toUpperCase();
+  const symbol = cur === "USD" ? "$" : cur === "KRW" ? "₩" : "";
+  // KRW처럼 소수가 없는 통화도 Polar는 100배로 주므로 동일하게 나눈다.
+  const num = major.toLocaleString("ko-KR", {
+    minimumFractionDigits: Number.isInteger(major) ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+  return symbol ? `${symbol}${num}` : `${num} ${cur}`;
+}
+
+export async function notifyDonation(input: DonationNotification): Promise<ChannelResult[]> {
+  const money = formatMoney(input.amountCents, input.currency);
+  const who = input.customerName?.trim() || "익명 후원자";
+  const supportUrl = `${site.url}/admin`;
+
+  const kakaoText = [
+    "💚 새 후원이 도착했어요",
+    `금액: ${money}`,
+    `후원자: ${who}${input.customerEmail ? ` (${maskEmail(input.customerEmail)})` : ""}`,
+    input.productName ? `상품: ${input.productName}` : null,
+    `주문번호: ${input.orderId.slice(0, 20)}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const emailText = [
+    `금액: ${money}`,
+    `후원자: ${who}`,
+    input.customerEmail ? `이메일: ${input.customerEmail}` : null,
+    input.productName ? `상품: ${input.productName}` : null,
+    `주문번호: ${input.orderId}`,
+    "",
+    `관리자: ${supportUrl}`,
+  ]
+    .filter((l) => l !== null)
+    .join("\n");
+
+  const settled = await Promise.allSettled([
+    sendEmailRaw(`[habitree 후원] ${money} — ${who}`, emailText),
+    sendKakaoText(kakaoText, supportUrl, "관리자에서 보기"),
+  ]);
+
+  const results: ChannelResult[] = settled.map((s, i) =>
+    s.status === "fulfilled"
+      ? s.value
+      : {
+          channel: i === 0 ? "email" : "kakao",
+          status: "failed",
+          detail: String(s.reason).slice(0, 200),
+        }
+  );
+
+  for (const r of results) {
+    if (r.status === "sent") continue;
+    await logActivity({
+      action: `notify.${r.channel}`,
+      level: r.status === "failed" ? "issue" : "info",
+      targetType: "donation",
+      targetId: input.orderId,
       message: `${r.status}: ${r.detail ?? ""}`,
     });
   }

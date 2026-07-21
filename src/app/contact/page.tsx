@@ -65,6 +65,22 @@ export default async function ContactPage({
             </div>
 
             <div className="space-y-2">
+              <label htmlFor="phone" className="text-sm font-medium">
+                연락처 <span className="text-xs font-normal text-muted-foreground">(선택)</span>
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                inputMode="tel"
+                maxLength={30}
+                autoComplete="tel"
+                placeholder="010-1234-5678 — 빠른 연락이 필요할 때만 남겨주세요"
+                className={fieldClass}
+              />
+            </div>
+
+            <div className="space-y-2">
               <label htmlFor="type" className="text-sm font-medium">문의 유형</label>
               <select id="type" name="type" className={fieldClass} defaultValue={defaultType}>
                 {inquiryTypes.map((t) => (
