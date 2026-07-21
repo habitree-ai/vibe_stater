@@ -20,7 +20,7 @@ const CONTACT = "scripts/out/characters-contact.html";
 // ---------------------------------------------------------------- 배경 제거
 // 가장자리에서 flood fill 해 '바깥 크림색 배경'만 투명 처리한다.
 // (build-about-assets.mjs와 동일 로직 — 내부 흰색(노트북 화면 등)은 보존)
-async function cutout(buf) {
+export async function cutout(buf) {
   const img = sharp(buf).ensureAlpha();
   const { width: w, height: h } = await img.metadata();
   const data = await img.raw().toBuffer();
@@ -69,7 +69,7 @@ async function cutout(buf) {
 // ------------------------------------------------- 경계 슬리버 자동 제거
 // 셀 경계에 걸친 옆 컷의 조각(팔·소품 일부)을 지운다.
 // 규칙: 알파>0 연결 성분 중 '이미지 테두리에 닿아 있고' 면적이 최대 성분의 8% 미만이면 제거.
-async function dropEdgeSlivers(buf) {
+export async function dropEdgeSlivers(buf) {
   const img = sharp(buf).ensureAlpha();
   const { width: w, height: h } = await img.metadata();
   const data = await img.raw().toBuffer();
@@ -115,7 +115,7 @@ async function dropEdgeSlivers(buf) {
 //   { section, names[], y:[y0,y1], band:[x0,x1] }         — names 수만큼 균등 분할
 //   { section, cells:[{name, rect:[x,y,w,h]}] }           — 개별 지정(히어로 등)
 // group 생략 시 시트 기본 group. scale 생략 시 2.
-const SHEETS = [
+export const SHEETS = [
   {
     src: "img/man1.png",
     group: "man",
@@ -271,7 +271,7 @@ const SHEETS = [
 ];
 
 // row 정의 → cell 목록으로 평탄화
-function cellsOf(row) {
+export function cellsOf(row) {
   if (row.cells) {
     return row.cells.map((c) => ({ name: c.name, rect: c.rect, cover: c.cover }));
   }
@@ -292,7 +292,7 @@ function cellsOf(row) {
 }
 
 // 확대 + 언샤프 — 선화가 흐려지지 않게 2배까지만 키운다.
-function crisp(pipeline, scale, w) {
+export function crisp(pipeline, scale, w) {
   return pipeline
     .resize({ width: Math.round(w * scale), kernel: "lanczos3" })
     .sharpen({ sigma: 0.7, m1: 0.4, m2: 2.2 });
@@ -396,4 +396,8 @@ ${groups
   console.log(`콘택트시트 → ${CONTACT}`);
 }
 
-await main();
+// 직접 실행 시에만 빌드 수행(다른 스크립트에서 import 가능하도록 가드)
+import { pathToFileURL } from "node:url";
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
+}
