@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # 07. GitHub → Cloudflare 자동 배포 (Git 연동)
 
 > 목표: **자체 서버 없이** 코드를 **GitHub**에 올리고, **Cloudflare Workers Builds**가

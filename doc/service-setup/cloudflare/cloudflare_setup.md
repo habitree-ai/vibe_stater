@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # Cloudflare 기초 세팅 가이드 (1편)
 
 > 대상: Cloudflare **회원가입 → 이메일 인증 → 도메인 연결 → 네임서버 교체 → 2FA**까지의 기초 세팅.
@@ -85,7 +87,7 @@
 - [ ] 도메인 상태가 **Active**로 표시됨(네임서버 적용 완료)
 - [ ] DNS 레코드가 의도대로 들어가 있음
 - [ ] 2FA 활성화됨
-- [ ] (배포 준비) Workers/Pages 연결은 [`../../06_deployment_cloudflare.md`](../../06_deployment_cloudflare.md) 참고
+- [ ] (배포 준비) Workers/Pages 연결은 [`../../archive/06_deployment_cloudflare.md`](../../archive/06_deployment_cloudflare.md) 참고
 
 ## 참고
 - 공식 문서: https://developers.cloudflare.com/dns/zone-setups/full-setup/

@@ -1,8 +1,9 @@
 # 04. 실행 로드맵
 
 > 마스터 기획서 11·12장을 실행 단위로 재구성. 각 단계의 산출물·체크리스트.
-> 현재 위치: **Step 2 완료 + 프리미엄 리디자인 + 배포/셋업 문서화**. 다음: git/GitHub → Cloudflare 배포 → Step 3(Supabase 인증/DB).
-> 관련: 디자인 [`05_homepage_redesign.md`](./05_homepage_redesign.md) · 배포 [`06_deployment_cloudflare.md`](./06_deployment_cloudflare.md) · 서비스 셋업 [`service-setup/README.md`](./service-setup/README.md)
+> **현재 위치(2026-07)**: Step 0~4·6 대부분 완료, **Vercel 배포 운영 중**(`vibe.habitree.io`). 다음: 문서 통합 마스터 확정 · Step 5(커머스 판매) · Step 7(교육화).
+> ⚠️ 이 문서 작성 당시 결제=Stripe·배포=Cloudflare로 적혔으나, 실제는 **결제=Polar·배포=Vercel**. 괴리 전체는 [`_consolidation_plan.md`](./_consolidation_plan.md) 참조.
+> 관련: 디자인 [`14_homepage_v2_personality.md`](./14_homepage_v2_personality.md) · 배포 [`13_vercel_deployment.md`](./13_vercel_deployment.md) · 서비스 셋업 [`service-setup/README.md`](./service-setup/README.md)
 
 ---
 
@@ -26,32 +27,33 @@
 - [x] /education, /contact, /login, /signup 골격
 - 산출물: 사이트맵(기획서 4.1)의 공개 영역 골격 (총 19개 라우트)
 
-## Step 3. 인증 + DB 연동 (Supabase)
-- [ ] Supabase 프로젝트, `profiles` + RLS(기획서 6.1, 13장)
-- [ ] 회원가입/로그인/비밀번호 재설정
-- [ ] 관리자 권한 구분(role)
-- [ ] 샘플 데이터 → DB 테이블로 점진 이전
-- 산출물: 회원 기능, 마이페이지 `/me` 골격
+## Step 3. 인증 + DB 연동 (Supabase) ✅
+- [x] Supabase 프로젝트(`ofxzkwbqwpsjoeqjhrpl`), `profiles` + RLS + 가입 트리거
+- [x] 회원가입/로그인 (`/login`·`/signup`·`/auth/callback`)
+- [x] 관리자 권한 구분(role) + `/me` 마이페이지(아바타 업로드)
+- [x] 마이그레이션 0001~0015 적용
+- 산출물: 회원 기능, 관리자 허브 `/admin/*`
 
-## Step 4. 콘텐츠/자료 (posts·tags·assets)
-- [ ] posts/tags CRUD, 관리자 글 작성
-- [ ] assets + Supabase Storage 업로드/다운로드
+## Step 4. 콘텐츠/자료 — 부분
+- [x] `/posts`·`/products` 목록/상세(현재 샘플 데이터 기반 SSG)
+- [ ] posts/tags/assets DB CRUD + Storage 업로드/다운로드
 - [ ] 공개/회원/구매자 가시성(visibility) 처리
-- 산출물: 블로그·자료실, 관리자 콘텐츠 관리
+- 산출물: 블로그·자료실(콘텐츠는 정적, DB화는 다음)
 
-## Step 5. 상품/결제 (Stripe)
-- [ ] products CRUD, Stripe Product/Price 연동
-- [ ] Stripe Checkout + Webhook(`checkout.session.completed`)
-- [ ] orders/payments/user_entitlements 생성
-- [ ] 구매자 자료실 `/me/library`
-- 산출물: 단건 결제 → 권한 부여 → 다운로드 전체 흐름
+## Step 5. 상품/결제 — 현재 = 후원(Polar), 판매는 계획
+- [x] **후원 결제(Polar)**: `/support`·`/api/donate`·`/api/polar-webhook`·`donations` 테이블
+- [ ] (계획) products CRUD + Polar 상품 판매/체크아웃 → orders/entitlements
+- [ ] (계획) 구매자 자료실 `/me/library`
+- 산출물: **현재는 자율 후원 모델**. 유료 상품 판매 파이프라인은 미구현
+- ⚠️ 기획 원안은 Stripe였으나 실제 구현은 **Polar**(SDK 없이 raw fetch)
 
-## Step 6. 운영/전환
-- [ ] 문의/상담 `/contact` + inquiries
-- [ ] 뉴스레터 구독 + Resend 발송
-- [ ] PostHog 이벤트 추적
-- [ ] LINKMAP 서비스맵 공개 페이지
-- 산출물: 리드·뉴스레터·분석·공개 사례
+## Step 6. 운영/전환 — 대부분 완료
+- [x] 문의/상담 `/contact` + `contact_messages` (+ 메일·카카오톡 알림, `18` 참조)
+- [x] 뉴스레터 구독 `/api/newsletter` + `newsletter_subscribers`
+- [x] 1:1 커피챗 `/coffee-chat` + 관리자 관리
+- [x] AI 챗봇 `/api/chat`(**OpenAI** `gpt-4o-mini`, 설정 DB `chat_settings`)
+- [ ] (미도입) PostHog 등 분석
+- [ ] (계획) LINKMAP 서비스맵 공개 페이지
 
 ## Step 7. 교육화 / 템플릿화
 - [ ] 각 구축 과정을 강의 모듈로 분리

@@ -1,782 +1,274 @@
-# LINKMAP 부가서비스: 개인 브랜드 플랫폼 구축 기획서
+# Habitree 마스터 기획서
 
-문서 목적: LINKMAP의 부가서비스/교육 콘텐츠로 활용할 수 있는 **개인 브랜드 랜딩페이지 + 회원/콘텐츠/판매/교육 관리 플랫폼**의 정보구조(IA), 서비스맵, ERD를 정의한다.
+> **Habitree**(vibe.habitree.io) — AI·바이브코딩·독서로 읽고 만들고 연결하는 개인 브랜드 플랫폼의
+> 단일 마스터 문서. **Part Ⅰ**은 코드·배포로 확인된 *현재 정본*이고, **Part Ⅱ**는 원본 기획의
+> *상세 설계·계획*(커머스 ERD·RLS·성공지표·LINKMAP 템플릿)을 보존한 참조부다.
+> 초기 코드네임은 "Creator Link Hub". 통합 경위·괴리는 [`_consolidation_plan.md`](./_consolidation_plan.md).
+>
+> **표기**: ✅ 구현됨 · 🟡 부분 · ⬜ 계획. "구현됨"은 코드·마이그레이션으로 확인된 것만.
+> 최종 통합: 2026-07-22
 
 ---
+
+# Part Ⅰ — 현재 정본 (구현 반영)
 
 ## 1. 프로젝트 정의
 
-### 1.1 프로젝트명
-**Creator Link Hub**  
-부제: LINKMAP으로 만드는 나만의 서비스형 개인 플랫폼
+### 1.1 명칭
+- **Habitree** (약칭 **HT**) — 사용자 대면 정식 브랜드.
+- 기획 코드네임: "Creator Link Hub"(초기 문서에만 등장, 신규 사용 안 함).
+- 저장소/배포 식별자: `vibe_stater`(GitHub) · `vibe-stater`(Vercel).
 
 ### 1.2 핵심 목적
-1. 최동혁 개인 브랜드 소개 및 가치 제고
-2. 전자책, 강의, 컨설팅, 자료 판매 기반 구축
-3. ReadTree와 YouTube 콘텐츠 유입 경로 구축
-4. LINKMAP의 실제 사용 사례 확보
-5. 바이브코딩 교육 커리큘럼의 실습 프로젝트로 활용
+1. 운영자 개인 브랜드("바이브코딩 치트키") 소개·신뢰 구축
+2. 전자책·강의·컨설팅·자료의 콘텐츠 및 (향후) 판매 기반
+3. ReadTree·YouTube 콘텐츠 유입 경로
+4. LINKMAP의 실제 사용 사례이자 바이브코딩 교육의 실습 프로젝트
 
 ### 1.3 제품 포지션
-이 플랫폼은 단순 랜딩페이지가 아니라 다음 기능을 갖는 **소형 SaaS형 개인 비즈니스 플랫폼**이다.
-
-- 공개 랜딩페이지
-- 회원가입/로그인
-- 콘텐츠/자료실
-- 상품 판매
-- 결제
-- 뉴스레터
-- 문의/상담 신청
-- 관리자 페이지
-- LINKMAP 서비스맵/환경변수 관리 연동
+단순 랜딩이 아니라 **회원·콘텐츠·후원·문의·관리자**를 갖춘 소형 개인 플랫폼.
+현재 수익 모델은 **자율 후원(Polar) + 1:1 커피챗**이며, 상품 판매(커머스)는 계획 단계.
 
 ---
 
-## 2. 전체 서비스맵
+## 2. 브랜드·도메인 규칙 (혼동 방지)
 
-### 2.1 서비스 구성 요약
+| 층위 | 값 | 규칙 |
+|---|---|---|
+| 브랜드(대면) | **Habitree** / `vibe.habitree.io` | 모든 카피·문서 표준. 정본 상수: `src/lib/site.ts` |
+| 저장소/프로젝트 | `vibe_stater`·`vibe-stater` | 기술 식별자로만 |
+| 코드네임 | Creator Link Hub | 이력 각주 전용 |
 
-| 구분 | 서비스 | 역할 | LINKMAP 관리 대상 |
+- **`.io` = 운영 도메인**, **`.ai` = 계정·조직(`habitree-ai`)·이메일·폴더**. `habitree.ai`는 미등록(NXDOMAIN)이라 **도메인으로 쓰면 실장애**(로그인 DNS 오류 이력, WORKLOG 2026-06-25).
+- 코드에서 도메인 단일 출처는 `site.url`(`vibe.habitree.io`). `NEXT_PUBLIC_APP_URL`이 잘못돼 있어 신뢰하지 않음(`layout.tsx` 주석).
+
+---
+
+## 3. 서비스맵 · 기술 스택 (실제)
+
+| 구분 | 서비스 | 상태 | 연동 방식 |
 |---|---|---|---|
-| 프론트엔드 | Next.js | 웹앱/랜딩페이지 | O |
-| 호스팅 | Vercel | 배포/도메인/환경변수 | O |
-| 인증 | Supabase Auth | 회원가입/로그인/OAuth | O |
-| DB | Supabase PostgreSQL | 사용자/콘텐츠/상품/주문 DB | O |
-| 스토리지 | Supabase Storage | 자료 파일/썸네일/첨부파일 | O |
-| 결제 | Stripe | 상품 결제/구독/웹훅 | O |
-| 이메일 | Resend | 가입/구매/문의/뉴스레터 발송 | O |
-| AI | OpenAI API | 콘텐츠 요약/추천/챗봇 | O |
-| 분석 | PostHog | 유입/전환/행동 분석 | O |
-| 영상 유입 | YouTube | 콘텐츠 유입 채널 | 부분 |
-| 독서 서비스 | ReadTree | 연계 서비스/CTA | 부분 |
-| 환경관리 | LINKMAP | 서비스 연결/환경변수/체크리스트 | 핵심 |
+| 프레임워크 | **Next.js 16.2.9** / React 19 | ✅ | App Router. `AGENTS.md`: 훈련 데이터와 다른 버전이니 `node_modules/next/dist/docs/` 확인 |
+| 배포/호스팅 | **Vercel** | ✅ | `main` push 자동배포. `.vercel/repo.json` |
+| 인증·DB·스토리지 | **Supabase** | ✅ | `@supabase/ssr`. 프로젝트 `ofxzkwbqwpsjoeqjhrpl` |
+| 후원 결제 | **Polar** | ✅ | SDK 없이 raw fetch(`api/donate`·`polar-webhook`) |
+| AI | **OpenAI** `gpt-4o-mini` | ✅ | raw fetch(`api/chat`), 설정 DB `chat_settings` |
+| 이메일 | **Resend** | ✅ | raw fetch(`src/lib/notify.ts`) |
+| 알림 | **카카오톡**(나에게 보내기) | ✅ | raw fetch, 토큰 DB `notification_tokens` |
+| 분석 | PostHog | ⬜ | 미도입 |
+| 유입 | YouTube · ReadTree(`read.habitree.io`) | 🟡 | CTA 링크 |
+| 환경관리 | LINKMAP | ⬜ | 연동 미도입(개념 참조) |
+
+> 스택 특징: 외부 연동을 **SDK 없이 raw HTTP(fetch)** 로 최소 구현 → `package.json` 의존성은 Supabase + Next/React + UI만. 결제/AI/메일 SDK 없음.
 
 ---
 
-## 3. 서비스맵 다이어그램
+## 4. 정보구조(IA) — 구현 라우트 + 계획
 
-```mermaid
-flowchart TD
-    U[방문자/회원] --> WEB[Next.js 개인 브랜드 플랫폼]
-    ADMIN[관리자: 최동혁] --> WEB
+### 4.1 공개/회원 페이지
+| URL | 설명 | 상태 |
+|---|---|---|
+| `/` | 메인(디자인 v2) | ✅ |
+| `/about` | 소개 | ✅ |
+| `/projects` | 서비스(LINKMAP·ReadTree) | ✅ |
+| `/posts` · `/posts/[slug]` | 저널/글 | ✅ (샘플 데이터 SSG) |
+| `/products` · `/products/[slug]` | 자료/상품 카탈로그 | 🟡 (표시만, 결제 파이프라인 없음) |
+| `/education` · `/guides` | 교육·가이드 | ✅ |
+| `/support` | 후원(Polar) | ✅ |
+| `/coffee-chat` | 1:1 커피챗 신청 | ✅ |
+| `/contact` | 문의(+메일·카카오 알림) | ✅ |
+| `/login` · `/signup` · `/me` | 인증·마이페이지(아바타) | ✅ |
+| `/kakao-oauth` | 카카오 토큰 1회 연동 | ✅ |
+| `/terms` · `/privacy` | 약관·개인정보 | ✅ |
+| `/me/orders` · `/me/library` | 구매내역·자료실 | ⬜ 계획(커머스) |
 
-    WEB --> AUTH[Supabase Auth]
-    WEB --> DB[(Supabase PostgreSQL)]
-    WEB --> STORAGE[Supabase Storage]
-    WEB --> PAY[Stripe]
-    WEB --> MAIL[Resend]
-    WEB --> AI[OpenAI API]
-    WEB --> ANALYTICS[PostHog]
+### 4.2 관리자 `/admin/*` (role=admin)
+| URL | 설명 | 상태 |
+|---|---|---|
+| `/admin` | 관리자 허브 | ✅ |
+| `/admin/coffee-chat` | 커피챗 관리 | ✅ |
+| `/admin/contact` | 문의 관리(삭제) | ✅ |
+| `/admin/subscribers` (+`/export`) | 뉴스레터 구독자·CSV | ✅ |
+| `/admin/characters` | 캐릭터 자산 관리 | ✅ |
+| `/admin/settings` | AI 챗봇 설정 | ✅ |
+| `/admin/logs` | 활동 로그 | ✅ |
 
-    PAY --> WH[Stripe Webhook]
-    WH --> DB
-    WH --> MAIL
+### 4.3 API·기타
+`/api/chat`(OpenAI) · `/api/donate`·`/api/polar-webhook`(Polar) · `/api/newsletter` · `/auth/callback` · `/c/[code]`(캐릭터 리다이렉트) — 모두 ✅
 
-    WEB --> YT[YouTube 채널]
-    WEB --> RT[ReadTree]
-    WEB --> LM[LINKMAP]
+---
 
-    LM --> ENV[환경변수 관리]
-    LM --> MAP[서비스맵 시각화]
-    LM --> CHECK[서비스 연결 체크리스트]
+## 5. 데이터 모델 (현재)
 
-    ENV --> WEB
-```
+마이그레이션 0001~0015, ✅ 적용됨.
 
-### 3.1 데이터 흐름
-
-| 흐름 | 설명 |
+| 테이블 | 역할 |
 |---|---|
-| 방문자 → 플랫폼 | 소개, 콘텐츠, 상품, ReadTree/LINKMAP CTA 확인 |
-| 방문자 → 회원가입 | Supabase Auth로 계정 생성 |
-| 회원 → 콘텐츠 | 공개/회원전용/구매자전용 콘텐츠 접근 |
-| 회원 → 상품 구매 | Stripe Checkout 또는 Payment Element 사용 |
-| Stripe → Webhook | 결제 성공/실패/환불 이벤트 수신 |
-| Webhook → DB | 주문, 결제상태, 권한 업데이트 |
-| Webhook → Resend | 구매확인, 자료 다운로드 안내 메일 발송 |
-| 플랫폼 → LINKMAP | 프로젝트 구조, 서비스 연결, 환경변수 관리 사례 공개/교육화 |
-| 플랫폼 → ReadTree | 독서/필사 서비스 유입 |
-| YouTube → 플랫폼 | 영상 설명/고정댓글/CTA를 통한 유입 |
+| `profiles` | 사용자 프로필·role(user/admin) |
+| `coffee_chat_requests` | 1:1 커피챗 신청(취소·시퀀스 포함) |
+| `contact_messages` | 문의(+phone, 레이트리밋) |
+| `newsletter_subscribers` | 뉴스레터 구독 |
+| `donations` | Polar 후원 결제 기록 |
+| `chat_settings` | AI 챗봇 모델·지침 |
+| `character_assets` | 캐릭터 자산(HT-### 채번) |
+| `notification_tokens` | 카카오 access/refresh |
+| `activity_logs` | 운영 활동 로그 |
+
+Storage 버킷: `avatars`, 캐릭터 자산 버킷.
+> 커머스용 테이블(`products`·`orders`·`payments`·`user_entitlements`·`posts`·`tags`·`assets`)은 **Part Ⅱ §B**의 설계를 상품 판매 단계에서 도입한다. 현재 콘텐츠는 `src/data/sample.ts` 정적 데이터.
 
 ---
 
-## 4. 정보구조(IA)
+## 6. 기능 현황 매트릭스
 
-### 4.1 최상위 사이트맵
+| 영역 | 기능 | 상태 |
+|---|---|---|
+| 인증 | 회원가입·로그인·마이페이지·role | ✅ |
+| 콘텐츠 | 저널/자료 목록·상세 | 🟡 (정적, DB화 예정) |
+| 후원 | Polar 결제·웹훅·기록 | ✅ |
+| 상품 판매 | 카탈로그·체크아웃·권한·자료실 | ⬜ |
+| 문의 | 접수 + 메일(Resend)·카카오 알림 | ✅ |
+| 뉴스레터 | 구독·구독자 관리·CSV | ✅ |
+| 커피챗 | 신청·관리·취소 | ✅ |
+| AI 챗봇 | OpenAI, 관리자 설정 | ✅ |
+| 캐릭터 | HT-### 채번·대시보드·리다이렉트 | ✅ |
+| 전자책 | 초보자 A4 5쪽 | ✅ |
+| 관리자 | 허브·각 도메인 관리 | ✅ |
+| 분석 | PostHog | ⬜ |
+| LINKMAP 공개맵 | 서비스맵 페이지 | ⬜ |
+
+---
+
+## 7. 배포·운영
+
+- **Vercel** `main` push 자동배포 → `vibe.habitree.io`. `scripts/ship.ps1`(=`npm run ship`)은 `git push`만.
+- 배포 관련 파일: `next.config.ts`(표준 Next). `vercel.json`·wrangler·open-next·GitHub Actions **없음**.
+- 배포 정본 문서: [`13_vercel_deployment.md`](./13_vercel_deployment.md). 폐기된 Cloudflare 이력은 [`archive/`](./archive/).
+
+---
+
+## 8. 환경변수
+단일 소스: [`10_env_config_registry.md`](./10_env_config_registry.md). 요약 — Supabase 3키 · Polar 4키 · OpenAI 1키 · Resend 2키 · Kakao 2키(+토큰 DB) · `NEXT_PUBLIC_APP_URL`·`ADMIN_EMAIL`. 배포 등록처는 **Vercel → Environment Variables**.
+
+---
+
+## 9. 로드맵 (현행)
+상세: [`04_roadmap.md`](./04_roadmap.md).
+- ✅ Step 0~3(환경·메인·하위 페이지·인증/DB)
+- ✅ Step 6 대부분(문의·뉴스레터·커피챗·AI 챗봇)
+- 🟡 Step 4(콘텐츠 DB화)
+- ⬜ Step 5(커머스 판매, Polar 상품) · 분석 · LINKMAP 공개맵 · Step 7(교육화·템플릿)
+
+---
+
+## 10. 디자인 기준
+정본: [`14_homepage_v2_personality.md`](./14_homepage_v2_personality.md)("사람이 만든 티" v2). `01`(토큰 v0)·`05`(v1)은 이력.
+토큰 소스: `globals.css`(`.home-v2` 스코프). 브랜드 그린 계열, Pretendard.
+
+---
+
+## 11. 하위 문서 인덱스
+전체 지도: [`README.md`](./README.md). 기능 스펙 — 전자책 [`16`](./16_ebook_beginner_plan.md) · 캐릭터 [`17`](./17_character_platform.md) · 알림 [`18`](./18_contact_notifications.md) · 고도화 기록 [`15`](./15_site_enhancement_2026-07.md).
+
+---
+---
+
+# Part Ⅱ — 상세 설계·계획 (원본 기획 보존)
+
+> 아래는 초기 기획의 설계 자산이다. 상당수(커머스 도메인)는 아직 **⬜ 계획**이며, 상품 판매 단계에서
+> 이 설계를 기준으로 구현한다. 현재 구현된 것은 Part Ⅰ이 정본이다.
+
+## A. 목적별 IA 원안 (참조)
 
 ```text
-/
-├─ 소개
-│  ├─ 프로필
-│  ├─ 경력/이력
-│  ├─ 프로젝트
-│  └─ 협업/문의
-│
-├─ 콘텐츠
-│  ├─ 블로그
-│  ├─ 유튜브 콘텐츠 정리
-│  ├─ AI/독서/바이브코딩 아카이브
-│  └─ 무료 자료
-│
-├─ 서비스
-│  ├─ LINKMAP 소개
-│  ├─ ReadTree 소개
-│  ├─ 제작 사례
-│  └─ 서비스맵 보기
-│
-├─ 상품
-│  ├─ 전자책
-│  ├─ 강의
-│  ├─ 템플릿
-│  ├─ 컨설팅
-│  └─ 구매 상세
-│
-├─ 교육
-│  ├─ 바이브코딩 실습 과정
-│  ├─ LINKMAP으로 서비스 연결하기
-│  ├─ Supabase 설정
-│  ├─ Stripe 설정
-│  ├─ Resend 설정
-│  └─ 배포/운영
-│
-├─ 회원
-│  ├─ 로그인
-│  ├─ 회원가입
-│  ├─ 비밀번호 재설정
-│  ├─ 마이페이지
-│  ├─ 내 구매내역
-│  ├─ 내 자료실
-│  └─ 뉴스레터 설정
-│
-├─ 문의
-│  ├─ 상담 신청
-│  ├─ 제휴 문의
-│  └─ 일반 문의
-│
-└─ 관리자
-   ├─ 대시보드
-   ├─ 회원 관리
-   ├─ 콘텐츠 관리
-   ├─ 상품 관리
-   ├─ 주문/결제 관리
-   ├─ 문의 관리
-   ├─ 뉴스레터 관리
-   ├─ 파일 관리
-   ├─ LINKMAP 연동 관리
-   └─ 설정
+소개 · 콘텐츠 · 서비스 · 상품 · 교육 · 회원 · 문의 · 관리자
 ```
+원안의 상세 사이트맵/URL 표는 Part Ⅰ §4가 실제 라우트로 대체한다. 아직 미구현 영역(구매·자료실 등)은
+아래 커머스 설계를 따른다.
 
-### 4.2 URL 구조
+## B. 커머스 ERD (⬜ 계획)
 
-| 영역 | URL | 설명 | 인증 |
-|---|---|---|---|
-| 홈 | `/` | 메인 랜딩페이지 | 공개 |
-| 소개 | `/about` | 개인 소개 | 공개 |
-| 경력 | `/about/career` | 이력/경력/성과 | 공개 |
-| 프로젝트 | `/projects` | LINKMAP, ReadTree 등 | 공개 |
-| 블로그 | `/posts` | 글 목록 | 공개 |
-| 글 상세 | `/posts/[slug]` | 글 상세 | 공개/제한 가능 |
-| 자료실 | `/resources` | 무료/유료 자료 목록 | 혼합 |
-| 상품 목록 | `/products` | 판매 상품 목록 | 공개 |
-| 상품 상세 | `/products/[slug]` | 상품 상세/구매 CTA | 공개 |
-| 결제 | `/checkout/[productId]` | 결제 페이지 | 로그인 권장 |
-| 결제 성공 | `/checkout/success` | 구매 완료 | 로그인 |
-| 로그인 | `/login` | 로그인 | 비회원 |
-| 회원가입 | `/signup` | 회원가입 | 비회원 |
-| 마이페이지 | `/me` | 내 정보 | 로그인 |
-| 내 구매내역 | `/me/orders` | 주문/결제 내역 | 로그인 |
-| 내 자료실 | `/me/library` | 구매/다운로드 가능 자료 | 로그인 |
-| 문의 | `/contact` | 문의/상담 신청 | 공개 |
-| 관리자 | `/admin` | 관리자 홈 | 관리자 |
-| 관리자 콘텐츠 | `/admin/posts` | 콘텐츠 CRUD | 관리자 |
-| 관리자 상품 | `/admin/products` | 상품 CRUD | 관리자 |
-| 관리자 주문 | `/admin/orders` | 주문 관리 | 관리자 |
-| 관리자 문의 | `/admin/inquiries` | 문의 관리 | 관리자 |
-
----
-
-## 5. ERD 개요
-
-### 5.1 핵심 도메인
-
-1. 사용자/권한 도메인
-2. 콘텐츠 도메인
-3. 상품/결제 도메인
-4. 파일/자료 도메인
-5. 문의/리드 도메인
-6. 뉴스레터 도메인
-7. LINKMAP 연동 도메인
-8. 분석/활동 로그 도메인
-
-### 5.2 ERD 다이어그램
+상품 판매 도입 시 생성할 도메인·테이블. 현재 미생성.
 
 ```mermaid
 erDiagram
     profiles ||--o{ posts : writes
     profiles ||--o{ orders : places
-    profiles ||--o{ inquiries : submits
     profiles ||--o{ user_entitlements : owns
-    profiles ||--o{ activity_logs : performs
-
     posts ||--o{ post_tags : has
     tags ||--o{ post_tags : belongs_to
-
     products ||--o{ product_assets : includes
     assets ||--o{ product_assets : attached_to
     products ||--o{ order_items : sold_as
     products ||--o{ user_entitlements : grants
-
     orders ||--o{ order_items : contains
     orders ||--o{ payments : paid_by
     orders ||--o{ user_entitlements : grants
-
-    inquiries ||--o{ inquiry_messages : has
-
-    newsletter_subscribers ||--o{ newsletter_events : receives
-
-    linkmap_projects ||--o{ linkmap_services : contains
-    linkmap_projects ||--o{ linkmap_env_refs : manages
-
-    profiles {
-      uuid id PK
-      text email
-      text name
-      text avatar_url
-      text role
-      text status
-      timestamptz created_at
-      timestamptz updated_at
-    }
-
-    posts {
-      uuid id PK
-      uuid author_id FK
-      text title
-      text slug
-      text excerpt
-      text content_md
-      text visibility
-      text status
-      text cover_image_url
-      timestamptz published_at
-      timestamptz created_at
-      timestamptz updated_at
-    }
-
-    tags {
-      uuid id PK
-      text name
-      text slug
-      text type
-    }
-
-    post_tags {
-      uuid post_id FK
-      uuid tag_id FK
-    }
-
-    products {
-      uuid id PK
-      text name
-      text slug
-      text product_type
-      numeric price_amount
-      text currency
-      text status
-      text stripe_price_id
-      text description_md
-      timestamptz created_at
-      timestamptz updated_at
-    }
-
-    assets {
-      uuid id PK
-      text title
-      text asset_type
-      text storage_path
-      text mime_type
-      int file_size
-      text access_level
-      timestamptz created_at
-    }
-
-    product_assets {
-      uuid product_id FK
-      uuid asset_id FK
-      int sort_order
-    }
-
-    orders {
-      uuid id PK
-      uuid user_id FK
-      text order_no
-      text status
-      numeric total_amount
-      text currency
-      text stripe_checkout_session_id
-      timestamptz ordered_at
-    }
-
-    order_items {
-      uuid id PK
-      uuid order_id FK
-      uuid product_id FK
-      numeric unit_price
-      int quantity
-      numeric subtotal
-    }
-
-    payments {
-      uuid id PK
-      uuid order_id FK
-      text provider
-      text provider_payment_id
-      text status
-      numeric amount
-      text raw_event_json
-      timestamptz paid_at
-    }
-
-    user_entitlements {
-      uuid id PK
-      uuid user_id FK
-      uuid product_id FK
-      uuid order_id FK
-      text entitlement_type
-      timestamptz starts_at
-      timestamptz expires_at
-      text status
-    }
-
-    inquiries {
-      uuid id PK
-      uuid user_id FK
-      text name
-      text email
-      text inquiry_type
-      text status
-      text subject
-      text message
-      timestamptz created_at
-    }
-
-    inquiry_messages {
-      uuid id PK
-      uuid inquiry_id FK
-      text sender_type
-      text message
-      timestamptz created_at
-    }
-
-    newsletter_subscribers {
-      uuid id PK
-      uuid user_id FK
-      text email
-      text status
-      text source
-      timestamptz subscribed_at
-    }
-
-    newsletter_events {
-      uuid id PK
-      uuid subscriber_id FK
-      text event_type
-      text campaign_id
-      timestamptz created_at
-    }
-
-    linkmap_projects {
-      uuid id PK
-      text name
-      text external_project_id
-      text description
-      text visibility
-      timestamptz created_at
-    }
-
-    linkmap_services {
-      uuid id PK
-      uuid linkmap_project_id FK
-      text service_name
-      text service_category
-      text status
-      jsonb metadata
-    }
-
-    linkmap_env_refs {
-      uuid id PK
-      uuid linkmap_project_id FK
-      text env_key
-      text environment
-      text service_name
-      bool is_secret
-      text status
-    }
-
-    activity_logs {
-      uuid id PK
-      uuid user_id FK
-      text action
-      text target_type
-      uuid target_id
-      jsonb metadata
-      timestamptz created_at
-    }
 ```
 
----
-
-## 6. 테이블 상세 설계
-
-### 6.1 profiles
-Supabase Auth의 `auth.users`와 1:1로 연결되는 사용자 프로필.
-
-| 컬럼 | 타입 | 설명 |
-|---|---|---|
-| id | uuid PK | auth.users.id 참조 |
-| email | text | 이메일 |
-| name | text | 표시 이름 |
-| avatar_url | text | 프로필 이미지 |
-| role | text | `user`, `admin` |
-| status | text | `active`, `blocked`, `deleted` |
-| created_at | timestamptz | 생성일 |
-| updated_at | timestamptz | 수정일 |
-
-### 6.2 posts
-블로그, 유튜브 원고 정리, 교육 콘텐츠, 공지사항을 통합 관리.
-
-| 컬럼 | 타입 | 설명 |
-|---|---|---|
-| id | uuid PK | 글 ID |
-| author_id | uuid FK | 작성자 |
-| title | text | 제목 |
-| slug | text unique | URL slug |
-| excerpt | text | 요약 |
-| content_md | text | Markdown 본문 |
-| visibility | text | `public`, `members`, `buyers`, `private` |
-| status | text | `draft`, `published`, `archived` |
-| cover_image_url | text | 대표 이미지 |
-| published_at | timestamptz | 발행일 |
-
-### 6.3 products
-전자책, 강의, 템플릿, 컨설팅 상품을 통합 관리.
-
+### B-1. products
 | 컬럼 | 타입 | 설명 |
 |---|---|---|
 | id | uuid PK | 상품 ID |
-| name | text | 상품명 |
-| slug | text unique | URL slug |
-| product_type | text | `ebook`, `course`, `template`, `consulting`, `subscription` |
-| price_amount | numeric | 가격 |
-| currency | text | KRW/USD |
-| status | text | `draft`, `active`, `hidden`, `archived` |
-| stripe_price_id | text | Stripe Price ID |
+| name / slug | text | 상품명 / URL slug |
+| product_type | text | `ebook`·`course`·`template`·`consulting`·`subscription` |
+| price_amount / currency | numeric / text | 가격 / KRW·USD |
+| status | text | `draft`·`active`·`hidden`·`archived` |
 | description_md | text | 상품 설명 |
+> 결제 연동 컬럼은 **Polar** 기준(예: `polar_product_id`)으로 정의한다. 원안의 `stripe_price_id`는 폐기.
 
-### 6.4 assets
-무료/유료 자료 파일, 썸네일, PDF, 템플릿 등을 관리.
+### B-2. posts / tags / assets
+- `posts`: title·slug·excerpt·content_md·visibility(`public`/`members`/`buyers`/`private`)·status·cover_image_url·published_at
+- `tags` + `post_tags`(N:M)
+- `assets`: title·asset_type(`pdf`·`zip`·`image`·`video`·`template`·`link`)·storage_path·mime_type·file_size·access_level(`public`/`members`/`buyers`/`admin`)
 
-| 컬럼 | 타입 | 설명 |
+### B-3. orders / order_items / payments / user_entitlements
+- `orders`(헤더) · `order_items`(상세) · `payments`(결제 이벤트, provider=`polar`) 분리.
+- `user_entitlements`: user_id·product_id·order_id·entitlement_type(`download`·`course_access`·`membership`·`consulting`)·starts_at·expires_at·status.
+
+## C. 상품 판매 MVP 범위 (⬜ 계획)
+
+| 우선순위 | 기능 | 비고 |
 |---|---|---|
-| id | uuid PK | 파일 ID |
-| title | text | 파일명/자료명 |
-| asset_type | text | `pdf`, `zip`, `image`, `video`, `template`, `link` |
-| storage_path | text | Supabase Storage 경로 |
-| mime_type | text | MIME 타입 |
-| file_size | int | 파일 크기 |
-| access_level | text | `public`, `members`, `buyers`, `admin` |
+| P0 | 상품 등록/상세 | products CRUD |
+| P0 | Polar 단건 결제 | 전자책/템플릿 판매 |
+| P0 | 구매자 자료실 | 결제 → 권한 → 다운로드 |
+| P1 | 관리자 상품 관리 | 운영 가능성 |
+| P2 | 구독 결제·강의 진도·쿠폰 | 후순위 |
 
-### 6.5 orders / order_items / payments
-Stripe 결제와 플랫폼 내부 주문을 분리 관리한다.
+## D. 화면 구조 원안 (참조)
+- **상품 상세**: 상품명/결과물 → 대상 → 포함 내용 → 미리보기 → 가격/구매 → 이용 방법 → FAQ.
+- **마이페이지**: 프로필 · 구매 내역 · 다운로드 자료 · 수강 교육 · 뉴스레터 설정 · 문의 내역.
+- **관리자 대시보드**: 오늘 방문/가입/구매/문의 · 최근 주문·문의 · 인기 콘텐츠 · 환경/서비스 상태.
 
-| 테이블 | 역할 |
-|---|---|
-| orders | 주문 헤더 |
-| order_items | 주문 상세 상품 |
-| payments | 결제 이벤트/상태 |
+## E. LINKMAP 템플릿 설계 (⬜ 상품화 계획)
+템플릿명 **Creator Business Platform Template**. 포함: Next.js·Supabase(Auth/DB/Storage)·Vercel·**Polar**·Resend(권장)·OpenAI(선택)·YouTube/ReadTree(선택). 각 서비스별 셋업 체크리스트는 [`10_env_config_registry.md`](./10_env_config_registry.md) 및 [`service-setup/`](./service-setup/) 방법론을 상품화한다.
 
-### 6.6 user_entitlements
-사용자가 어떤 상품/자료/강의 접근 권한을 갖는지 관리한다.
-
-| 컬럼 | 타입 | 설명 |
-|---|---|---|
-| id | uuid PK | 권한 ID |
-| user_id | uuid FK | 사용자 |
-| product_id | uuid FK | 상품 |
-| order_id | uuid FK | 주문 |
-| entitlement_type | text | `download`, `course_access`, `membership`, `consulting` |
-| starts_at | timestamptz | 시작일 |
-| expires_at | timestamptz | 종료일 nullable |
-| status | text | `active`, `expired`, `revoked` |
-
----
-
-## 7. MVP 범위
-
-### 7.1 반드시 구현할 기능
-
-| 우선순위 | 기능 | 이유 |
-|---|---|---|
-| P0 | 랜딩페이지 | 개인 브랜드/서비스 소개의 시작점 |
-| P0 | 회원가입/로그인 | 자료실/구매자 권한의 기반 |
-| P0 | 블로그/콘텐츠 | YouTube/ReadTree/Linkmap 유입 자산 |
-| P0 | 상품 등록/상세 | 판매 구조의 기반 |
-| P0 | Stripe 단건 결제 | 전자책/템플릿 판매 가능 |
-| P0 | 구매자 자료실 | 결제 후 파일 제공 |
-| P0 | 관리자 상품/콘텐츠 관리 | 운영 가능성 확보 |
-| P1 | 문의/상담 신청 | 컨설팅 전환 경로 |
-| P1 | 뉴스레터 구독 | 장기 고객 관계 구축 |
-| P1 | LINKMAP 서비스맵 공개 페이지 | 교육/홍보 차별점 |
-
-### 7.2 MVP에서 제외할 기능
-
-| 기능 | 제외 이유 | 추후 단계 |
-|---|---|---|
-| 구독 결제 | 초기 복잡도 증가 | Phase 2 |
-| 강의 진도율 | LMS 복잡도 증가 | Phase 2 |
-| 커뮤니티 | 운영 부담 | Phase 3 |
-| AI 챗봇 | 핵심 검증 후 적용 | Phase 2 |
-| 쿠폰/프로모션 | 초기에는 수동 처리 가능 | Phase 2 |
-| 정산/세금 자동화 | 초기 거래량 확인 후 | Phase 3 |
-
----
-
-## 8. 화면 구조
-
-### 8.1 공개 홈
-
-섹션 구성:
-1. Hero: “AI 시대, 읽고 만들고 연결하는 개인 플랫폼”
-2. 소개: 최동혁의 경력/관점/전문성
-3. 핵심 프로젝트: LINKMAP, ReadTree, YouTube
-4. 판매 상품: 전자책/템플릿/강의
-5. 최신 콘텐츠: 블로그/영상 정리
-6. 교육 CTA: 바이브코딩으로 나만의 서비스 만들기
-7. 뉴스레터/문의 CTA
-
-### 8.2 상품 상세
-
-섹션 구성:
-1. 상품명/핵심 결과물
-2. 누구를 위한 상품인가
-3. 포함 내용
-4. 미리보기
-5. 가격/구매 버튼
-6. 구매 후 이용 방법
-7. FAQ
-
-### 8.3 마이페이지
-
-섹션 구성:
-1. 프로필 정보
-2. 구매 내역
-3. 다운로드 가능한 자료
-4. 수강 가능한 교육
-5. 뉴스레터 수신 설정
-6. 문의 내역
-
-### 8.4 관리자 대시보드
-
-섹션 구성:
-1. 오늘 방문/가입/구매/문의 요약
-2. 최근 주문
-3. 최근 문의
-4. 인기 콘텐츠
-5. LINKMAP 연결 상태
-6. 환경변수 누락/서비스 상태 경고
-
----
-
-## 9. LINKMAP 템플릿 설계
-
-### 9.1 템플릿명
-**Creator Business Platform Template**
-
-### 9.2 포함 서비스
-
-| 서비스 | 필수 여부 | 설명 |
-|---|---|---|
-| Next.js | 필수 | 앱 프레임워크 |
-| Supabase Auth | 필수 | 회원가입/로그인 |
-| Supabase PostgreSQL | 필수 | DB |
-| Supabase Storage | 필수 | 자료 파일 저장 |
-| Vercel | 필수 | 배포 |
-| Stripe | 필수 | 결제 |
-| Resend | 권장 | 이메일 |
-| PostHog | 권장 | 분석 |
-| OpenAI | 선택 | AI 기능 |
-| YouTube | 선택 | 유입 채널 |
-| ReadTree | 선택 | 연계 서비스 |
-
-### 9.3 LINKMAP 체크리스트 예시
-
-#### Supabase
-- [ ] Supabase 프로젝트 생성
-- [ ] Auth URL 설정
-- [ ] Google/GitHub OAuth 활성화 여부 결정
-- [ ] profiles 테이블 생성
-- [ ] RLS 정책 적용
-- [ ] Storage bucket 생성
-- [ ] 환경변수 등록
-
-#### Stripe
-- [ ] Stripe 계정 생성
-- [ ] Product/Price 생성
-- [ ] Webhook endpoint 생성
-- [ ] `checkout.session.completed` 이벤트 연결
-- [ ] Webhook secret 환경변수 등록
-- [ ] 테스트 결제 확인
-
-#### Resend
-- [ ] 도메인 인증
-- [ ] API Key 생성
-- [ ] 발신 이메일 설정
-- [ ] 구매완료 이메일 템플릿 생성
-- [ ] 문의 접수 이메일 템플릿 생성
-
-#### Vercel
-- [ ] GitHub 저장소 연결
-- [ ] Production 환경변수 등록
-- [ ] Preview 환경변수 등록
-- [ ] Custom domain 연결
-- [ ] 배포 확인
-
----
-
-## 10. 환경변수 설계
-
-```bash
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-
-# App
-NEXT_PUBLIC_APP_URL=
-ADMIN_EMAIL=
-
-# Stripe
-STRIPE_SECRET_KEY=
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-STRIPE_WEBHOOK_SECRET=
-
-# Resend
-RESEND_API_KEY=
-RESEND_FROM_EMAIL=
-
-# OpenAI
-OPENAI_API_KEY=
-
-# PostHog
-NEXT_PUBLIC_POSTHOG_KEY=
-NEXT_PUBLIC_POSTHOG_HOST=
-
-# Linkmap
-LINKMAP_PROJECT_ID=
-LINKMAP_API_TOKEN=
-```
-
----
-
-## 11. 개발 우선순위
-
-### Phase 1: 기반 구축
-1. Next.js 프로젝트 생성
-2. Supabase Auth 연결
-3. profiles 테이블/RLS 구성
-4. 홈/소개/프로젝트 페이지 구현
-5. 관리자 권한 구분
-
-### Phase 2: 콘텐츠/자료 구조
-1. posts 테이블 구현
-2. tags 구현
-3. 관리자 글 작성 화면
-4. 공개 블로그 목록/상세
-5. assets 테이블/Storage 연결
-
-### Phase 3: 상품/결제
-1. products 테이블 구현
-2. 상품 목록/상세
-3. Stripe Checkout 연결
-4. Webhook 처리
-5. orders/payments/user_entitlements 생성
-6. 구매자 자료실 구현
-
-### Phase 4: 운영/전환
-1. 문의/상담 신청
-2. 뉴스레터 구독
-3. Resend 이메일 발송
-4. PostHog 이벤트 추적
-5. LINKMAP 서비스맵 공개 페이지
-
-### Phase 5: 교육화
-1. 각 구축 과정을 강의 모듈로 분리
-2. LINKMAP 체크리스트화
-3. 템플릿으로 패키징
-4. YouTube 콘텐츠와 연결
-5. ReadTree/Linkmap CTA 삽입
-
----
-
-## 12. 개발 태스크 백로그
-
-| ID | 태스크 | 우선순위 | 산출물 |
-|---|---|---|---|
-| T-001 | 프로젝트 초기 세팅 | P0 | Next.js 앱 |
-| T-002 | Supabase 연결 | P0 | Auth/DB 연결 |
-| T-003 | profiles 테이블/RLS | P0 | 사용자 프로필 |
-| T-004 | 홈 IA 구현 | P0 | 랜딩페이지 |
-| T-005 | posts CRUD | P0 | 블로그 관리 |
-| T-006 | products CRUD | P0 | 상품 관리 |
-| T-007 | assets Storage | P0 | 파일 업로드/다운로드 |
-| T-008 | Stripe Checkout | P0 | 결제 플로우 |
-| T-009 | Stripe Webhook | P0 | 결제 후 권한 부여 |
-| T-010 | 마이페이지 | P0 | 구매자료 확인 |
-| T-011 | 문의 기능 | P1 | 상담 신청 |
-| T-012 | Resend 이메일 | P1 | 알림 메일 |
-| T-013 | PostHog 이벤트 | P1 | 분석 이벤트 |
-| T-014 | LINKMAP 서비스맵 페이지 | P1 | 공개 사례 페이지 |
-| T-015 | 교육 모듈 페이지 | P1 | 커리큘럼 소개 |
-
----
-
-## 13. 권한/RLS 정책 원칙
-
-| 데이터 | 일반 방문자 | 로그인 사용자 | 구매자 | 관리자 |
+## F. 권한/RLS 정책 원칙 (설계)
+| 데이터 | 방문자 | 로그인 | 구매자 | 관리자 |
 |---|---:|---:|---:|---:|
 | 공개 글 | 읽기 | 읽기 | 읽기 | CRUD |
 | 회원전용 글 | 불가 | 읽기 | 읽기 | CRUD |
 | 구매자전용 글 | 불가 | 불가 | 읽기 | CRUD |
 | 상품 | 읽기 | 읽기 | 읽기 | CRUD |
-| 주문 | 불가 | 본인만 읽기 | 본인만 읽기 | 전체 읽기 |
-| 파일 | 공개 파일만 | 회원 파일 | 구매 파일 | CRUD |
-| 문의 | 생성 가능 | 본인 문의 읽기 | 본인 문의 읽기 | 전체 CRUD |
-| LINKMAP 공개맵 | 읽기 | 읽기 | 읽기 | CRUD |
+| 주문 | 불가 | 본인 | 본인 | 전체 |
+| 파일 | 공개만 | 회원 | 구매 | CRUD |
+| 문의 | 생성 | 본인 | 본인 | 전체 |
+> 현재 구현된 테이블(profiles·contact_messages·coffee_chat_requests 등)의 RLS는 마이그레이션에 이미 적용됨. 위 표는 커머스 도입 시 확장 기준.
 
----
-
-## 14. 성공 지표
-
+## G. 성공 지표 (목표)
 | 구분 | 지표 | 목표 |
 |---|---|---|
 | 브랜드 | 월 방문자 | 1차 1,000명 |
-| 콘텐츠 | 글/영상 CTA 클릭률 | 3% 이상 |
-| 회원 | 방문자→회원 전환 | 5% 이상 |
-| 판매 | 무료자료→유료상품 전환 | 2% 이상 |
-| 교육 | LINKMAP 템플릿 사용 | 1차 30명 |
-| 운영 | 문의 전환 | 월 5건 이상 |
+| 콘텐츠 | CTA 클릭률 | 3%+ |
+| 회원 | 방문자→회원 | 5%+ |
+| 판매 | 무료→유료 전환 | 2%+ |
+| 교육 | 템플릿 사용 | 1차 30명 |
+| 운영 | 문의 전환 | 월 5건+ |
 
 ---
 
-## 15. 결론
-
-이 프로젝트는 단순 개인 홈페이지가 아니라 LINKMAP의 핵심 메시지인 **서비스 연결, 환경변수 관리, 바이브코딩 온보딩**을 실제 사례로 보여주는 실습형 비즈니스 플랫폼이다.
-
-따라서 개발 순서는 다음이 가장 적합하다.
-
-1. 개인 플랫폼 IA 확정
-2. ERD 기준으로 Supabase DB 구축
-3. LINKMAP 서비스맵으로 연결 구조 관리
-4. Stripe/Resend/PostHog 등 외부 서비스 연결
-5. 제작 과정을 교육 콘텐츠로 전환
-6. 완성된 구조를 LINKMAP 템플릿으로 상품화
+## 결론
+Habitree는 단순 개인 홈페이지가 아니라 **서비스 연결·환경변수 관리·바이브코딩 온보딩**을 실제 사례로
+보여주는 실습형 개인 플랫폼이다. 현재는 후원·문의·콘텐츠·AI·캐릭터·전자책까지 운영 중이며, 다음
+단계는 **콘텐츠 DB화 → 상품 판매(Polar 커머스) → 교육 템플릿화**다.

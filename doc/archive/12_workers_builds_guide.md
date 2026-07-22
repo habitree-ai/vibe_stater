@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # 12. (교육용) Cloudflare Workers Builds 이해와 배포 디버깅
 
 > 비개발자/입문자 교육용 정리. "왜 배포가 안 되는가"를 스스로 진단할 수 있게 **흐름 → 실패 지점 → 점검법** 순으로 설명한다.

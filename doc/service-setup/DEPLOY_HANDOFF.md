@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # 배포 핸드오프 & 작업 기록 (2026-06-17)
 
 > Creator Link Hub를 **GitHub → Cloudflare 자동배포**로 올리기 위한 준비를 완료했습니다.

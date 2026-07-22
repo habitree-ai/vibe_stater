@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # 08. 배포 처리 기록 (GitHub 연결 · 자동 배포)
 
 > 실제로 수행한 git/배포 처리의 **기록 + 재사용 가능한 방법론**. 같은 상황 재발 시 그대로 참고.

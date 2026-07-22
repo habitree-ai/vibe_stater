@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # 11. 배포 실패 진단 기록 (Workers Builds 클론·명령 오류)
 
 > 2026-06-18 점검 기록. Cloudflare Workers Builds 첫 배포가 **계속 실패**하던 원인을 추적·확정한 실제 진단 로그 + 해결 절차.

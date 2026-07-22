@@ -59,13 +59,13 @@ export function Footer() {
         {/* 대형 워드마크 */}
         <div className="relative select-none overflow-hidden">
           <p className="font-display text-[18vw] font-bold leading-none tracking-tighter text-foreground/[0.04] md:text-[12rem]">
-            LINK HUB
+            HABITREE
           </p>
         </div>
 
         <div className="flex flex-col items-center justify-between gap-3 border-t border-border/60 py-6 text-xs text-muted-foreground sm:flex-row">
           <p>© 2026 {profile.name} · {site.name}. All rights reserved.</p>
-          <p className="font-mono">Built with Next.js · Supabase · Stripe · Vercel</p>
+          <p className="font-mono">Built with Next.js · Supabase · Polar · Vercel</p>
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
 # 09. Supabase 인증/DB 연동 (로드맵 Step 3)
 
-> 코드 스캐폴딩은 완료. **Supabase 프로젝트 생성·키 발급·마이그레이션 적용**은 사용자가 직접 진행한다.
+> ✅ **적용 완료 기록** — 프로젝트 `ofxzkwbqwpsjoeqjhrpl` 생성, 마이그레이션 0001~0015 적용,
+> 관리자 role 지정까지 끝났다(WORKLOG 참조). 아래는 최초 셋업 절차 기록으로, 새 환경을 구성할 때만 참고한다.
 > 키가 없어도 빌드/페이지는 깨지지 않도록 가드가 들어가 있다(미설정 시 /me·로그인은 안내 메시지).
 
 ---
@@ -46,10 +47,10 @@ Copy-Item .env.example .env.local
   update public.profiles set role = 'admin' where email = '본인이메일';
   ```
 
-### 5) 배포(Cloudflare) 빌드 변수
-- Workers & Pages → 프로젝트 → Settings → **Build → Variables and secrets**에
+### 5) 배포(Vercel) 환경변수
+- Vercel → 프로젝트 → Settings → **Environment Variables**에
   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (+ 필요 시 `SUPABASE_SERVICE_ROLE_KEY`) 등록.
-  (SSG가 빌드 타임에 `NEXT_PUBLIC_*`를 주입하므로 **CI 빌드 환경에도 필요**)
+  (SSG가 빌드 타임에 `NEXT_PUBLIC_*`를 주입하므로 **빌드 환경에도 필요**) — 배포 정본 [`13_vercel_deployment.md`](./13_vercel_deployment.md)
 
 ---
 

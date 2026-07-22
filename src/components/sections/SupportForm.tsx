@@ -174,7 +174,7 @@ export function SupportForm() {
             🔗 {copied ? "복사됨!" : "링크 복사"}
           </button>
           <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("교육 목적으로 무료 공개되는 자료를 응원해요 — Creator Link Hub")}&url=${encodeURIComponent(shareUrl)}`}
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("교육 목적으로 무료 공개되는 자료를 응원해요 — Habitree")}&url=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-muted"

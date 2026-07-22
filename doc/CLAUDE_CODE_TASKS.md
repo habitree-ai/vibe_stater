@@ -1,7 +1,12 @@
-# Claude Code 작업 지시서 (핸드오프)
+# Claude Code 작업 지시서 (핸드오프) — 대부분 완료(이력)
 
-> 다음 Claude Code 세션이 이어받아 진행할 **남은 작업 목록**. 최신 상태 기준(2026-06-17).
-> 이 문서가 [`service-setup/DEPLOY_HANDOFF.md`](./service-setup/DEPLOY_HANDOFF.md)의 staged 계획을 **대체**한다(아래 ⚠️ 참고).
+> ⚠️ **이 핸드오프(2026-06-17 기준)의 작업은 대부분 완료됐다.** 아래 지시 중 유효한 것은 거의 없다 —
+> 현재 상태는 [`README.md`](./README.md) "현재 진행 상태"와 [`WORKLOG.md`](./WORKLOG.md)가 정본이다.
+> 갱신 요약:
+> - ~~Cloudflare 연결 → 첫 배포~~ → **폐기.** 배포는 **Vercel**(`main` push 자동배포)로 전환됨([`13_vercel_deployment.md`](./13_vercel_deployment.md)).
+> - ~~Pretendard 셀프호스팅~~ · ~~Supabase Step 3~~ → **완료**(WORKLOG).
+> - 결제는 기획의 Stripe가 아니라 **Polar**로 구현됨.
+> - 이 문서는 이력으로만 보존. 새 작업의 근거로 쓰지 말 것.
 
 ---
 
@@ -26,7 +31,7 @@
 - 변경 후 푸시는 **`.\scripts\ship.ps1 "메시지"`** 사용(= 자동 배포 트리거).
 - 셸 PATH 보정 필요 시: `$env:Path = "$env:ProgramFiles\nodejs;$env:ProgramFiles\Git\cmd;$env:Path"`.
 - 푸시/빌드 전 `npm run build`로 타입·정적 생성 확인.
-- OneDrive 동기화 경로라 `.git` 권한 이슈 가능 — 막히면 [`08_deploy_record.md`](./08_deploy_record.md) 2장 참고.
+- OneDrive 동기화 경로라 `.git` 권한 이슈 가능 — 막히면 [`archive/08_deploy_record.md`](./archive/08_deploy_record.md) 2장 참고.
 
 ---
 
@@ -71,5 +76,5 @@
 4. 정비/확장(선택)
 
 ## 참고 문서
-- 배포: [`06_deployment_cloudflare.md`](./06_deployment_cloudflare.md) · [`07_github_cloudflare_deploy.md`](./07_github_cloudflare_deploy.md) · [`08_deploy_record.md`](./08_deploy_record.md)
+- 배포(정본): [`13_vercel_deployment.md`](./13_vercel_deployment.md) · 폐기된 Cloudflare 이력: [`archive/`](./archive/)
 - 전체 인덱스: [`README.md`](./README.md)

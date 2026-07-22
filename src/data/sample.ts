@@ -539,7 +539,7 @@ export const marqueeItems: string[] = [
   "AI 바이브코딩",
   "Next.js",
   "Supabase",
-  "Stripe 결제",
+  "Polar 결제",
   "Resend 이메일",
   "Vercel 배포",
   "독서 · 필사",

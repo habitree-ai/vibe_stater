@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # 06. Cloudflare 배포 세팅
 
 > 이 Next.js 16 프로젝트(Creator Link Hub)를 **Cloudflare**에 배포하기 위한 세팅과 절차.

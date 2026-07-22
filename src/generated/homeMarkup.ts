@@ -42,8 +42,8 @@ export const homeMarkup = `
     <!-- 마퀴 -->
     <div class="marquee-band">
       <div class="marquee-track">
-        <span>AI 바이브코딩</span><span>Next.js</span><span>Supabase</span><span>Stripe</span><span>Resend</span><span>Vercel</span><span>독서 · 필사</span><span>1인 SaaS</span>
-        <span>AI 바이브코딩</span><span>Next.js</span><span>Supabase</span><span>Stripe</span><span>Resend</span><span>Vercel</span><span>독서 · 필사</span><span>1인 SaaS</span>
+        <span>AI 바이브코딩</span><span>Next.js</span><span>Supabase</span><span>Polar</span><span>Resend</span><span>Vercel</span><span>독서 · 필사</span><span>1인 SaaS</span>
+        <span>AI 바이브코딩</span><span>Next.js</span><span>Supabase</span><span>Polar</span><span>Resend</span><span>Vercel</span><span>독서 · 필사</span><span>1인 SaaS</span>
       </div>
     </div>
   </section>

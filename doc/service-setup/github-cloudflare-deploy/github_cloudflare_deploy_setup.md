@@ -1,10 +1,12 @@
+> ⚠️ **SUPERSEDED — Cloudflare 시기 이력입니다.** 현재 배포는 **Vercel**(`main` push 자동배포)이며, 배포 정본은 `doc/13_vercel_deployment.md`. 아래 내용은 참고 기록으로만 보존합니다.
+
 # GitHub → Cloudflare 자동 배포 연결 가이드 (배포편)
 
 > 대상: 코드를 **GitHub**에 올리고 **Cloudflare Workers Builds**와 연결해,
 > 이후 `git push`만으로 **자동 빌드·배포**되도록 만드는 9단계.
 > 양식: [`../method_template.md`](../method_template.md) 기준. 화면 자막(STEP n/9)과 1:1 대응.
 > 함께 보기: `github_cloudflare_deploy_manual.html`(매뉴얼), `github_cloudflare_deploy_walkthrough.mp4`(영상), `screens/`(캡처 9장).
-> 실행 절차 상세: [`../../07_github_cloudflare_deploy.md`](../../07_github_cloudflare_deploy.md)
+> 실행 절차 상세: [`../../archive/07_github_cloudflare_deploy.md`](../../archive/07_github_cloudflare_deploy.md)
 
 ---
 
@@ -17,7 +19,7 @@
 | 단계 수 | 9 |
 | 산출물 | 매뉴얼 HTML · 워크스루 영상(mp4) · 캡처 9장 · 본 문서 |
 | 캡처 소스 | 로그인 대시보드는 보안상 **재현(representative)** — 실제 UI와 다를 수 있음 |
-| 선행 조건 | OpenNext 배포 파일 구성([`../../06_deployment_cloudflare.md`](../../06_deployment_cloudflare.md)), Cloudflare 도메인 Active([`../cloudflare/cloudflare_setup.md`](../cloudflare/cloudflare_setup.md)) |
+| 선행 조건 | OpenNext 배포 파일 구성([`../../archive/06_deployment_cloudflare.md`](../../archive/06_deployment_cloudflare.md)), Cloudflare 도메인 Active([`../cloudflare/cloudflare_setup.md`](../cloudflare/cloudflare_setup.md)) |
 | 실제 저장소 | `https://github.com/habitree-ai/vibe_stater.git` |
 
 > ⚠️ 안전 원칙: GitHub/Cloudflare **OAuth·권한 부여·시크릿 입력은 사용자가 직접** 수행. `.env*`·`.dev.vars`·시크릿은 커밋 금지(빌드 변수는 대시보드에 등록).
@@ -96,6 +98,6 @@
 - [ ] `git push` → 자동 배포 동작 확인
 
 ## 참고
-- 실행 가이드: [`../../07_github_cloudflare_deploy.md`](../../07_github_cloudflare_deploy.md)
-- 처리 기록: [`../../08_deploy_record.md`](../../08_deploy_record.md)
+- 실행 가이드: [`../../archive/07_github_cloudflare_deploy.md`](../../archive/07_github_cloudflare_deploy.md)
+- 처리 기록: [`../../archive/08_deploy_record.md`](../../archive/08_deploy_record.md)
 - 재현 화면 안내: 로그인 대시보드는 보안·안전 원칙에 따라 재현했습니다.
