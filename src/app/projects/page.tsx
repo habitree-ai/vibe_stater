@@ -8,7 +8,7 @@ import { projects } from "@/data/sample";
 
 export const metadata: Metadata = {
   title: "서비스",
-  description: "LINKMAP, ReadTree, YouTube 등 제작/운영 중인 서비스와 프로젝트.",
+  description: "LINKMAP, ReadTree — 직접 만들어 매일 쓰는 서비스.",
 };
 
 export default function ProjectsPage() {
@@ -21,10 +21,10 @@ export default function ProjectsPage() {
             서비스 & <span className="serif-accent text-primary">프로젝트</span>
           </>
         }
-        subtitle="직접 만들고 운영하는 서비스를 LINKMAP으로 연결해 관리합니다."
+        subtitle="직접 만들어 매일 쓰는 서비스입니다. 영상 강의는 교육(무작정 따라하기)에서 만나요."
       />
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
-        <div className="grid gap-5 md:grid-cols-3">
+      <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6 md:py-28">
+        <div className="grid gap-5 sm:grid-cols-2">
           {projects.map((project, i) => (
             <Reveal key={project.id} delay={i * 80}>
               <Link

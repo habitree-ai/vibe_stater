@@ -2,7 +2,9 @@
 // 기획: doc/14_homepage_v2_personality.md. 인터랙션은 src/components/HomeEnhancer.tsx.
 // 공용 헤더/푸터는 layout.tsx(Header/Footer)가 제공하므로 여기엔 포함하지 않는다.
 // 스타일은 globals.css의 `.home-v2` 스코프 블록 참조.
-// nav/앵커 호환 ID: about · projects(서비스) · products(자료) · posts(저널) · newsletter · education.
+// nav/앵커 호환 ID: about · education(무작정 따라하기) · projects(서비스) · products(자료) · posts(저널) · newsletter.
+// 구성 순서: 히어로 → 소개 → 무작정 따라하기(핵심 교육) → 서비스 → 무료 자료 → 저널 → 뉴스레터.
+// (유튜브/강의/교육은 '무작정 따라하기' 한 블록으로 통합 — 중복 제거)
 export const homeMarkup = `
 <div class="home-v2">
   <div id="hv-cursor">열기 →</div>
@@ -22,12 +24,12 @@ export const homeMarkup = `
         <p class="lede rv">제조 현장에서 ERP를 굴리다, 퇴근 후엔 도구를 만듭니다.
           <b>제가 쓰려고 만들었고</b>, 그대로 공개합니다.</p>
         <div class="btn-row rv">
-          <a href="/#products" class="btn">무료 자료 받기</a>
-          <a href="/#projects" class="btn-text">만든 것 둘러보기</a>
+          <a href="/#education" class="btn">무작정 따라하기 시작</a>
+          <a href="/#projects" class="btn-text">만든 도구 보기</a>
         </div>
         <div class="hero-meta rv">
-          <div><b>2</b> 운영 중인 서비스</div>
-          <div><b>37/100</b> 커피챗 신청</div>
+          <div><b>2</b> 직접 운영하는 서비스</div>
+          <div><b>3편</b> 무작정 따라하기 공개</div>
           <div><b>100%</b> 무료 공개</div>
         </div>
       </div>
@@ -86,27 +88,89 @@ export const homeMarkup = `
     </div>
   </section>
 
+  <!-- ============ 무작정 따라하기 (핵심 교육) ============ -->
+  <section class="edu sec" id="education">
+    <div class="glow" style="width:600px;height:400px;top:-100px;left:30%"></div>
+    <div class="wrap">
+      <div class="edu-head rv">
+        <div class="kicker">✦ 바이브코딩 무작정 따라하기</div>
+        <h2>코딩 몰라도, <span class="hand">오늘 내 사이트를<svg viewBox="0 0 320 12" preserveAspectRatio="none"><path d="M3 8 Q90 2 170 7 T317 5"/></svg></span> 인터넷에</h2>
+        <p class="sub">왜 시작해야 하는지부터 3분 만에 배포까지. 어려운 용어 없이, 유튜브 영상을 그대로 따라오면 됩니다.
+          지금 <b>3편 공개</b> · 다음 편 순차 추가.</p>
+      </div>
+
+      <div class="ep-list">
+        <a class="ep-card rv" href="https://www.youtube.com/watch?v=TKe41WMIhrQ&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL" target="_blank" rel="noopener noreferrer" data-cursor>
+          <figure class="ep-thumb">
+            <img src="https://i.ytimg.com/vi/TKe41WMIhrQ/hqdefault.jpg" alt="영상 — AI 시대, 끝까지 살아남는 단 하나의 무기" loading="lazy" width="480" height="360" />
+            <span class="ep-play" aria-hidden="true">▶</span>
+          </figure>
+          <div class="ep-body">
+            <div class="ep-tag"><span class="ep-no">EP1</span><span class="ep-role">동기</span></div>
+            <h4>AI 시대, 끝까지 살아남는 단 하나의 무기</h4>
+            <p>왜 지금 바이브코딩을 시작해야 하는지, 그 이유부터.</p>
+          </div>
+        </a>
+        <a class="ep-card rv" href="https://www.youtube.com/watch?v=zJDF2e4dYKU&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL" target="_blank" rel="noopener noreferrer" data-cursor>
+          <figure class="ep-thumb">
+            <img src="https://i.ytimg.com/vi/zJDF2e4dYKU/hqdefault.jpg" alt="영상 — 바이브코딩 무작정 따라하기, 비개발자도 진짜 될까?" loading="lazy" width="480" height="360" />
+            <span class="ep-play" aria-hidden="true">▶</span>
+          </figure>
+          <div class="ep-body">
+            <div class="ep-tag"><span class="ep-no">EP2</span><span class="ep-role">개요</span></div>
+            <h4>바이브코딩 무작정 따라하기, 비개발자도 진짜 될까?</h4>
+            <p>코드 한 줄 몰라도 되는지, 전체 그림을 먼저 봅니다.</p>
+          </div>
+        </a>
+        <a class="ep-card rv" href="https://www.youtube.com/watch?v=he2_I9LCmQU&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL" target="_blank" rel="noopener noreferrer" data-cursor>
+          <figure class="ep-thumb">
+            <img src="https://i.ytimg.com/vi/he2_I9LCmQU/hqdefault.jpg" alt="영상 — 3분 만에 오늘 내 사이트를 인터넷에 올리기" loading="lazy" width="480" height="360" />
+            <span class="ep-play" aria-hidden="true">▶</span>
+            <span class="ep-new">NEW</span>
+          </figure>
+          <div class="ep-body">
+            <div class="ep-tag"><span class="ep-no">EP3</span><span class="ep-role">실습</span></div>
+            <h4>3분 만에 오늘 내 사이트를 인터넷에 올리기</h4>
+            <p>구글 계정·AI·원클릭 배포로, 진짜 내 사이트를 공개해요.</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="ep-roadmap rv">
+        <span class="ep-roadmap-label">다음 편 예정</span>
+        <span class="ep-chip">내 맘대로 고치기</span>
+        <span class="ep-chip">데이터 연결</span>
+        <span class="ep-chip">결제 받기</span>
+      </div>
+
+      <div class="btn-row rv">
+        <a href="https://www.youtube.com/playlist?list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL" target="_blank" rel="noopener noreferrer" class="btn" style="background:var(--moss);color:var(--ink)">재생목록 전체 보기</a>
+        <a href="/education" class="btn-text">교육 안내</a>
+        <a href="https://linkmap.biz" rel="noopener noreferrer" class="btn-text">LINKMAP으로 시작 →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ SERVICES ============ -->
   <section class="sec wrap" id="projects">
     <div class="sec-head rv">
       <div class="kicker">Services</div>
-      <h2>지금 운영 중인 <em>실제 서비스</em></h2>
-      <p>직접 만들어 지금 돌리고 있는 서비스입니다. 카드를 누르면 라이브로 바로 갑니다.</p>
+      <h2>내가 만들어 <em>매일 쓰는 도구</em></h2>
+      <p>남이 만든 걸 소개하지 않아요. 직접 만들어 지금도 돌리는 서비스입니다.
+        무작정 따라하기 EP3에서 쓰는 그 도구예요.</p>
     </div>
     <div class="bento">
-      <a class="card big rv" href="https://linkmap.biz" rel="noopener noreferrer" data-cursor>
-        <div>
-          <span class="live"><span class="dot"></span> 서비스 · 라이브</span>
-          <h3>LINKMAP</h3>
-          <span class="host">linkmap.biz ↗</span>
-          <p class="desc">초보자부터 개발자까지, 구글 계정 하나로 <b>3분 만에 배포</b>하는 바이브 코딩 플랫폼.
-            서비스 맵·환경변수(AES-256)를 한 곳에서.</p>
-          <ul class="feat">
-            <li>서비스 맵 시각화 &amp; 연결 체크리스트</li>
-            <li>환경변수 안전 관리 (AES-256)</li>
-            <li>30+ 서비스 · 프로젝트 템플릿</li>
-          </ul>
-        </div>
+      <a class="card rv" href="https://linkmap.biz" rel="noopener noreferrer" data-cursor>
+        <span class="live"><span class="dot"></span> 서비스 · 라이브</span>
+        <h3>LINKMAP</h3>
+        <span class="host">linkmap.biz ↗</span>
+        <p class="desc">초보자부터 개발자까지, 구글 계정 하나로 <b>3분 만에 배포</b>하는 바이브 코딩 플랫폼.
+          서비스 맵·환경변수(AES-256)를 한 곳에서.</p>
+        <ul class="feat">
+          <li>서비스 맵 시각화 &amp; 연결 체크리스트</li>
+          <li>환경변수 안전 관리 (AES-256)</li>
+          <li>30+ 서비스 · 프로젝트 템플릿</li>
+        </ul>
         <figure class="shot">
           <div class="shot-bar"><i style="background:#f87171"></i><i style="background:#fbbf24"></i><i style="background:#34d399"></i><span class="u">🔒 linkmap.biz</span></div>
           <img src="/img/linkmap-main.png" alt="LINKMAP 메인 화면 — 한 플랫폼에서 3분 만에 배포" loading="lazy" width="1798" height="872" />
@@ -117,17 +181,15 @@ export const homeMarkup = `
         <h3>ReadTree</h3>
         <span class="host">read.habitree.io ↗</span>
         <p class="desc">읽고 기록하면 <b>독서나무가 자라는</b> 습관 플랫폼. 읽은 모든 페이지가 자산이 됩니다.</p>
+        <ul class="feat">
+          <li>독서 기록 &amp; 통계 · 독서나무 성장</li>
+          <li>AI 채팅 · OCR 필사 · AI 리포트</li>
+          <li>독서 그룹 · 독서 달력</li>
+        </ul>
         <figure class="shot">
           <div class="shot-bar"><i style="background:#f87171"></i><i style="background:#fbbf24"></i><i style="background:#34d399"></i><span class="u">🔒 read.habitree.io</span></div>
           <img src="/img/readtree-main.png" alt="ReadTree 대시보드 — 독서 기록으로 자라는 독서나무" loading="lazy" width="1723" height="886" />
         </figure>
-        <div class="tags"><span>#독서</span><span>#필사</span><span>#습관</span></div>
-      </a>
-      <a class="card dark rv" href="https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ" target="_blank" rel="noopener noreferrer" data-cursor>
-        <span class="live" style="color:var(--moss)"><span class="dot" style="background:var(--moss)"></span> 콘텐츠</span>
-        <h3>YouTube 채널</h3>
-        <p>AI·바이브코딩·독서 인사이트를 영상으로 정리하는 채널.</p>
-        <div class="tags"><span style="color:var(--moss)">구독하기 ↗</span></div>
       </a>
     </div>
   </section>
@@ -136,8 +198,8 @@ export const homeMarkup = `
   <section class="sec wrap" id="products">
     <div class="sec-head rv">
       <div class="kicker">Resources</div>
-      <h2>무료로 공개하는 <em>교육 자료</em></h2>
-      <p>전자책·강의·1:1 커피챗까지, 전부 교육 목적으로 공개해요. 공짜예요. 도움됐으면 커피 한 잔만.</p>
+      <h2>곁들이는 <em>무료 자료</em></h2>
+      <p>영상 강의(무작정 따라하기) 말고도, 바로 읽는 입문 전자책과 1:1 커피챗을 무료로 열어둬요.</p>
     </div>
     <div class="res-feature">
       <a class="card rv" href="/ebook/vibe-1in-saas.html" target="_blank" rel="noopener noreferrer" data-cursor>
@@ -149,24 +211,16 @@ export const homeMarkup = `
         </figure>
         <span class="stamp">바로 읽기 ↗</span>
       </a>
-      <a class="card rv" href="https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ/playlists" target="_blank" rel="noopener noreferrer" data-cursor>
-        <div class="kicker" style="color:var(--clay)">강의 · 준비중</div>
-        <h3 style="font-size:1.5rem">LINKMAP 실전 강의</h3>
-        <p class="desc">LINKMAP으로 서비스를 연결하는 영상 강의. 제작되는 대로 유튜브 재생목록에 순차 공개해요.</p>
-        <figure class="res-thumb ill">
-          <img src="/img/about/man-record.png" alt="카메라 앞에서 강의 영상을 촬영하는 모습" loading="lazy" width="256" height="288" />
-        </figure>
-        <span class="stamp">준비중 · 유튜브 ↗</span>
+      <a class="card rv" href="/coffee-chat" data-cursor>
+        <div class="kicker" style="color:var(--clay)">1:1 커피챗 · 추첨 무료</div>
+        <h3 style="font-size:1.5rem">신청 100명 모이면, 추첨으로 무료 세션</h3>
+        <p class="desc">온라인·오프라인, 원하는 방식으로. 부담 없이 신청만 남겨 주세요.</p>
+        <div class="gauge">
+          <div class="gauge-bar"><div class="gauge-fill"></div></div>
+          <small><b>37</b> / 100명 · 63명 더 모이면 추첨이 시작돼요</small>
+        </div>
       </a>
     </div>
-    <a class="card rv" href="/coffee-chat" data-cursor>
-      <div class="kicker" style="color:var(--clay)">1:1 커피챗 · 추첨 무료</div>
-      <h3 style="font-size:1.5rem">신청 100명 모이면, 추첨으로 무료 세션</h3>
-      <div class="gauge">
-        <div class="gauge-bar"><div class="gauge-fill"></div></div>
-        <small><b>37</b> / 100명 · 63명 더 모이면 추첨이 시작돼요</small>
-      </div>
-    </a>
     <div class="free-band rv">
       <div class="glow" style="width:300px;height:300px;background:var(--forest);opacity:.3;top:-80px;right:-40px"></div>
       <h3 style="position:relative">모든 자료는 교육 목적의 <span class="hand">무료 공개<svg viewBox="0 0 200 12" preserveAspectRatio="none"><path d="M3 7 Q60 3 100 7 T197 6"/></svg></span>예요</h3>
@@ -216,27 +270,6 @@ export const homeMarkup = `
           <button type="submit" class="btn">구독하기</button>
         </form>
         <p class="nl-msg" id="nl-msg" role="status" aria-live="polite"></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ EDUCATION ============ -->
-  <section class="edu sec" id="education">
-    <div class="glow" style="width:600px;height:400px;top:-100px;left:30%"></div>
-    <div class="wrap">
-      <div class="rv">
-        <div class="kicker">✦ 바이브코딩 실습 과정</div>
-        <h2>코딩을 몰라도 <span class="hand">내 홈페이지를<svg viewBox="0 0 320 12" preserveAspectRatio="none"><path d="M3 8 Q90 2 170 7 T317 5"/></svg></span> 직접 만들어요</h2>
-        <p class="sub">구글 계정 만들기부터 내 홈페이지 공개까지, 하나씩 무작정 따라 하기. 어려운 용어 없이, 클릭으로 따라오면 됩니다.</p>
-        <div class="btn-row"><a href="/education" class="btn" style="background:var(--moss);color:var(--ink)">무작정 따라하기 보기</a><a href="https://linkmap.biz" rel="noopener noreferrer" class="btn-text">LINKMAP 살펴보기</a></div>
-      </div>
-      <div class="steps">
-        <div class="step rv"><div class="n">01</div><h4>구글 계정 만들기</h4><p>모든 것의 시작. 계정 하나로 전부 로그인.</p></div>
-        <div class="step rv"><div class="n">02</div><h4>AI 서비스 가입</h4><p>ChatGPT·Claude에 가입하고 옆에서 도움받기.</p></div>
-        <div class="step rv"><div class="n">03</div><h4>내 홈페이지 만들기</h4><p>템플릿 고르고 원클릭 배포로 공개.</p></div>
-        <div class="step rv"><div class="n">04</div><h4>내 마음대로 고치기</h4><p>글·사진·색을 바꿔 내 것으로.</p></div>
-        <div class="step rv"><div class="n">05</div><h4>데이터 연결</h4><p>신청·문의 정보를 저장하는 창고 연결.</p></div>
-        <div class="step rv"><div class="n">06</div><h4>결제 받기</h4><p>카드 결제를 붙여 판매까지.</p></div>
       </div>
     </div>
   </section>

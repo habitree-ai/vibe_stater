@@ -63,9 +63,13 @@ export type Product = {
   faq: FaqItem[];
 };
 
-// 교육 자료 상태별 외부 연결 (강의=유튜브 재생목록, 템플릿=LINKMAP 원클릭 배포)
-export const YOUTUBE_PLAYLISTS_URL =
-  "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ/playlists";
+// 유튜브 채널·재생목록 (교육 콘텐츠의 실제 출처)
+export const YOUTUBE_CHANNEL_URL =
+  "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ";
+export const YOUTUBE_PLAYLISTS_URL = `${YOUTUBE_CHANNEL_URL}/playlists`;
+// '바이브코딩 무작정 따라하기' 재생목록(교육 시리즈 정본). 3편 공개 · 순차 추가.
+export const FOLLOW_ALONG_PLAYLIST_URL =
+  "https://www.youtube.com/playlist?list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL";
 export const LINKMAP_DEPLOY_URL = "https://linkmap.biz";
 // 전자책 본문(정적 HTML). 화면에서 읽고, 인쇄하면 A4 5쪽 PDF가 된다.
 export const EBOOK_VIBE_URL = "/ebook/vibe-1in-saas.html";
@@ -82,7 +86,23 @@ export type Post = {
 };
 
 export type CareerItem = { period: string; title: string; desc: string };
-export type EducationModule = { step: string; title: string; desc: string };
+// 로드맵 단계 — status로 실제 공개 여부를 정직하게 표시(done=영상 공개됨, planned=다음 편 예정)
+export type EducationModule = {
+  step: string;
+  title: string;
+  desc: string;
+  status: "done" | "planned";
+};
+
+// '무작정 따라하기' 실제 공개 영상 한 편.
+export type FollowAlongEpisode = {
+  no: string; // EP 번호(학습 순서 = 공개 오래된→최신)
+  role: string; // 역할 배지: 동기 · 개요 · 실습
+  title: string; // 실제 유튜브 제목
+  short: string; // 초보자 눈높이 한 줄 요약
+  videoId: string;
+  url: string;
+};
 
 export const productTypeLabel: Record<ProductType, string> = {
   ebook: "전자책",
@@ -274,21 +294,6 @@ export const projects: Project[] = [
       kicker: "지금 운영 중 · 라이브",
     },
   },
-  {
-    id: "youtube",
-    name: "YouTube 채널",
-    category: "콘텐츠",
-    summary: "AI·바이브코딩·독서 인사이트를 영상으로 정리하는 채널.",
-    tags: ["영상", "AI"],
-    url: "https://www.youtube.com/channel/UCmlOkbbqe6Tl0S1F0NEDIrQ",
-    external: true,
-    cover: {
-      src: "/img/about/otter-cheer.png",
-      alt: "응원하는 하비트리 캐릭터",
-      fit: "contain",
-      kicker: "새 영상 순차 공개",
-    },
-  },
 ];
 
 export const products: Product[] = [
@@ -327,34 +332,38 @@ export const products: Product[] = [
   },
   {
     id: "course-linkmap",
-    name: "LINKMAP 실전 강의",
+    name: "바이브코딩 무작정 따라하기 (영상 강의)",
     type: "course",
     price: 0,
     currency: "KRW",
     summary:
-      "LINKMAP으로 서비스를 연결하는 영상 강의. (준비중 · 유튜브 재생목록에 순차 공개)",
+      "코딩 몰라도 오늘 내 사이트를 인터넷에. 유튜브 재생목록에 3편 공개, 다음 편 순차 추가.",
     slug: "linkmap-course",
-    status: "soon",
+    status: "ready",
     cover: {
       src: "/img/about/man-record.png",
       alt: "카메라 앞에서 강의 영상을 촬영하는 모습",
       fit: "contain",
-      kicker: "영상 제작 중 · 순차 공개",
+      kicker: "3편 공개 · 순차 추가",
     },
-    statusNote:
-      "강의 영상을 제작하고 있어요. 완성되는 영상부터 유튜브 재생목록에 순차 업데이트됩니다.",
-    action: { label: "유튜브에서 미리 보기", href: YOUTUBE_PLAYLISTS_URL, external: true },
-    outcome: "외부 서비스를 연결한, 동작하는 나만의 홈페이지 한 개",
+    action: { label: "재생목록 보기 (무료)", href: FOLLOW_ALONG_PLAYLIST_URL, external: true },
+    outcome: "구글 계정·AI·원클릭 배포로 인터넷에 올라간 나만의 사이트 한 개",
     forWhom: [
-      "서비스 연결에서 매번 막히는 분",
+      "완전 왕초보 · 비개발자로 처음 시작하는 분",
       "환경변수·배포가 두려운 분",
       "이 사이트 같은 홈페이지를 직접 만들고 싶은 분",
     ],
-    includes: ["영상 강의 (제작 시 순차 업데이트)", "LINKMAP 체크리스트", "질문 게시판 접근"],
-    howToUse: "강의는 유튜브 재생목록으로 공개돼요. 제작되는 대로 이 페이지와 재생목록에 순차 반영됩니다.",
+    includes: [
+      "EP1 왜 지금 시작해야 하는지 (동기)",
+      "EP2 비개발자도 진짜 될까? (개요)",
+      "EP3 3분 만에 내 사이트 배포하기 (실습)",
+    ],
+    howToUse:
+      "유튜브 재생목록을 순서대로 따라 보면 됩니다. 새 편이 나오면 재생목록에 자동으로 이어져요.",
     faq: [
-      { q: "어디서 볼 수 있나요?", a: "유튜브 재생목록으로 공개하며, 제작되는 영상부터 순차 업데이트됩니다." },
-      { q: "실습 환경이 필요한가요?", a: "무료 등급의 계정이면 충분합니다. 강의에서 함께 준비합니다." },
+      { q: "정말 무료인가요?", a: "네. 교육 목적으로 유튜브에 무료 공개합니다. 응원은 전적으로 선택이에요." },
+      { q: "실습 환경이 필요한가요?", a: "구글 계정과 무료 등급 AI면 충분합니다. 영상에서 함께 준비합니다." },
+      { q: "다음 편은 언제 나오나요?", a: "고치기·데이터 연결·결제 받기 편을 순서대로 제작 중이며, 재생목록에 순차 추가됩니다." },
     ],
   },
   {
@@ -470,37 +479,80 @@ export const posts: Post[] = [
   },
 ];
 
-// 초보자 눈높이 커리큘럼 — '무작정 따라하기' 컨셉(어려운 용어 없이 클릭으로 따라오기)
+// '무작정 따라하기' 재생목록의 실제 공개 영상 3편 (학습 순서: 동기 → 개요 → 실습)
+export const followAlong = {
+  seriesTitle: "바이브코딩 무작정 따라하기",
+  tagline: "코딩 몰라도, 오늘 내 사이트를 인터넷에",
+  description:
+    "왜 지금 시작해야 하는지부터 3분 만에 내 사이트를 배포하기까지. 어려운 용어 없이, 영상을 그대로 따라오면 됩니다. 유튜브에 무료 공개하고, 다음 편을 순차 추가해요.",
+  playlistUrl: FOLLOW_ALONG_PLAYLIST_URL,
+  channelUrl: YOUTUBE_CHANNEL_URL,
+  episodes: [
+    {
+      no: "EP1",
+      role: "동기",
+      title: "AI 시대, 끝까지 살아남는 단 하나의 무기",
+      short: "왜 지금 바이브코딩을 시작해야 하는지, 그 이유부터.",
+      videoId: "TKe41WMIhrQ",
+      url: "https://www.youtube.com/watch?v=TKe41WMIhrQ&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL",
+    },
+    {
+      no: "EP2",
+      role: "개요",
+      title: "바이브코딩 무작정 따라하기, 비개발자도 진짜 될까?",
+      short: "코드 한 줄 몰라도 되는지, 전체 그림을 먼저 봅니다.",
+      videoId: "zJDF2e4dYKU",
+      url: "https://www.youtube.com/watch?v=zJDF2e4dYKU&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL",
+    },
+    {
+      no: "EP3",
+      role: "실습",
+      title: "3분 만에 오늘 내 사이트를 인터넷에 올리기",
+      short: "구글 계정·AI·원클릭 배포로, 진짜 내 사이트를 공개해요.",
+      videoId: "he2_I9LCmQU",
+      url: "https://www.youtube.com/watch?v=he2_I9LCmQU&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL",
+    },
+  ] as FollowAlongEpisode[],
+};
+
+// 전체 커리큘럼 로드맵 — 무엇을 배우는지 한눈에.
+// 앞 3단계(계정·AI·배포)는 EP3에서 이미 다뤄 status: "done", 나머지는 다음 편 예정.
 export const educationModules: EducationModule[] = [
   {
     step: "01",
     title: "구글 계정 만들기",
-    desc: "모든 것의 시작이에요. 구글 계정 하나면 앞으로 쓸 서비스에 전부 로그인할 수 있어요. 이미 있다면 이 단계는 건너뛰어도 됩니다.",
+    desc: "모든 것의 시작이에요. 구글 계정 하나면 앞으로 쓸 서비스에 전부 로그인할 수 있어요.",
+    status: "done",
   },
   {
     step: "02",
     title: "AI 서비스에 가입하기",
-    desc: "ChatGPT·Claude 같은 AI 도구에 가입해요. 앞으로 '무엇을 만들지'만 말하면 AI가 옆에서 도와줍니다.",
+    desc: "ChatGPT·Claude 같은 AI 도구에 가입해요. '무엇을 만들지'만 말하면 AI가 옆에서 도와줍니다.",
+    status: "done",
   },
   {
     step: "03",
     title: "내 홈페이지 만들기",
-    desc: "LINKMAP에서 템플릿을 고르고 버튼 한 번(원클릭 배포)이면, 세상에 공개되는 내 홈페이지가 생겨요. 코드는 몰라도 됩니다.",
+    desc: "LINKMAP에서 템플릿을 고르고 버튼 한 번(원클릭 배포)이면, 세상에 공개되는 내 홈페이지가 생겨요.",
+    status: "done",
   },
   {
     step: "04",
     title: "내 마음대로 고치기",
     desc: "글·사진·색을 바꿔 내 것으로 만들어요. AI에게 '이 부분 이렇게 바꿔줘'라고 말하듯 요청하면 됩니다.",
+    status: "planned",
   },
   {
     step: "05",
     title: "내 정보 담아두기 (데이터 연결)",
     desc: "방문자가 남긴 신청·문의 같은 정보를 저장하는 '창고'를 연결해요. 어려운 말 같지만, 클릭 몇 번이면 됩니다.",
+    status: "planned",
   },
   {
     step: "06",
     title: "결제 받기 (결제 연동)",
     desc: "내가 만든 걸 팔고 싶다면 카드 결제를 붙여요. 손님이 결제하면 나에게 자동으로 알림이 오도록 연결합니다.",
+    status: "planned",
   },
 ];
 
@@ -512,10 +564,10 @@ export const newsletter = {
 };
 
 export const education = {
-  title: "코딩을 몰라도, 내 홈페이지를 직접 만들어요",
+  title: "바이브코딩 무작정 따라하기",
   description:
-    "구글 계정 만들기부터 내 홈페이지 공개까지, 하나씩 무작정 따라 하기. 어려운 용어 없이, 클릭으로 따라오면 됩니다.",
-  cta: "무작정 따라하기 보기",
+    "코딩 몰라도, 오늘 내 사이트를 인터넷에. 왜 시작해야 하는지부터 3분 배포까지, 유튜브 영상을 그대로 따라오면 됩니다. 지금 3편 공개 · 다음 편 순차 추가.",
+  cta: "재생목록 전체 보기",
 };
 
 // 조회 헬퍼 (추후 DB 쿼리로 대체)

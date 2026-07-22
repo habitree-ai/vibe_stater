@@ -26,14 +26,14 @@ export const footerColumns = [
     title: "둘러보기",
     links: [
       { label: "소개", href: "/about" },
-      { label: "콘텐츠", href: "/posts" },
+      { label: "무작정 따라하기", href: "/education" },
       { label: "서비스", href: "/projects" },
     ],
   },
   {
     title: "자료",
     links: [
-      { label: "전자책·강의", href: "/products" },
+      { label: "전자책·자료", href: "/products" },
       { label: "1:1 커피챗", href: "/coffee-chat" },
       { label: "응원하기", href: "/support" },
     ],
