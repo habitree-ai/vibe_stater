@@ -7,6 +7,27 @@
 
 ---
 
+## 디자인 정본 범위 · 계보 (01·05 흡수)
+
+이 문서(v2) + `src/app/globals.css`가 **디자인 단일 정본**이다. 이전 세대 문서는 아카이브됨:
+
+- [`archive/01_design_system.md`](./archive/01_design_system.md) — v0 토큰(emerald/sky · HSL · Inter). → §2 팔레트(oklch 숲톤)·타이포로 대체.
+- [`archive/05_homepage_redesign.md`](./archive/05_homepage_redesign.md) — v1 "Editorial × Tech"(Space Grotesk · Instrument Serif · violet aurora). → §1 진단에서 그대로 교체.
+
+**01에서 승계한 기반 토큰** (여전히 유효 — 실체는 `globals.css`·컴포넌트):
+
+| 항목 | 값 |
+|---|---|
+| 컨테이너 최대폭 | `max-w-6xl`(≈1152px), 텍스트 `max-w-2xl` |
+| 카드 라운드 | `--radius: 0.75rem` |
+| 그리드 간격 | `gap-6 md:gap-8` |
+| 브레이크포인트 | `md` 768 / `lg` 1024 (모바일 우선 1→2→3열) |
+| 컴포넌트 | shadcn/ui: Button(primary/outline/ghost)·Card·Badge·Separator·Nav |
+
+폰트 계보: Inter(v0) → Space Grotesk + Instrument Serif(v1) → **Fraunces(헤드) + Pretendard(본문) + Geist(라틴)**(v2, 현행).
+
+---
+
 ## 0. 한 줄 전략
 
 > **"emerald 단색 + 보편 그라데이션"을 버리고, 따뜻한 숲톤 + 그레인 + 에디토리얼 타이포 + 1인칭 손글씨 디테일로 "최동혁이라는 사람이 직접 짠 페이지"를 만든다.**

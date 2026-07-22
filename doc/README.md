@@ -24,18 +24,16 @@
 | # | 문서 | 내용 | 상태 |
 |---|---|---|---|
 | 00 | [`00_setup_guide.md`](./00_setup_guide.md) | 개발 환경·외부 서비스·env | 유지 |
-| 01 | [`01_design_system.md`](./01_design_system.md) | 디자인 토큰 v0 | *14가 대체* |
 | 02 | [`02_main_page_plan.md`](./02_main_page_plan.md) | 메인페이지 섹션 기획 | 유지 |
 | 03 | [`03_sample_content.md`](./03_sample_content.md) | 샘플 데이터 명세 | 유지 |
 | 04 | [`04_roadmap.md`](./04_roadmap.md) | 단계별 로드맵 | 갱신됨 |
-| 05 | [`05_homepage_redesign.md`](./05_homepage_redesign.md) | 프리미엄 리디자인 v1 | *14가 대체* |
 | 09 | [`09_supabase_step3.md`](./09_supabase_step3.md) | Supabase 인증/DB | **적용 완료**(기록) |
 | 10 | [`10_env_config_registry.md`](./10_env_config_registry.md) | 환경변수 레지스트리 | 정본 |
 | 13 | [`13_vercel_deployment.md`](./13_vercel_deployment.md) | Vercel 배포 | **정본** |
 | 14~18 | 위 "정본 문서" 표 참조 | 디자인·고도화·기능 스펙 | 정본 |
 
-## 🗄️ 아카이브 (폐기된 Cloudflare 배포 이력)
-- [`archive/`](./archive/) — 06·07·08·11·12 이동. 배포는 Vercel(13)로 전환됨. → [`archive/README.md`](./archive/README.md)
+## 🗄️ 아카이브 (폐기·대체된 문서)
+- [`archive/`](./archive/) — Cloudflare 배포(06·07·08·11·12) + 이전 세대 디자인(01 v0·05 v1). 정본: 배포=13, 디자인=14. → [`archive/README.md`](./archive/README.md)
 
 ## 서비스 셋업 가이드 시리즈
 - [`service-setup/README.md`](./service-setup/README.md) — 시리즈 인덱스·제작 방법론

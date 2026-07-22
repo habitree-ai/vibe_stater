@@ -86,6 +86,6 @@
 
 ## 구현 체크리스트
 - [ ] 모든 섹션 모바일 1열 → md/lg 다열 반응형
-- [ ] 색상/간격은 `01_design_system.md` 토큰 사용
+- [ ] 색상/간격은 디자인 정본([`14_homepage_v2_personality.md`](./14_homepage_v2_personality.md) + `globals.css`) 토큰 사용
 - [ ] 이미지 없는 항목은 그라데이션/이니셜 placeholder
 - [ ] 시맨틱 태그(`<section>`, `<nav>`, `<footer>`) + 기본 a11y(alt, aria-label)

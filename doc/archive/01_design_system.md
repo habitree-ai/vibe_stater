@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED — 이전 세대 디자인 문서입니다.** 디자인 정본은 `doc/14_homepage_v2_personality.md`(v2) + `src/app/globals.css`. 아래는 계보 참고 기록으로만 보존합니다.
+
 # 01. 디자인 시스템
 
 > Creator Link Hub 브랜드 디자인 토큰. `src/app/globals.css`와 Tailwind/shadcn 테마에 반영한다.
