@@ -28,6 +28,16 @@
 
 ## 변경/이슈 기록
 
+### 2026-07-22 — 캐릭터/전자책 품질 + 문서 통합·정본화 + 브랜드/결제 표기 정정
+- **캐릭터 자산**: 추출 파이프라인(`scripts/build-character-assets.mjs`)에 크롭 자동확장(`autoExpand`)·드롭섀도 2차 제거(`cutout`)·경계조각 제거(`dropIntruders`) 추가 → 잘림·뿌연 배경 해소. HT-001~105 전면 재생성. 전자책(`public/ebook/vibe-1in-saas.html`) 구도 정리(전 캐릭터 오터 통일, A4 5쪽 유지). (doc/16·17)
+- **문서 통합**: 마스터 기획서(`linkmap_personal_platform_plan.md`)를 **Habitree 통합본**으로 재작성 — Part Ⅰ 현재 정본(구현 반영) + Part Ⅱ 커머스 설계 보존. 정본 일원화: 배포=**Vercel**, 결제=**Polar**, AI=**OpenAI**, 브랜드=**Habitree**(vibe.habitree.io).
+- **아카이브**(`doc/archive/`): Cloudflare 배포 문서 5개(06·07·08·11·12) + 이전 세대 디자인 2개(01 v0·05 v1). 상단 SUPERSEDED 배너. 배포 정본=13, 디자인 정본=14+globals.css.
+- **stale 문서 개정**: README·04·09·10(§B Vercel·§C 적용완료·§D Polar)·CLAUDE_CODE_TASKS·service-setup/README.
+- **사용자 대면 정정(코드)**: 결제 표기 Stripe→**Polar**(`Footer`·홈 마퀴`homeMarkup`·`sample.ts`), 브랜드 LINK HUB→**HABITREE** 워드마크(`Footer`), 후원 공유문구 Creator Link Hub→**Habitree**(`SupportForm`). `tsc --noEmit` 통과.
+- **근거**: 조사 결과 문서(06~12=Cloudflare 이력, 결제=Polar/`donations` 테이블, AI=OpenAI `gpt-4o-mini`, 브랜드=`src/lib/site.ts` Habitree). 실제 테이블 9종(profiles·coffee_chat_requests·activity_logs·contact_messages·newsletter_subscribers·chat_settings·character_assets·notification_tokens·donations).
+- **커밋**: `ee22c19`(캐릭터·전자책) · `800548f`(문서통합·표기정정) · `426fa3f`(디자인통합). 배포=Vercel 자동(main push).
+- 작업용 계획 문서(`_consolidation_plan.md`)는 실행 완료 후 제거 — 내용은 본 로그 + 마스터 부록 + archive 배너로 대체(경위는 git 히스토리 보존).
+
 ### 2026-07-07 — 사이트 전면 고도화(관리자 허브·SEO/내비·기술 위생)
 - **관리자 데이터 허브**: 공용 가드 `src/lib/admin.ts`(`requireAdmin`) + `admin/layout.tsx`(내비). 문의 인박스(`/admin/contact`), 뉴스레터 구독자+CSV(`/admin/subscribers`), 활동로그 뷰어(`/admin/logs`) 신설. `activity_logs`가 처음으로 UI에 노출. DB 스키마 변경 없음(service_role 읽기).
 - **SEO/내비**: 내비·푸터를 전용 페이지로 연결(홈 앵커 폐지), 모바일 햄버거 메뉴, `/terms`·`/privacy` 플레이스홀더(깨진 링크 해소), `error.tsx`·`not-found.tsx`, `sitemap.ts`·`robots.ts`, `metadataBase`+OG/Twitter, `icon.tsx`·`opengraph-image.tsx`(ImageResponse 동적 생성).

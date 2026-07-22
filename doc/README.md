@@ -5,8 +5,7 @@
 > (초기 기획 코드네임은 "Creator Link Hub" — 마스터 기획서 참조.)
 
 ## 마스터 기획
-- [`linkmap_personal_platform_plan.md`](./linkmap_personal_platform_plan.md) — **Habitree 마스터 기획서**(통합본). Part Ⅰ=현재 정본(구현 반영), Part Ⅱ=상세 설계·계획(커머스 ERD·RLS·성공지표).
-- [`_consolidation_plan.md`](./_consolidation_plan.md) — 통합 경위·문서 처분표·기획 vs 실제 괴리 13항목(작업 기록).
+- [`linkmap_personal_platform_plan.md`](./linkmap_personal_platform_plan.md) — **Habitree 마스터 기획서**(통합본). Part Ⅰ=현재 정본(구현 반영), Part Ⅱ=상세 설계·계획(커머스 ERD·RLS·성공지표). 원본 대비 변경은 부록, 전환 경위는 [`WORKLOG.md`](./WORKLOG.md).
 
 ## ⭐ 정본 문서 (현재 진실)
 | 문서 | 내용 |

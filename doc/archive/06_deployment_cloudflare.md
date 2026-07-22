@@ -3,7 +3,7 @@
 # 06. Cloudflare 배포 세팅
 
 > 이 Next.js 16 프로젝트(Creator Link Hub)를 **Cloudflare**에 배포하기 위한 세팅과 절차.
-> 계정/도메인 기초 세팅은 [`service-setup/cloudflare/cloudflare_setup.md`](./service-setup/cloudflare/cloudflare_setup.md) 선행.
+> 계정/도메인 기초 세팅은 [`service-setup/cloudflare/cloudflare_setup.md`](../service-setup/cloudflare/cloudflare_setup.md) 선행.
 > 본 문서는 **준비/문서화**가 목적이며, 실제 적용은 이후 단계에서 진행한다.
 
 ---
@@ -143,7 +143,7 @@ npm run deploy
 | 대시보드 → Workers → Settings → Variables | UI로 관리 |
 
 > `NEXT_PUBLIC_*` 변수는 빌드 타임에 번들로 주입되므로, CI 빌드 환경에도 동일하게 제공해야 한다.
-> 전체 환경변수 목록은 [`00_setup_guide.md`](./00_setup_guide.md) 4장 참고.
+> 전체 환경변수 목록은 [`00_setup_guide.md`](../00_setup_guide.md) 4장 참고.
 
 ---
 

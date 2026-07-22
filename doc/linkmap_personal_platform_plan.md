@@ -3,7 +3,7 @@
 > **Habitree**(vibe.habitree.io) — AI·바이브코딩·독서로 읽고 만들고 연결하는 개인 브랜드 플랫폼의
 > 단일 마스터 문서. **Part Ⅰ**은 코드·배포로 확인된 *현재 정본*이고, **Part Ⅱ**는 원본 기획의
 > *상세 설계·계획*(커머스 ERD·RLS·성공지표·LINKMAP 템플릿)을 보존한 참조부다.
-> 초기 코드네임은 "Creator Link Hub". 통합 경위·괴리는 [`_consolidation_plan.md`](./_consolidation_plan.md).
+> 초기 코드네임은 "Creator Link Hub". 통합 경위는 [`WORKLOG.md`](./WORKLOG.md)(2026-07-22), 원본 대비 변경은 본 문서 **부록** 참조.
 >
 > **표기**: ✅ 구현됨 · 🟡 부분 · ⬜ 계획. "구현됨"은 코드·마이그레이션으로 확인된 것만.
 > 최종 통합: 2026-07-22

@@ -3,7 +3,7 @@
 # 08. 배포 처리 기록 (GitHub 연결 · 자동 배포)
 
 > 실제로 수행한 git/배포 처리의 **기록 + 재사용 가능한 방법론**. 같은 상황 재발 시 그대로 참고.
-> 핸드오프 요약: [`service-setup/DEPLOY_HANDOFF.md`](./service-setup/DEPLOY_HANDOFF.md) · 실행 가이드: [`07_github_cloudflare_deploy.md`](./07_github_cloudflare_deploy.md)
+> 핸드오프 요약: [`service-setup/DEPLOY_HANDOFF.md`](../service-setup/DEPLOY_HANDOFF.md) · 실행 가이드: [`07_github_cloudflare_deploy.md`](./07_github_cloudflare_deploy.md)
 
 ---
 
@@ -86,7 +86,7 @@ npm run ship -- "feat: 변경 내용"
 2. Build `npx opennextjs-cloudflare build` / Deploy `npx opennextjs-cloudflare deploy` / 브랜치 `main`.
 3. **빌드 변수·시크릿** 등록(`NEXT_PUBLIC_*` 등).
 4. 첫 배포(`*.workers.dev`) 확인 → 이후 `ship.ps1`로 자동 배포.
-- 화면별 안내: [`service-setup/github-cloudflare-deploy/`](./service-setup/github-cloudflare-deploy/) (매뉴얼·영상·캡처 9장) + [`service-setup/github-cloudflare-deploy/github_cloudflare_deploy_setup.md`](./service-setup/github-cloudflare-deploy/github_cloudflare_deploy_setup.md)
+- 화면별 안내: [`service-setup/github-cloudflare-deploy/`](./service-setup/github-cloudflare-deploy/) (매뉴얼·영상·캡처 9장) + [`service-setup/github-cloudflare-deploy/github_cloudflare_deploy_setup.md`](../service-setup/github-cloudflare-deploy/github_cloudflare_deploy_setup.md)
 
 ## 6. 관련 산출물
 - 배포 설정 상세: [`06_deployment_cloudflare.md`](./06_deployment_cloudflare.md)

@@ -2,7 +2,7 @@
 
 > 마스터 기획서 11·12장을 실행 단위로 재구성. 각 단계의 산출물·체크리스트.
 > **현재 위치(2026-07)**: Step 0~4·6 대부분 완료, **Vercel 배포 운영 중**(`vibe.habitree.io`). 다음: 문서 통합 마스터 확정 · Step 5(커머스 판매) · Step 7(교육화).
-> ⚠️ 이 문서 작성 당시 결제=Stripe·배포=Cloudflare로 적혔으나, 실제는 **결제=Polar·배포=Vercel**. 괴리 전체는 [`_consolidation_plan.md`](./_consolidation_plan.md) 참조.
+> ⚠️ 이 문서 작성 당시 결제=Stripe·배포=Cloudflare로 적혔으나, 실제는 **결제=Polar·배포=Vercel**. 전환 경위는 [`WORKLOG.md`](./WORKLOG.md)(2026-07-22), 원본 대비 변경은 마스터 [`linkmap_personal_platform_plan.md`](./linkmap_personal_platform_plan.md) 부록 참조.
 > 관련: 디자인 [`14_homepage_v2_personality.md`](./14_homepage_v2_personality.md) · 배포 [`13_vercel_deployment.md`](./13_vercel_deployment.md) · 서비스 셋업 [`service-setup/README.md`](./service-setup/README.md)
 
 ---
