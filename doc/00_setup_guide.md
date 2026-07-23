@@ -30,13 +30,16 @@ git --version
 
 ---
 
-## 2. OneDrive 동기화 주의사항
+## 2. 작업 경로 — `C:\dev\habitree.ai`
 
-작업 경로가 OneDrive 동기화 폴더(`OneDrive\dev\habitree.ai`)이므로 `node_modules`/`.next`가 동기화되면 성능 저하·충돌이 발생할 수 있다.
+작업 경로는 **`C:\dev\habitree.ai`** 다. OneDrive 동기화 폴더 밖이어야 한다(2026-07-23 이전).
 
-- `.gitignore`에는 `node_modules`, `.next`, `.env*`가 포함됨(create-next-app 기본).
-- OneDrive에서도 제외 권장: 해당 폴더 우클릭 → **"항상 이 장치에 유지" 해제** 또는 OneDrive 설정에서 폴더 제외.
-- 장기적으로는 `C:\dev\` 같은 비동기 경로로 이전 검토.
+- 과거에는 `OneDrive\dev\habitree.ai` 에서 작업했으나, `node_modules`(500MB)·`.next`·`.git` 이 전부 동기화되어
+  대량 재동기화·파일 잠금·리포 사본 난립 문제가 있었다.
+- **리포를 OneDrive 안에 두지 말 것.** 백업은 GitHub 원격(`habitree-ai/vibe_stater`)으로 충분하다.
+- `.gitignore`에는 `node_modules`, `.next`, `.env*`, `local/` 이 포함됨.
+- 리포 사본이 여러 개 생기면 어느 쪽에서 작업 중인지 혼동된다. 사본 발견 시
+  `git log -1` · `git status` 로 최신본을 확인하고 나머지는 정리한다.
 
 ---
 
