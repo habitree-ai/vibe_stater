@@ -354,7 +354,7 @@ export const products: Product[] = [
       "이 사이트 같은 홈페이지를 직접 만들고 싶은 분",
     ],
     includes: [
-      "EP1 왜 지금 시작해야 하는지 (동기)",
+      "EP1 AI 시대에 끝까지 필요한 단 하나의 능력 (동기)",
       "EP2 비개발자도 진짜 될까? (개요)",
       "EP3 3분 만에 내 사이트 배포하기 (실습)",
     ],
@@ -491,10 +491,10 @@ export const followAlong = {
     {
       no: "EP1",
       role: "동기",
-      title: "AI 시대, 끝까지 살아남는 단 하나의 무기",
-      short: "왜 지금 바이브코딩을 시작해야 하는지, 그 이유부터.",
-      videoId: "TKe41WMIhrQ",
-      url: "https://www.youtube.com/watch?v=TKe41WMIhrQ&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL",
+      title: "AI 시대, 끝까지 살아남는 사람은 결국 이 능력 하나가 달랐습니다",
+      short: "AI 잘 쓰는 법부터 사고력·문해력·질문력까지, AI보다 앞서가는 사람들의 공통점.",
+      videoId: "c5RdemFfZZU",
+      url: "https://www.youtube.com/watch?v=c5RdemFfZZU&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL",
     },
     {
       no: "EP2",

@@ -100,15 +100,15 @@ export const homeMarkup = `
       </div>
 
       <div class="ep-list">
-        <a class="ep-card rv" href="https://www.youtube.com/watch?v=TKe41WMIhrQ&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL" target="_blank" rel="noopener noreferrer" data-cursor>
+        <a class="ep-card rv" href="https://www.youtube.com/watch?v=c5RdemFfZZU&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL" target="_blank" rel="noopener noreferrer" data-cursor>
           <figure class="ep-thumb">
-            <img src="https://i.ytimg.com/vi/TKe41WMIhrQ/hqdefault.jpg" alt="영상 — AI 시대, 끝까지 살아남는 단 하나의 무기" loading="lazy" width="480" height="360" />
+            <img src="https://i.ytimg.com/vi/c5RdemFfZZU/hqdefault.jpg" alt="영상 — AI 시대, 끝까지 살아남는 사람은 결국 이 능력 하나가 달랐습니다" loading="lazy" width="480" height="360" />
             <span class="ep-play" aria-hidden="true">▶</span>
           </figure>
           <div class="ep-body">
             <div class="ep-tag"><span class="ep-no">EP1</span><span class="ep-role">동기</span></div>
-            <h4>AI 시대, 끝까지 살아남는 단 하나의 무기</h4>
-            <p>왜 지금 바이브코딩을 시작해야 하는지, 그 이유부터.</p>
+            <h4>AI 시대, 끝까지 살아남는 사람은 결국 이 능력 하나가 달랐습니다</h4>
+            <p>AI 잘 쓰는 법부터 사고력·문해력·질문력까지, AI보다 앞서가는 사람들의 공통점.</p>
           </div>
         </a>
         <a class="ep-card rv" href="https://www.youtube.com/watch?v=zJDF2e4dYKU&list=PLhCPUlBwmKCV6sc_li9MVLZeLrAq_iaFL" target="_blank" rel="noopener noreferrer" data-cursor>
